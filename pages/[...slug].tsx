@@ -55,6 +55,7 @@ import {
   getOfficesByArea,
 } from "@/lib/offices-server";
 import { CATEGORIES, getCategoryBySlug, type CategoryInfo } from "@/lib/categorySlugMap";
+import { CONTENT_COMING_SOON } from "@/lib/contentVisibility";
 import dynamic from "next/dynamic";
 const OfficeList = dynamic(() => import("@/page-components/OfficeList"));
 const OfficeDetail = dynamic(() => import("@/page-components/OfficeDetail"));
@@ -113,13 +114,15 @@ export const getStaticPaths: GetStaticPaths = async () => {
     const cities = getCitiesByPrefecture(prefSlug);
 
     // ── /{pref}/{articleSlug} (recommendation, no city) ──
-    for (const article of getAllArticles()) {
-      if (
-        article.category === "recommendation" &&
-        article.relatedPrefecture === prefSlug &&
-        !article.relatedCity
-      ) {
-        paths.push({ params: { slug: [prefSlug, article.slug] } });
+    if (!CONTENT_COMING_SOON) {
+      for (const article of getAllArticles()) {
+        if (
+          article.category === "recommendation" &&
+          article.relatedPrefecture === prefSlug &&
+          !article.relatedCity
+        ) {
+          paths.push({ params: { slug: [prefSlug, article.slug] } });
+        }
       }
     }
 
@@ -130,13 +133,15 @@ export const getStaticPaths: GetStaticPaths = async () => {
       paths.push({ params: { slug: [prefSlug, citySlug] } });
 
       // ── /{pref}/{city}/{articleSlug} (recommendation with city) ──
-      for (const article of getAllArticles()) {
-        if (
-          article.category === "recommendation" &&
-          article.relatedPrefecture === prefSlug &&
-          article.relatedCity === citySlug
-        ) {
-          paths.push({ params: { slug: [prefSlug, citySlug, article.slug] } });
+      if (!CONTENT_COMING_SOON) {
+        for (const article of getAllArticles()) {
+          if (
+            article.category === "recommendation" &&
+            article.relatedPrefecture === prefSlug &&
+            article.relatedCity === citySlug
+          ) {
+            paths.push({ params: { slug: [prefSlug, citySlug, article.slug] } });
+          }
         }
       }
 
@@ -174,12 +179,14 @@ export const getStaticPaths: GetStaticPaths = async () => {
   }
 
   // ── Interview paths ──
-  for (const interview of getAllInterviews()) {
-    const office = getOfficeById(interview.officeId);
-    if (!office) continue;
-    const itvUrl = buildInterviewUrl(interview, office);
-    const itvSegments = itvUrl.replace(/^\//, "").split("/");
-    paths.push({ params: { slug: itvSegments } });
+  if (!CONTENT_COMING_SOON) {
+    for (const interview of getAllInterviews()) {
+      const office = getOfficeById(interview.officeId);
+      if (!office) continue;
+      const itvUrl = buildInterviewUrl(interview, office);
+      const itvSegments = itvUrl.replace(/^\//, "").split("/");
+      paths.push({ params: { slug: itvSegments } });
+    }
   }
 
   // カテゴリページ・記事ページは fallback: 'blocking' で初回アクセス時に生成
@@ -294,7 +301,7 @@ export const getStaticProps: GetStaticProps<SlugPageProps> = async ({ params }) 
 
     // /{pref}/{articleSlug}
     const article = getArticleBySlug(seg1);
-    if (article && article.relatedPrefecture === pref.slug && !article.relatedCity) {
+    if (!CONTENT_COMING_SOON && article && article.relatedPrefecture === pref.slug && !article.relatedCity) {
       return {
         props: {
           pageType: "article" as const,
@@ -384,6 +391,7 @@ export const getStaticProps: GetStaticProps<SlugPageProps> = async ({ params }) 
     // /{pref}/{city}/{articleSlug}
     const article = getArticleBySlug(seg2);
     if (
+      !CONTENT_COMING_SOON &&
       article &&
       article.relatedPrefecture === pref.slug &&
       article.relatedCity === city.slug
@@ -603,7 +611,7 @@ export const getStaticProps: GetStaticProps<SlugPageProps> = async ({ params }) 
       if (office) {
         // /{pref}/{city}/{station}/{officeId}/{interviewId}
         const interview = getInterviewById(seg4);
-        if (interview && interview.officeId === office.id) {
+        if (!CONTENT_COMING_SOON && interview && interview.officeId === office.id) {
           return {
             props: {
               pageType: "interview" as const,
@@ -645,7 +653,7 @@ export const getStaticProps: GetStaticProps<SlugPageProps> = async ({ params }) 
 
     // /{pref}/{city}/{ward}/{station}/{officeId}/{interviewId}
     const interview = getInterviewById(seg5);
-    if (interview && interview.officeId === office.id) {
+    if (!CONTENT_COMING_SOON && interview && interview.officeId === office.id) {
       return {
         props: {
           pageType: "interview" as const,

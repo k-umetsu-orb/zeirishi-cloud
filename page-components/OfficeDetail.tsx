@@ -11,6 +11,7 @@ import GlobalFooter from "@/components/GlobalFooter";
 import Breadcrumb, { type BreadcrumbItem } from "@/components/Breadcrumb";
 import type { Prefecture, City, Ward, Station, Office } from "@/lib/data";
 import { toDisplayName } from "@/lib/categorySlugMap";
+import { CONTENT_COMING_SOON } from "@/lib/contentVisibility";
 import {
   getCitiesByPrefecture,
   getStationsForCity,
@@ -316,7 +317,7 @@ export default function OfficeDetail({
           </section>
 
           {/* ─── Interviews ───────────────────────────────── */}
-          {officeInterviews.length > 0 && (
+          {!CONTENT_COMING_SOON && officeInterviews.length > 0 && (
             <section className="mb-10">
               <SectionHeading>インタビュー</SectionHeading>
               <div className="space-y-3">

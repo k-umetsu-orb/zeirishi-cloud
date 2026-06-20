@@ -50,7 +50,7 @@ export default function InterviewList({ interviewUrls }: InterviewListProps) {
                     {/* Photo */}
                     <div className="aspect-[16/7] overflow-hidden">
                       <img
-                        src="https://ferret-one.akamaized.net/images/65efc23960d473004b55331f/original.png?utime=1710211641"
+                        src="/images/interview-placeholder.svg"
                         alt={iv.officeName}
                         className="w-full h-full object-cover"
                       />

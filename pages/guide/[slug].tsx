@@ -2,10 +2,13 @@ import type { GetStaticPaths, GetStaticProps } from "next";
 import { PageMeta } from "@/lib/usePageMeta";
 import ArticlePage from "@/page-components/ArticlePage";
 import { getArticlesByCategory, getArticleBySlug, type Article } from "@/lib/data";
+import { CONTENT_COMING_SOON } from "@/lib/contentVisibility";
 
 type Props = { article: Article; title: string; description: string };
 
 export const getStaticPaths: GetStaticPaths = async () => {
+  if (CONTENT_COMING_SOON) return { paths: [], fallback: false };
+
   const articles = getArticlesByCategory("guide");
   return {
     paths: articles.map((a) => ({ params: { slug: a.slug } })),
