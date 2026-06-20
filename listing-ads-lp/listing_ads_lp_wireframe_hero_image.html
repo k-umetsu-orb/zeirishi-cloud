@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>税理士クラウド /introduction KW別variant ワイヤーフレーム v3</title>
+<style>
+  :root{
+    --navy:#0f2660; --blue:#1a50a8; --blue2:#1d4ed8; --blue3:#2563eb; --quote:#1a4f8a;
+    --orange1:#f97316; --orange2:#ef4444; --amber:#f59e0b; --amber4:#fbbf24;
+    --fg:#1f2937; --muted:#6b7280; --border:#e5e7eb;
+    --formbg1:#dce8f5; --formbg2:#eef4fb; --meritbg:#f0f4fa;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:-apple-system,"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;color:var(--fg);background:#fff;}
+  .container{max-width:1080px;margin:0 auto;padding:0 20px;}
+  .ctrl{position:sticky;top:0;z-index:50;background:#111827;color:#fff;padding:10px 16px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;font-size:13px;}
+  .ctrl b{color:#fbbf24;}
+  .ctrl select{padding:6px 10px;border-radius:6px;border:none;font-size:13px;}
+  .ctrl .legend{margin-left:auto;font-size:11px;color:#9ca3af;}
+  .ctrl .legend .tag{display:inline-block;border:1px dashed var(--amber4);color:#fbbf24;border-radius:4px;padding:0 5px;margin-right:4px;}
+  .vary{position:relative;}
+  body.variant .vary{outline:2px dashed rgba(251,191,36,.7);outline-offset:4px;border-radius:6px;}
+  body.variant .vary::after{content:"可変";position:absolute;top:-10px;left:-2px;background:var(--amber);color:#111;font-size:9px;font-weight:700;padding:1px 5px;border-radius:4px;z-index:5;}
+  /* hero */
+  .hero{background:linear-gradient(135deg,var(--navy) 0%,var(--blue) 60%,var(--blue2) 100%);color:#fff;overflow:hidden;}
+  .hero .container{padding-top:56px;padding-bottom:0;}
+  .hero-row{display:grid;grid-template-columns:1.2fr 0.8fr;gap:24px;align-items:end;text-align:left;}
+  .hero-text{padding-bottom:72px;}
+  .hero-img{display:flex;justify-content:flex-start;align-items:flex-end;height:100%;}
+  .hero-img img{max-width:100%;width:310px;height:auto;display:block;}
+  .badge{display:inline-block;background:linear-gradient(90deg,var(--orange1),var(--orange2));color:#fff;font-size:12px;font-weight:700;padding:6px 20px;border-radius:999px;margin-bottom:22px;}
+  .hero h1{font-size:40px;line-height:1.3;font-weight:800;margin:0 0 20px;letter-spacing:-.01em;}
+  .hero h1 .u{position:relative;display:inline-block;}
+  .hero h1 .u::after{content:"";position:absolute;left:0;right:0;bottom:4px;height:12px;background:rgba(251,191,36,.4);z-index:-1;}
+  .hero .sub{color:rgba(255,255,255,.82);font-size:17px;line-height:1.8;max-width:600px;margin:0 0 36px;}
+  .cta{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(90deg,var(--orange1),var(--orange2));color:#fff;font-weight:800;font-size:18px;padding:16px 40px;border-radius:12px;text-decoration:none;box-shadow:0 10px 24px rgba(239,68,68,.3);}
+  .trust{margin-top:40px;display:flex;justify-content:flex-start;align-items:center;gap:16px;}
+  .trust .chev{color:var(--amber4);font-size:30px;}
+  .trust .lbl{font-size:12px;color:rgba(255,255,255,.6);}
+  .trust .big{font-weight:800;font-size:24px;}
+  .trust .big span{color:var(--amber4);}
+  .trust .note{font-size:10px;color:rgba(255,255,255,.4);margin-top:3px;}
+  /* empathy (NEW) */
+  .empathy{padding:64px 0;background:#fff;}
+  .empathy .row{display:grid;grid-template-columns:0.92fr 1.08fr;gap:48px;align-items:center;}
+  .empathy .imgph{aspect-ratio:4/3;border:2px dashed #c7cdd6;border-radius:4px;background:repeating-linear-gradient(45deg,#eef1f5,#eef1f5 10px,#f6f8fa 10px,#f6f8fa 20px);display:flex;align-items:center;justify-content:center;color:#94a3b8;font-size:13px;text-align:center;padding:20px;}
+  .empathy .quote{font-size:30px;font-weight:800;color:var(--quote);line-height:1.55;letter-spacing:.01em;margin:0;}
+  .empathy .divider{width:120px;height:1px;background:#9ca3af;margin:24px 0;}
+  .empathy .body{color:#374151;font-size:15px;line-height:2;}
+  .empathy .body p{margin:0 0 18px;}
+  /* sections */
+  section h2{font-size:28px;font-weight:800;text-align:center;margin:0 0 6px;}
+  .sec-pad{padding:56px 0;}
+  .sub-c{text-align:center;color:var(--muted);font-size:14px;margin:0 0 36px;}
+  .hr{height:1px;background:var(--blue);max-width:760px;margin:14px auto 36px;}
+  .pain{max-width:760px;margin:0 auto;}
+  .pain ul{list-style:none;padding:0;margin:0 0 40px;}
+  .pain li{display:flex;gap:16px;align-items:flex-start;padding:12px 8px;font-size:16px;line-height:1.7;}
+  .pain li svg{flex-shrink:0;margin-top:3px;}
+  .hl{color:var(--amber);text-decoration:underline;text-underline-offset:2px;font-weight:600;}
+  .solve{background:linear-gradient(135deg,var(--navy),var(--blue));border-radius:18px;padding:36px;text-align:center;color:#fff;}
+  .solve .pill{display:inline-block;border:2px solid #fff;border-radius:999px;padding:12px 40px;font-weight:800;font-size:22px;margin-top:10px;}
+  .formsec{background:linear-gradient(180deg,var(--formbg1) 0%,var(--formbg2) 100%);}
+  .form{background:#fff;border-radius:18px;box-shadow:0 10px 30px rgba(15,38,96,.1);max-width:680px;margin:0 auto;padding:32px;}
+  .form h3{text-align:center;font-size:18px;margin:0 0 24px;}
+  .form .fl{font-size:13px;font-weight:700;margin-bottom:8px;display:block;}
+  .req{color:#ef4444;font-size:11px;margin-left:6px;}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px;}
+  .chip{border:1px solid var(--border);border-radius:6px;padding:8px 14px;font-size:13px;color:var(--muted);background:#fff;}
+  .chip.on{border-color:var(--blue);background:rgba(26,80,168,.08);color:var(--blue);font-weight:700;}
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:22px;}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:22px;}
+  .inp{border:1px solid var(--border);border-radius:8px;padding:11px 12px;font-size:13px;color:var(--muted);background:#fff;}
+  .submit{width:100%;background:linear-gradient(90deg,var(--orange1),var(--orange2));color:#fff;font-weight:800;font-size:16px;border:none;padding:16px;border-radius:12px;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;}
+  .merits{background:var(--meritbg);}
+  .mgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;}
+  .mcard{background:#fff;border:1px solid var(--border);border-radius:18px;padding:24px;text-align:center;}
+  .micon{width:60px;height:60px;border-radius:16px;background:linear-gradient(135deg,var(--blue),var(--blue3));margin:0 auto 14px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:24px;}
+  .mcard h3{font-size:15px;margin:0 0 8px;}
+  .mcard p{font-size:13px;color:var(--muted);line-height:1.7;margin:0;}
+  .steps{max-width:720px;margin:0 auto;}
+  .step{display:flex;gap:20px;}
+  .step .n{width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--blue3));color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .step .ln{width:2px;flex:1;background:rgba(26,80,168,.2);margin:4px auto;min-height:28px;}
+  .step .tx{padding:2px 0 28px;}
+  .step .tx .lab{font-size:11px;font-weight:800;color:var(--blue);letter-spacing:.1em;}
+  .step .tx h3{margin:2px 0 6px;font-size:17px;}
+  .step .tx p{margin:0;color:var(--muted);font-size:14px;}
+  .faq{max-width:760px;margin:0 auto;}
+  .qa{border-bottom:1px solid var(--border);padding:16px 0;}
+  .qa .q{font-weight:700;font-size:15px;}
+  .qa .a{color:var(--muted);font-size:14px;margin-top:8px;}
+  .bcta{background:linear-gradient(135deg,var(--navy) 0%,var(--blue) 100%);text-align:center;color:#fff;}
+  .bcta h2{color:#fff;}
+  .bcta p{color:rgba(255,255,255,.7);font-size:14px;max-width:420px;margin:8px auto 28px;}
+  @media(max-width:780px){
+    .hero h1{font-size:28px;} .mgrid{grid-template-columns:1fr 1fr;} .grid3{grid-template-columns:1fr 1fr;}
+    .empathy .row{grid-template-columns:1fr;gap:28px;} .empathy .quote{font-size:24px;}
+    .hero-row{grid-template-columns:1fr;text-align:center;gap:24px;}
+    .hero-img img{width:240px;}
+    .hero .sub{margin:0 auto 36px;}
+    .trust{justify-content:center;}
+  }
+</style>
+</head>
+<body>
+
+<div class="ctrl">
+  <b>WIREFRAME v3</b>
+  <label>KW意図でvariant切替：
+    <select id="sw" onchange="apply(this.value)">
+      <option value="base">ベース（税理士紹介 /introduction）</option>
+      <option value="area">【CP01・新規】地域：例「福岡市 税理士」</option>
+      <option value="souzoku">【CP02・実装済03】相続税</option>
+      <option value="kaisha">【CP02・実装済06】会社設立</option>
+      <option value="conquest">【CP03・新規】他社比較conquest</option>
+    </select>
+  </label>
+  <span class="legend"><span class="tag">可変</span>＝KWで出し分け／枠なし＝全variant共通（固定）</span>
+</div>
+
+<main>
+  <!-- ===== HERO ===== -->
+  <section class="hero">
+    <div class="container hero-row">
+      <div class="hero-text">
+        <div class="badge" id="badge">完全無料・全国対応</div>
+        <h1 class="vary" id="headline"></h1>
+        <p class="sub vary" id="subtext"></p>
+        <a href="#form" class="cta">無料で相談する →</a>
+        <div class="trust vary" id="trust"></div>
+      </div>
+      <div class="hero-img">
+        <img src="./images/女性1_crop.png" alt="コーディネーター">
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 共感 / ストーリー（NEW・Hero と お悩み の間）===== -->
+  <section class="empathy">
+    <div class="container">
+      <div class="row vary" id="empathy">
+        <div class="imgph" id="empImg"></div>
+        <div>
+          <p class="quote" id="empQuote"></p>
+          <div class="divider"></div>
+          <div class="body" id="empBody"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== PAIN POINTS ===== -->
+  <section class="sec-pad" style="padding-top:8px;">
+    <div class="container">
+      <h2>こんなお悩みはありませんか？</h2>
+      <div class="hr"></div>
+      <div class="pain">
+        <ul id="pain"></ul>
+        <div class="solve">
+          <p style="opacity:.8;font-size:14px;margin:0 0 4px;">このようなお悩みを抱えている方</p>
+          <div class="pill">税理士クラウドで解決しませんか？</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FORM ===== -->
+  <section class="formsec sec-pad" id="form">
+    <div class="container">
+      <h2>無料相談のお申し込み</h2>
+      <p class="sub-c">入力後、担当コーディネーターよりご連絡いたします</p>
+      <div class="form">
+        <h3>無料相談フォーム</h3>
+        <span class="fl">ご相談者の区分<span class="req">必須</span></span>
+        <div class="chips"><span class="chip on">法人</span><span class="chip">個人事業主</span><span class="chip">個人（確定申告等）</span></div>
+        <span class="fl">ご相談の内容<span class="req">必須</span> <span id="consultHint" style="color:var(--amber);font-weight:600;font-size:11px;"></span></span>
+        <div class="grid3" id="consult">
+          <span class="chip">法人の決算・申告</span><span class="chip">個人事業主の確定申告</span><span class="chip">相続税・贈与税</span>
+          <span class="chip">記帳代行</span><span class="chip">起業・会社設立</span><span class="chip">その他</span>
+        </div>
+        <span class="fl">お探しのエリア<span class="req">必須</span> <span id="areaHint" style="color:var(--amber);font-weight:600;font-size:11px;"></span></span>
+        <div class="grid2"><span class="inp" id="prefField">都道府県 ▾</span><span class="inp">市区町村 ▾</span></div>
+        <div class="grid2"><span class="inp">お名前（必須）</span><span class="inp">メールアドレス（必須）</span></div>
+        <button class="submit">無料で相談する →</button>
+        <p style="text-align:center;font-size:11px;color:var(--muted);margin-top:12px;">送信後、担当者より1〜3営業日以内にご連絡いたします。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== MERITS (固定) ===== -->
+  <section class="merits sec-pad">
+    <div class="container">
+      <h2>サービスの特徴</h2>
+      <p class="sub-c">税理士クラウドの紹介サービスが選ばれる4つの理由</p>
+      <div class="mgrid">
+        <div class="mcard"><div class="micon">🛡</div><h3>完全無料</h3><p>ご相談から紹介まで一切費用はかかりません。成功報酬も不要です。</p></div>
+        <div class="mcard"><div class="micon">👥</div><h3>専門コーディネーター</h3><p>税理士業界に精通した担当者が最適な税理士をご提案します。</p></div>
+        <div class="mcard"><div class="micon">📅</div><h3>最短翌営業日ご紹介</h3><p>お急ぎの場合でも迅速に対応。お問い合わせ後すぐにご連絡します。</p></div>
+        <div class="mcard"><div class="micon">🌐</div><h3>全国対応</h3><p>全国3,000件以上の事務所ネットワークから地域を問わずご紹介します。</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== STEPS (固定) ===== -->
+  <section class="sec-pad">
+    <div class="container">
+      <h2>ご利用の流れ</h2>
+      <p class="sub-c">お問い合わせから税理士紹介まで最短1週間</p>
+      <div class="steps" id="steps"></div>
+    </div>
+  </section>
+
+  <!-- ===== FAQ (固定) ===== -->
+  <section class="sec-pad">
+    <div class="container">
+      <h2 style="margin-bottom:32px;">よくあるご質問</h2>
+      <div class="faq" id="faq"></div>
+    </div>
+  </section>
+
+  <!-- ===== BOTTOM CTA (固定) ===== -->
+  <section class="bcta sec-pad">
+    <div class="container">
+      <h2>まずはお気軽にご相談ください</h2>
+      <p>ご相談・紹介は完全無料です。お気軽にお申し込みください。</p>
+      <a href="#form" class="cta">無料で相談する →</a>
+    </div>
+  </section>
+</main>
+
+<script>
+const hl=s=>`<span class="hl">${s}</span>`;
+const VARIANTS={
+  base:{
+    badge:"完全無料・全国対応",
+    headline:`あなたに合った税理士を<span class="u">無料で</span>ご紹介します`,
+    subtext:"専門コーディネーターがご要望に合った税理士を複数名ご紹介。比較検討の上、最適な税理士をお選びいただけます。",
+    trust:`掲載数<span> 3,000件以上</span>`,
+    empImg:"［画像：税理士選びに悩む経営者］",
+    empQuote:`「税理士って、どう選べば<br>いいのか分からなくて……」`,
+    empBody:`<p>税理士を自分一人で探すのは、意外と大変です。料金の相場、得意分野、そして相性。何を基準に選べばいいか迷うのは当然のことです。</p>
+             <p>税理士クラウドは、そんな方に寄り添い、あなたに合った税理士選びを最初から最後まで、丁寧にサポートします。</p>`,
+    pain:[`今の税理士に${hl("対応や料金で不満")}があり見直したい`,
+          `税理士の${hl("探し方・選び方がわからない")}`,
+          `自社に合う税理士に${hl("出会えるか不安")}`,
+          `複数の税理士を${hl("比較して納得して選びたい")}`],
+    consult:"", area:""
+  },
+  area:{
+    badge:"完全無料・福岡市対応",
+    headline:`福岡市で税理士をお探しの方へ<br><span class="u">無料で</span>ご紹介します`,
+    subtext:"福岡市エリアに対応する税理士を専門コーディネーターが複数名ご紹介。比較検討の上、最適な税理士をお選びいただけます。",
+    trust:`福岡市対応の税理士<span> 多数掲載</span>`,
+    empImg:"［画像：地元で相談相手を探す経営者］",
+    empQuote:`「近くで相談できる税理士を<br>どう探せばいいのか……」`,
+    empBody:`<p>地域で税理士を探すのは、意外と難しいものです。通いやすさ、料金、相性。どの事務所が自分に合うか、一人で見極めるのは大変です。</p>
+             <p>税理士クラウドは、福岡市エリアに対応する税理士の中から、あなたに合う一人を丁寧にご紹介します。</p>`,
+    pain:[`${hl("近くで相談できる")}税理士を探している`,
+          `地元${hl("福岡の事情に詳しい")}税理士に依頼したい`,
+          `${hl("来所しやすい")}事務所を地域で比較したい`,
+          `どの事務所が良いか${hl("地域内で比較")}したい`],
+    consult:"", area:"→ 都道府県=福岡県を初期選択（動的）"
+  },
+  souzoku:{
+    badge:"完全無料・全国対応",
+    headline:`相続税に強い税理士を<span class="u">無料で</span>ご紹介します`,
+    subtext:"専門コーディネーターがご要望に合った税理士を複数名ご紹介。比較検討の上、最適な税理士をお選びいただけます。",
+    trust:`掲載数<span> 3,000件以上</span>`,
+    empImg:"［画像：故人を思い悩むご遺族］",
+    empQuote:`「家族が亡くなって、何から<br>手をつければいいのか……」`,
+    empBody:`<p>相続税のことを自分一人で調べるのは、とても大変です。専門用語、複雑な手続き、そして申告の期限。不安を感じるのは、当然のことです。</p>
+             <p>税理士クラウドは、そんな方に寄り添い、最初の一歩から最後まで、丁寧にサポートします。</p>`,
+    pain:[`相続税がどれくらいかかるか${hl("心配で早めに準備したい")}`,
+          `相続が起こったが${hl("専門家の見つけ方がわからない")}`,
+          `相続税の${hl("節税対策として何をすればいいか")}知識がない`,
+          `生前贈与があり${hl("早急に専門家に相談したい")}`],
+    consult:"→ 相続税・贈与税 を初期選択", area:""
+  },
+  kaisha:{
+    badge:"完全無料・全国対応",
+    headline:`会社設立に強い税理士を<span class="u">無料で</span>ご紹介します`,
+    subtext:"専門コーディネーターがご要望に合った税理士を複数名ご紹介。比較検討の上、最適な税理士をお選びいただけます。",
+    trust:`掲載数<span> 3,000件以上</span>`,
+    empImg:"［画像：起業準備中の若手経営者］",
+    empQuote:`「会社をつくりたいけど、税金も<br>手続きも分からなくて……」`,
+    empBody:`<p>会社設立の手続きや、設立後の税務・経理。初めてのことだらけで、何から始めればいいか分からないのは当然のことです。</p>
+             <p>税理士クラウドは、起業のスタートに強い税理士を、最初の一歩から丁寧にご紹介します。</p>`,
+    pain:[`会社設立の手続きが複雑で${hl("何から始めればいいかわからない")}`,
+          `設立後の${hl("税務・経理体制をどう整えるか")}が不安`,
+          `法人と個人${hl("どちらが税金面で有利か")}相談したい`,
+          `起業と同時に${hl("記帳代行の依頼と相談をスタート")}させたい`],
+    consult:"→ 起業・会社設立 を初期選択", area:""
+  },
+  conquest:{
+    badge:"完全無料・登録不要",
+    headline:`税理士は<span class="u">自分で比較</span>して選べます`,
+    subtext:"営業電話で1社を勧められるのではなく、複数の候補を比較して納得の1社へ。完全無料・登録不要で、しつこい営業もありません。",
+    trust:`掲載数<span> 3,000件以上</span>`,
+    empImg:"［画像：PCで複数社を比較検討する人］",
+    empQuote:`「紹介サービスって結局、<br>1社だけ勧められるの……？」`,
+    empBody:`<p>税理士紹介サービスは便利な反面、「営業電話がしつこい」「結局1社しか比較できない」という不安の声もあります。慎重になるのは当然です。</p>
+             <p>税理士クラウドは、複数の候補を比較してご自身で選べる仕組み。無理な営業はせず、納得のいく選択をサポートします。</p>`,
+    pain:[`1社だけ勧められても${hl("他と比較できない")}のが不安`,
+          `${hl("しつこい営業電話")}は避けたい`,
+          `${hl("口コミや実績")}を見て自分で選びたい`,
+          `${hl("本当に無料か")}・登録が必要かが不安`],
+    consult:"", area:""
+  }
+};
+const STEPS=[
+  ["ご相談内容の入力","フォームから業種・規模・依頼内容など希望条件をご入力ください。"],
+  ["コーディネーターからご連絡","専門担当者が内容を確認し、1〜3営業日以内にご連絡いたします。"],
+  ["税理士のご紹介","ご要望に合った税理士を複数名ご紹介。特徴をお伝えし比較検討いただけます。"],
+  ["面談・お打ち合わせ","気になる税理士と無料で面談。相性や対応力を直接ご確認ください。"],
+  ["ご契約","最適な税理士が見つかりましたら直接ご契約。その後もサポート継続。"]
+];
+const FAQ=[
+  ["紹介サービスの利用に費用はかかりますか？","いいえ、ご相談から紹介まですべて無料でご利用いただけます。成功報酬も一切かかりません。"],
+  ["どのような税理士を紹介してもらえますか？","法人税・所得税・相続税・事業承継など多様な分野に対応する税理士をご紹介します。"],
+  ["紹介された税理士と必ず契約しなければなりませんか？","いいえ、ご契約は任意です。面談後にお断りいただいても問題ありません。"]
+];
+function render(){
+  document.getElementById('steps').innerHTML=STEPS.map((s,i)=>`
+    <div class="step"><div style="display:flex;flex-direction:column;align-items:center;">
+      <div class="n">${i+1}</div>${i<STEPS.length-1?'<div class="ln"></div>':''}</div>
+      <div class="tx"><span class="lab">STEP ${i+1}</span><h3>${s[0]}</h3><p>${s[1]}</p></div></div>`).join('');
+  document.getElementById('faq').innerHTML=FAQ.map(q=>`<div class="qa"><div class="q">Q. ${q[0]}</div><div class="a">A. ${q[1]}</div></div>`).join('');
+}
+function apply(k){
+  const v=VARIANTS[k];
+  document.getElementById('badge').textContent=v.badge;
+  document.getElementById('headline').innerHTML=v.headline;
+  document.getElementById('subtext').textContent=v.subtext;
+  document.getElementById('trust').innerHTML=`<div class="chev">❮</div><div><div class="lbl">全国対応！</div><div class="big">${v.trust}</div><div class="note">※2026年3月時点</div></div><div class="chev">❯</div>`;
+  document.getElementById('empImg').textContent=v.empImg;
+  document.getElementById('empQuote').innerHTML=v.empQuote;
+  document.getElementById('empBody').innerHTML=v.empBody;
+  document.getElementById('pain').innerHTML=v.pain.map(p=>`<li><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#1a50a8" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 12l3 3 5-6"/></svg><span>${p}</span></li>`).join('');
+  document.getElementById('consultHint').textContent=v.consult||"";
+  document.getElementById('areaHint').textContent=v.area||"";
+  const pf=document.getElementById('prefField');
+  if(k==='area'){pf.textContent='福岡県 ▾';pf.style.color='#1a50a8';pf.style.fontWeight='700';}
+  else{pf.textContent='都道府県 ▾';pf.style.color='';pf.style.fontWeight='';}
+  document.body.classList.toggle('variant', k!=='base');
+}
+render(); apply('base');
+</script>
+</body>
+</html>
