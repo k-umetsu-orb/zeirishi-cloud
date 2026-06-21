@@ -71,6 +71,7 @@ function LpForm({
     if (!prefecture)  newErrors.prefecture  = "都道府県を選択してください";
     if (!name.trim()) newErrors.name        = "お名前を入力してください";
     if (!email.trim()) newErrors.email      = "メールアドレスを入力してください";
+    if (!phone.trim()) newErrors.phone      = "電話番号を入力してください";
     if (!agreed)      newErrors.agreed      = "プライバシーポリシーへの同意が必要です";
     setErrors(newErrors);
     if (Object.keys(newErrors).length > 0) return;
@@ -227,8 +228,7 @@ function LpForm({
       {/* Phone */}
       <div className="mb-8">
         <label className="block text-sm font-semibold text-foreground mb-1">
-          電話番号
-          <span className="text-xs text-muted-foreground font-normal ml-2">（任意）</span>
+          電話番号 <span className="text-red-500 text-xs ml-1">必須</span>
         </label>
         <input
           type="tel"
@@ -237,6 +237,7 @@ function LpForm({
           onChange={(e) => setPhone(e.target.value)}
           className="w-full border border-border rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary"
         />
+        {errors.phone && <p className="mt-1 text-xs text-red-500">{errors.phone}</p>}
       </div>
 
       {/* Privacy policy */}

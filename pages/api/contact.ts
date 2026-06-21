@@ -70,7 +70,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     phone,
   } = req.body as ContactPayload;
 
-  if (!consultType || !prefectureName || !name?.trim() || !email?.trim()) {
+  if (!consultType || !prefectureName || !name?.trim() || !email?.trim() || !phone?.trim()) {
     res.status(400).json({ ok: false, error: "必須項目が未入力です" });
     return;
   }
