@@ -36,7 +36,7 @@ const faqItems = [
   { question: "法人でなくても利用できますか？",                  answer: "はい、個人事業主・確定申告・相続相談など個人のお客様もご利用いただけます。" },
 ];
 
-function IntroductionForm({ thanksPath }: { thanksPath: string }) {
+function IntroductionForm({ thanksPath, sourcePage }: { thanksPath: string; sourcePage: string }) {
   const router = useRouter();
   const [clientType, setClientType] = useState<string>("法人");
   const [consultType, setConsultType] = useState<string>("");
@@ -44,14 +44,17 @@ function IntroductionForm({ thanksPath }: { thanksPath: string }) {
   const [city, setCity] = useState<string>("");
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
+  const [phone, setPhone] = useState<string>("");
   const [agreed, setAgreed] = useState<boolean>(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [submitError, setSubmitError] = useState<string>("");
 
   const clientTypes = ["法人", "個人事業主", "個人（確定申告等）"];
   const allPrefectures = getAllPrefectures();
   const cityOptions = prefecture ? getCitiesByPrefecture(prefecture) : [];
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     const newErrors: Record<string, string> = {};
     if (!consultType) newErrors.consultType = "ご相談の内容を選択してください";
@@ -60,8 +63,31 @@ function IntroductionForm({ thanksPath }: { thanksPath: string }) {
     if (!email.trim()) newErrors.email      = "メールアドレスを入力してください";
     if (!agreed)      newErrors.agreed      = "プライバシーポリシーへの同意が必要です";
     setErrors(newErrors);
-    if (Object.keys(newErrors).length === 0) {
+    if (Object.keys(newErrors).length > 0) return;
+
+    setSubmitError("");
+    setIsSubmitting(true);
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          sourcePage,
+          clientType,
+          consultType,
+          prefectureName: allPrefectures.find((p) => p.slug === prefecture)?.name ?? prefecture,
+          cityName: cityOptions.find((c) => c.slug === city)?.name ?? "",
+          name,
+          email,
+          phone,
+        }),
+      });
+      if (!res.ok) throw new Error();
       router.push(thanksPath);
+    } catch {
+      setSubmitError("送信に失敗しました。時間をおいて再度お試しください。");
+    } finally {
+      setIsSubmitting(false);
     }
   }
 
@@ -197,6 +223,8 @@ function IntroductionForm({ thanksPath }: { thanksPath: string }) {
         <input
           type="tel"
           placeholder="090-0000-0000"
+          value={phone}
+          onChange={(e) => setPhone(e.target.value)}
           className="w-full border border-border rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary"
         />
       </div>
@@ -224,12 +252,14 @@ function IntroductionForm({ thanksPath }: { thanksPath: string }) {
         {errors.agreed && <p className="mt-1.5 text-xs text-red-500">{errors.agreed}</p>}
       </div>
 
+      {submitError && <p className="mb-3 text-center text-xs text-red-500">{submitError}</p>}
       <button
         type="submit"
-        className="w-full py-4 rounded-xl text-white font-bold text-base flex items-center justify-center gap-2 transition-opacity hover:opacity-90"
+        disabled={isSubmitting}
+        className="w-full py-4 rounded-xl text-white font-bold text-base flex items-center justify-center gap-2 transition-opacity hover:opacity-90 disabled:opacity-60"
         style={{ background: "linear-gradient(90deg,#1a50a8,#2563eb)" }}
       >
-        無料で相談する
+        {isSubmitting ? "送信中..." : "無料で相談する"}
         <ArrowRight className="w-5 h-5" />
       </button>
       <p className="text-center text-xs text-muted-foreground mt-3">
@@ -408,7 +438,7 @@ export default function IntroductionVariantPage({
             <p className="text-center text-sm text-muted-foreground mb-8">
               入力後、担当コーディネーターよりご連絡いたします
             </p>
-            <IntroductionForm thanksPath={thanksPath} />
+            <IntroductionForm thanksPath={thanksPath} sourcePage={`/introduction-${pageNumber}`} />
           </div>
         </section>
 

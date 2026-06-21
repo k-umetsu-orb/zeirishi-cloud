@@ -1,60 +1,56 @@
-/**
- * Introduction01 page - /introduction-01
- */
-import { useState, useEffect } from "react";
-import { usePageTitle } from "@/lib/usePageTitle";
-import Link from "next/link"
+import { useState, ReactNode } from "react";
+import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { ArrowRight, Users, CalendarCheck, Shield, Globe, ChevronDown, CheckSquare } from "lucide-react";
 import GlobalHeader from "@/components/GlobalHeader";
 import GlobalFooter from "@/components/GlobalFooter";
-import Breadcrumb from "@/components/Breadcrumb";
 import FAQ from "@/components/FAQ";
 import { getAllPrefectures, getCitiesByPrefecture } from "@/lib/data";
 import womanImage from "@/images/女性1_crop.png";
 
-// ─── Data ─────────────────────────────────────────────────────────────────────
-
 const merits = [
-  { icon: <Shield className="w-8 h-8" />,  title: "完全無料",         desc: "ご相談から紹介まで一切費用はかかりません。成功報酬も不要です。" },
-  { icon: <Users className="w-8 h-8" />,   title: "専門コーディネーター", desc: "税理士業界に精通した担当者が最適な税理士をご提案します。" },
-  { icon: <CalendarCheck className="w-8 h-8" />,     title: "最短翌営業日ご紹介", desc: "お急ぎの場合でも迅速に対応。お問い合わせ後すぐにご連絡します。" },
-  { icon: <Globe className="w-8 h-8" />,   title: "全国対応",         desc: "全国3,000件以上の事務所ネットワークから地域を問わずご紹介します。" },
+  { icon: <Shield className="w-8 h-8" />,        title: "完全無料",            desc: "ご相談から紹介まで一切費用はかかりません。成功報酬も不要です。" },
+  { icon: <Users className="w-8 h-8" />,         title: "専門コーディネーター", desc: "税理士業界に精通した担当者が最適な税理士をご提案します。" },
+  { icon: <CalendarCheck className="w-8 h-8" />, title: "最短翌営業日ご紹介",  desc: "お急ぎの場合でも迅速に対応。お問い合わせ後すぐにご連絡します。" },
+  { icon: <Globe className="w-8 h-8" />,         title: "全国対応",            desc: "全国3,000件以上の事務所ネットワークから地域を問わずご紹介します。" },
 ];
 
 const steps = [
-  { title: "ご相談内容の入力",        desc: "フォームから業種・規模・依頼内容など希望条件をご入力ください。" },
+  { title: "ご相談内容の入力",          desc: "フォームから業種・規模・依頼内容など希望条件をご入力ください。" },
   { title: "コーディネーターからご連絡", desc: "専門担当者が内容を確認し、1〜3営業日以内にご連絡いたします。" },
-  { title: "税理士のご紹介",          desc: "ご要望に合った税理士を複数名ご紹介。特徴をお伝えし比較検討いただけます。" },
-  { title: "面談・お打ち合わせ",      desc: "気になる税理士と無料で面談。相性や対応力を直接ご確認ください。" },
-  { title: "ご契約",                 desc: "最適な税理士が見つかりましたら直接ご契約。その後もサポート継続。" },
+  { title: "税理士のご紹介",            desc: "ご要望に合った税理士を複数名ご紹介。特徴をお伝えし比較検討いただけます。" },
+  { title: "面談・お打ち合わせ",        desc: "気になる税理士と無料で面談。相性や対応力を直接ご確認ください。" },
+  { title: "ご契約",                   desc: "最適な税理士が見つかりましたら直接ご契約。その後もサポート継続。" },
 ];
 
 const CONSULT_TYPES = ["法人の決算・申告", "個人事業主の確定申告", "相続税・贈与税", "記帳代行", "起業・会社設立", "その他"];
 
-const painPoints = [
-  <>現在の税理士は<span className="text-amber-500 underline underline-offset-2">連絡が遅い</span>、質問への<span className="text-amber-500 underline underline-offset-2">返答がない</span>、月次や決算の<span className="text-amber-500 underline underline-offset-2">説明がない</span></>,
-  <>顧問料に対して<span className="text-amber-500 underline underline-offset-2">サービスの質が合っていない</span>と感じている</>,
-  <><span className="text-amber-500 underline underline-offset-2">もっと経営に寄り添ってくれる</span>税理士に変えたい</>,
-  <>税理士を変えたいが、<span className="text-amber-500 underline underline-offset-2">どうやって変えればいいかわからない</span></>,
-];
-
 const faqItems = [
-  { question: "紹介サービスの利用に費用はかかりますか？",     answer: "いいえ、ご相談から紹介まですべて無料でご利用いただけます。成功報酬も一切かかりません。" },
-  { question: "どのような税理士を紹介してもらえますか？",     answer: "法人税・所得税・相続税・事業承継など多様な分野に対応する税理士をご紹介します。地域・予算のご希望にも対応いたします。" },
+  { question: "紹介サービスの利用に費用はかかりますか？",           answer: "いいえ、ご相談から紹介まですべて無料でご利用いただけます。成功報酬も一切かかりません。" },
+  { question: "どのような税理士を紹介してもらえますか？",           answer: "法人税・所得税・相続税・事業承継など多様な分野に対応する税理士をご紹介します。地域・予算のご希望にも対応いたします。" },
   { question: "紹介された税理士と必ず契約しなければなりませんか？", answer: "いいえ、ご契約は任意です。面談後にお断りいただいても問題ありません。" },
-  { question: "どのくらいの期間で紹介してもらえますか？",     answer: "通常、お問い合わせから1〜3営業日以内にご連絡し、1週間程度でご紹介いたします。" },
-  { question: "法人でなくても利用できますか？",              answer: "はい、個人事業主・確定申告・相続相談など個人のお客様もご利用いただけます。" },
+  { question: "どのくらいの期間で紹介してもらえますか？",           answer: "通常、お問い合わせから1〜3営業日以内にご連絡し、1週間程度でご紹介いたします。" },
+  { question: "法人でなくても利用できますか？",                    answer: "はい、個人事業主・確定申告・相続相談など個人のお客様もご利用いただけます。" },
 ];
 
-// ─── Form component ────────────────────────────────────────────────────────────
+// ─── Form ──────────────────────────────────────────────────────────────────────
 
-function IntroductionForm() {
+function LpForm({
+  thanksPath,
+  sourcePage,
+  defaultConsultType,
+  defaultPrefectureSlug,
+}: {
+  thanksPath: string;
+  sourcePage: string;
+  defaultConsultType?: string;
+  defaultPrefectureSlug?: string;
+}) {
   const router = useRouter();
   const [clientType, setClientType] = useState<string>("法人");
-  const [consultType, setConsultType] = useState<string>("");
-  const [prefecture, setPrefecture] = useState<string>("");
+  const [consultType, setConsultType] = useState<string>(defaultConsultType ?? "");
+  const [prefecture, setPrefecture] = useState<string>(defaultPrefectureSlug ?? "");
   const [city, setCity] = useState<string>("");
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
@@ -86,7 +82,7 @@ function IntroductionForm() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          sourcePage: "/introduction-01",
+          sourcePage,
           clientType,
           consultType,
           prefectureName: allPrefectures.find((p) => p.slug === prefecture)?.name ?? prefecture,
@@ -97,7 +93,7 @@ function IntroductionForm() {
         }),
       });
       if (!res.ok) throw new Error();
-      router.push("/introduction-01/thanks");
+      router.push(thanksPath);
     } catch {
       setSubmitError("送信に失敗しました。時間をおいて再度お試しください。");
     } finally {
@@ -198,7 +194,7 @@ function IntroductionForm() {
         {errors.prefecture && <p className="mt-1.5 text-xs text-red-500">{errors.prefecture}</p>}
       </div>
 
-      {/* Name + email */}
+      {/* Name + Email */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
         <div>
           <label className="block text-sm font-semibold text-foreground mb-1">
@@ -243,7 +239,7 @@ function IntroductionForm() {
         />
       </div>
 
-      {/* Privacy policy consent */}
+      {/* Privacy policy */}
       <div className="mb-6">
         <p className="text-xs text-muted-foreground mb-3">
           当社のプライバシーポリシーに同意の上、送信してください。
@@ -283,20 +279,40 @@ function IntroductionForm() {
   );
 }
 
+// ─── Props ─────────────────────────────────────────────────────────────────────
+
+interface LpVariantPageProps {
+  /** URL slug under /lp, e.g. "introduction" → thanks page is /lp/introduction/thanks */
+  slug: string;
+  badge: string;
+  headline: ReactNode;
+  subtext: string;
+  trustValue: ReactNode;
+  empathyImageCaption: string;
+  empathyQuote: ReactNode;
+  empathyBody: ReactNode;
+  painPoints: ReactNode[];
+  defaultConsultType?: string;
+  defaultPrefectureSlug?: string;
+}
+
 // ─── Page ──────────────────────────────────────────────────────────────────────
 
-export default function Introduction01() {
-  usePageTitle(
-    "税理士・会計事務所の無料紹介サービス | 税理士クラウド",
-    "税理士・会計事務所をお探しながら税理士クラウドへご相談ください。税理士業界に特化した専門のコーディネーターがあなたにぴったりの税理士・会計事務所をご紹介します。",
-  );
-  useEffect(() => {
-    const el = document.createElement("link");
-    el.rel = "canonical";
-    el.href = "/introduction";
-    document.head.appendChild(el);
-    return () => { document.head.removeChild(el); };
-  }, []);
+export default function LpVariantPage({
+  slug,
+  badge,
+  headline,
+  subtext,
+  trustValue,
+  empathyImageCaption,
+  empathyQuote,
+  empathyBody,
+  painPoints,
+  defaultConsultType,
+  defaultPrefectureSlug,
+}: LpVariantPageProps) {
+  const thanksPath = `/lp/${slug}/thanks`;
+
   return (
     <div className="min-h-screen flex flex-col">
       <GlobalHeader />
@@ -308,17 +324,9 @@ export default function Introduction01() {
           className="relative overflow-hidden"
           style={{ background: "linear-gradient(135deg,#0f2660 0%,#1a50a8 60%,#1d4ed8 100%)" }}
         >
-          <div className="container relative pt-10 md:pt-24">
-            <div className="block md:hidden relative -top-6">
-              <Breadcrumb items={[{ label: "税理士紹介サービス" }]} variant="light" />
-            </div>
-
+          <div className="container relative pt-10 md:pt-20">
             <div className="grid grid-cols-[1.1fr_1fr] md:grid-cols-[1.2fr_0.8fr] gap-3 md:gap-6 items-start md:items-end text-left">
               <div className="pb-6 md:pb-[72px] min-w-0">
-                <div className="hidden md:block relative md:-top-10">
-                  <Breadcrumb items={[{ label: "税理士紹介サービス" }]} variant="light" />
-                </div>
-
                 <div className="w-fit ml-auto">
                   {/* Badge */}
                   <div className="flex justify-start mb-2 md:mt-4 md:mb-6">
@@ -326,24 +334,18 @@ export default function Introduction01() {
                       className="inline-flex items-center px-3 py-1 md:px-5 md:py-1.5 rounded-full text-[10px] md:text-xs font-bold text-white"
                       style={{ background: "linear-gradient(90deg,#f97316,#ef4444)" }}
                     >
-                      完全無料・全国対応
+                      {badge}
                     </span>
                   </div>
 
                   {/* Headline */}
                   <h1 className="font-bold text-base md:text-5xl lg:text-[3.25rem] text-white leading-tight mb-2 md:mb-6 tracking-tight">
-                    あなたに合った税理士を<br />
-                    <span className="relative inline-block">
-                      <span className="relative z-10">無料でご紹介</span>
-                      <span className="absolute bottom-1 left-0 right-0 h-3 bg-amber-400/40 -z-0" />
-                    </span>
-                    します
+                    {headline}
                   </h1>
 
                   {/* Subtext */}
                   <p className="text-white/80 text-[11px] md:text-lg leading-relaxed md:max-w-xl mb-3 md:mb-10">
-                    専門コーディネーターがご要望に合った税理士を複数名ご紹介。<br className="hidden sm:block" />
-                    比較検討の上、最適な税理士をお選びいただけます。
+                    {subtext}
                   </p>
 
                   {/* CTA button */}
@@ -362,7 +364,7 @@ export default function Introduction01() {
                     <div className="text-center">
                       <p className="text-white/60 text-[9px] md:text-xs mb-0.5">全国対応！</p>
                       <p className="text-white font-extrabold text-sm md:text-2xl leading-none">
-                        掲載数<span className="text-amber-400"> 3,000件以上</span>
+                        {trustValue}
                       </p>
                       <p className="text-white/40 text-[8px] md:text-[10px] mt-1">※2026年3月時点</p>
                     </div>
@@ -381,7 +383,29 @@ export default function Introduction01() {
               </div>
             </div>
           </div>
+        </section>
 
+        {/* ── Empathy ── */}
+        <section className="py-14 md:py-16 bg-white">
+          <div className="container">
+            <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-[320px_1fr] gap-7 md:gap-12 items-center">
+              <div
+                className="w-full max-w-[320px] mx-auto aspect-[4/3] border-2 border-dashed border-[#c7cdd6] rounded flex items-center justify-center text-center text-[13px] text-slate-400 p-5"
+                style={{ background: "repeating-linear-gradient(45deg,#eef1f5,#eef1f5 10px,#f6f8fa 10px,#f6f8fa 20px)" }}
+              >
+                {empathyImageCaption}
+              </div>
+              <div>
+                <p className="text-2xl md:text-[30px] font-extrabold text-[#1a4f8a] leading-[1.55] tracking-wide m-0">
+                  {empathyQuote}
+                </p>
+                <div className="w-[120px] h-px bg-gray-400 my-6" />
+                <div className="text-gray-700 text-[15px] leading-[2] [&_p]:mb-[18px] [&_p:last-child]:mb-0">
+                  {empathyBody}
+                </div>
+              </div>
+            </div>
+          </div>
         </section>
 
         {/* ── Pain Points ── */}
@@ -411,7 +435,7 @@ export default function Introduction01() {
           </div>
         </section>
 
-        {/* ── Form (hero直後) ── */}
+        {/* ── Form ── */}
         <section
           id="form"
           className="py-14"
@@ -424,7 +448,12 @@ export default function Introduction01() {
             <p className="text-center text-sm text-muted-foreground mb-8">
               入力後、担当コーディネーターよりご連絡いたします
             </p>
-            <IntroductionForm />
+            <LpForm
+              thanksPath={thanksPath}
+              sourcePage={`/lp/${slug}`}
+              defaultConsultType={defaultConsultType}
+              defaultPrefectureSlug={defaultPrefectureSlug}
+            />
           </div>
         </section>
 
@@ -466,7 +495,6 @@ export default function Introduction01() {
             <div className="space-y-0">
               {steps.map((step, i) => (
                 <div key={i} className="relative flex gap-5">
-                  {/* Timeline */}
                   <div className="flex flex-col items-center">
                     <div
                       className="w-12 h-12 rounded-full flex items-center justify-center shrink-0 z-10 text-white font-bold text-base"
@@ -478,7 +506,6 @@ export default function Introduction01() {
                       <div className="w-0.5 flex-1 bg-primary/20 my-1 min-h-[32px]" />
                     )}
                   </div>
-                  {/* Content */}
                   <div className="pb-8 pt-2 flex-1">
                     <span className="text-[11px] font-bold text-primary uppercase tracking-widest">STEP {i + 1}</span>
                     <h3 className="font-bold text-lg text-foreground mt-0.5 mb-1.5">{step.title}</h3>
@@ -490,7 +517,6 @@ export default function Introduction01() {
           </div>
         </section>
 
-        {/* ── Form ── */}
         {/* ── FAQ ── */}
         <section className="py-14 bg-white">
           <div className="container max-w-3xl">
