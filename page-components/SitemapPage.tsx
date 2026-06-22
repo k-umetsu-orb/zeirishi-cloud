@@ -36,10 +36,10 @@ export default function SitemapPage() {
               </h2>
               <ul className="space-y-2">
                 <li><Link href="/" className="text-sm text-muted-foreground hover:text-primary transition-colors">トップページ</Link></li>
-                <li><Link href="/search" className="text-sm text-muted-foreground hover:text-primary transition-colors">検索トップ</Link></li>
+                <li><Link href="/search" className="text-sm text-muted-foreground hover:text-primary transition-colors">税理士検索</Link></li>
                 {/* <li><Link href="/ranking" className="text-sm text-muted-foreground hover:text-primary transition-colors">ランキング</Link></li> */}
                 <li><Link href="/interview" className="text-sm text-muted-foreground hover:text-primary transition-colors">インタビュー</Link></li>
-                <li><Link href="/guide" className="text-sm text-muted-foreground hover:text-primary transition-colors">ガイド</Link></li>
+                <li><Link href="/guide" className="text-sm text-muted-foreground hover:text-primary transition-colors">選び方ガイド</Link></li>
                 <li><Link href="/column" className="text-sm text-muted-foreground hover:text-primary transition-colors">コラム</Link></li>
                 <li><Link href="/recommendation" className="text-sm text-muted-foreground hover:text-primary transition-colors">おすすめ事務所</Link></li>
                 <li><Link href="/introduction" className="text-sm text-muted-foreground hover:text-primary transition-colors">税理士紹介サービス</Link></li>

@@ -6,7 +6,7 @@ import { Menu, X, ChevronRight } from "lucide-react";
 import logo from "@/images/ロゴ7.png";
 
 const navItems = [
-  { label: "検索", href: "/search" },
+  { label: "税理士検索", href: "/search" },
   // { label: "ランキング", href: "/ranking" },
   { label: "インタビュー", href: "/interview" },
   { label: "選び方ガイド", href: "/guide" },
