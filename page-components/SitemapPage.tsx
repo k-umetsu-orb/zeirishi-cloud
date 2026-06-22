@@ -6,7 +6,8 @@ import Link from "next/link";
 import GlobalHeader from "@/components/GlobalHeader";
 import GlobalFooter from "@/components/GlobalFooter";
 import Breadcrumb from "@/components/Breadcrumb";
-import { getRegions, getPrefecturesByRegion } from "@/lib/data";
+import { getRegions, getPrefecturesByRegion, getCitiesByPrefecture } from "@/lib/data";
+import { getCategoriesByType } from "@/lib/categorySlugMap";
 import { usePageTitle } from "@/lib/usePageTitle";
 
 export default function SitemapPage() {
@@ -15,6 +16,8 @@ export default function SitemapPage() {
     "税理士クラウドのサイトマップです。税理士・会計事務所をお探しなら税理士クラウド。",
   );
   const regions = getRegions();
+  const industries = getCategoriesByType("industry");
+  const services = getCategoriesByType("service");
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -58,6 +61,44 @@ export default function SitemapPage() {
               </ul>
             </div>
 
+            {/* Industry category pages */}
+            <div>
+              <h2 className="font-sans font-semibold text-sm text-foreground mb-3 pb-2 border-b border-border">
+                業界一覧
+              </h2>
+              <ul className="space-y-2">
+                {industries.map((cat) => (
+                  <li key={cat.slug}>
+                    <Link
+                      href={`/${cat.slug}`}
+                      className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                    >
+                      {cat.name}に強い税理士
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Service category pages */}
+            <div>
+              <h2 className="font-sans font-semibold text-sm text-foreground mb-3 pb-2 border-b border-border">
+                依頼内容一覧
+              </h2>
+              <ul className="space-y-2">
+                {services.map((cat) => (
+                  <li key={cat.slug}>
+                    <Link
+                      href={`/${cat.slug}`}
+                      className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                    >
+                      {cat.name}に強い税理士
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
             {/* Area pages */}
             {regions.map((region) => {
               const prefs = getPrefecturesByRegion(region.name);
@@ -67,16 +108,52 @@ export default function SitemapPage() {
                     {region.name}
                   </h2>
                   <ul className="space-y-2">
-                    {prefs.map((pref) => (
-                      <li key={pref.slug}>
-                        <Link
-                          href={`/${pref.slug}`}
-                          className="text-sm text-muted-foreground hover:text-primary transition-colors"
-                        >
-                          {pref.name}の税理士
-                        </Link>
-                      </li>
-                    ))}
+                    {prefs.map((pref) => {
+                      const cities = getCitiesByPrefecture(pref.slug);
+                      return (
+                        <li key={pref.slug}>
+                          <Link
+                            href={`/${pref.slug}`}
+                            className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                          >
+                            {pref.name}の税理士
+                          </Link>
+                          {cities.length > 0 && (
+                            <details className="mt-1 ml-3">
+                              <summary className="text-xs text-muted-foreground hover:text-primary transition-colors cursor-pointer">
+                                市区町村一覧
+                              </summary>
+                              <ul className="mt-1 ml-2 space-y-1">
+                                {cities.map((city) => (
+                                  <li key={city.slug}>
+                                    <Link
+                                      href={`/${pref.slug}/${city.slug}`}
+                                      className="text-xs text-muted-foreground hover:text-primary transition-colors"
+                                    >
+                                      {city.name}
+                                    </Link>
+                                    {city.wards && city.wards.length > 0 && (
+                                      <ul className="ml-3 space-y-1">
+                                        {city.wards.map((ward) => (
+                                          <li key={ward.slug}>
+                                            <Link
+                                              href={`/${pref.slug}/${city.slug}/${ward.slug}`}
+                                              className="text-xs text-muted-foreground hover:text-primary transition-colors"
+                                            >
+                                              {ward.name}
+                                            </Link>
+                                          </li>
+                                        ))}
+                                      </ul>
+                                    )}
+                                  </li>
+                                ))}
+                              </ul>
+                            </details>
+                          )}
+                        </li>
+                      );
+                    })}
                   </ul>
                 </div>
               );
