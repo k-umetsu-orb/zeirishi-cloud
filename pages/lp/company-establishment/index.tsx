@@ -47,7 +47,6 @@ export default function LpCompanyEstablishmentPage() {
         }
         painPoints={painPoints}
         requestDetailExamples={requestDetailExamples}
-        defaultConsultType="起業・会社設立"
       />
     </>
   );

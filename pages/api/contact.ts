@@ -73,7 +73,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   } = req.body as ContactPayload;
 
   if (
-    !consultType ||
     !prefectureName ||
     !name?.trim() ||
     !email?.trim() ||
@@ -91,11 +90,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     await sendEmail({
       to: NOTIFY_TO,
       replyTo: email,
-      subject: `【税理士クラウド お問い合わせ】${consultType} - ${name}`,
+      subject: `【税理士クラウド お問い合わせ】${consultType ? `${consultType} - ` : ""}${name}`,
       text: [
         `【流入元ページ】${sourcePage || "不明"}`,
         `【ご相談者の区分】${clientType || "未入力"}`,
-        `【ご相談の内容】${consultType}`,
+        ...(consultType ? [`【ご相談項目】${consultType}`] : []),
         `【お探しのエリア】${area}`,
         `【お名前】${name}`,
         `【メールアドレス】${email}`,
@@ -115,7 +114,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         "以下の内容で受け付けいたしました。",
         "",
         `【ご相談者の区分】${clientType || "未入力"}`,
-        `【ご相談の内容】${consultType}`,
+        ...(consultType ? [`【ご相談項目】${consultType}`] : []),
         `【お探しのエリア】${area}`,
         `【お名前】${name}`,
         `【メールアドレス】${email}`,

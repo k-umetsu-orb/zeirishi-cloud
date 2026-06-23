@@ -179,7 +179,7 @@ const MAP_CARD_REGIONS = [
 
 const consultLinks = [
   { href: "/introduction-01", icon: Search,    label: "顧問税理士を見直したい" },
-  { href: "/introduction-02", icon: RefreshCw, label: "確定申告年・末調整を任せたい" },
+  { href: "/introduction-02", icon: RefreshCw, label: "確定申告・年末調整を任せたい" },
   { href: "/introduction-03", icon: FileText,  label: "相続税について相談したい" },
   { href: "/introduction-04", icon: Shield,    label: "税務調査に備えたい" },
   { href: "/introduction-05", icon: Building2, label: "事業承継を進めたい" },

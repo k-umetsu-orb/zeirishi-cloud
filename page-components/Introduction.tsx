@@ -32,7 +32,7 @@ const steps = [
   { title: "ご契約",                 desc: "最適な税理士が見つかりましたら直接ご契約。その後もサポート継続。" },
 ];
 
-const CONSULT_TYPES = ["法人の決算・申告", "個人事業主の確定申告", "相続税・贈与税", "記帳代行", "起業・会社設立", "その他"];
+const CONSULT_TYPES = ["顧問税理士の見直し", "確定申告・年末調整", "相続・贈与", "事業継承", "起業・会社設立", "その他"];
 
 const REQUEST_DETAIL_EXAMPLES = [
   "決算と確定申告をまとめて依頼したい",
@@ -71,7 +71,7 @@ function IntroductionForm() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     const newErrors: Record<string, string> = {};
-    if (!consultType) newErrors.consultType = "ご相談の内容を選択してください";
+    if (!consultType) newErrors.consultType = "ご相談項目を選択してください";
     if (!prefecture)  newErrors.prefecture  = "都道府県を選択してください";
     if (!name.trim()) newErrors.name        = "お名前を入力してください";
     if (!email.trim()) newErrors.email      = "メールアドレスを入力してください";
@@ -138,30 +138,6 @@ function IntroductionForm() {
             </button>
           ))}
         </div>
-      </div>
-
-      {/* Consult type */}
-      <div className="mb-6">
-        <label className="block text-sm font-semibold text-foreground mb-2">
-          ご相談の内容 <span className="text-red-500 text-xs ml-1">必須</span>
-        </label>
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-          {CONSULT_TYPES.map((t) => (
-            <button
-              key={t}
-              type="button"
-              onClick={() => setConsultType(t)}
-              className={`px-3 py-2 rounded border text-sm font-medium transition-colors text-left ${
-                consultType === t
-                  ? "border-primary bg-primary/10 text-primary"
-                  : "border-border text-muted-foreground hover:border-primary/40"
-              }`}
-            >
-              {t}
-            </button>
-          ))}
-        </div>
-        {errors.consultType && <p className="mt-1.5 text-xs text-red-500">{errors.consultType}</p>}
       </div>
 
       {/* Prefecture + City */}
@@ -244,6 +220,30 @@ function IntroductionForm() {
           className="w-full border border-border rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary"
         />
         {errors.phone && <p className="mt-1 text-xs text-red-500">{errors.phone}</p>}
+      </div>
+
+      {/* Consult type */}
+      <div className="mb-6">
+        <label className="block text-sm font-semibold text-foreground mb-2">
+          ご相談項目 <span className="text-red-500 text-xs ml-1">必須</span>
+        </label>
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+          {CONSULT_TYPES.map((t) => (
+            <button
+              key={t}
+              type="button"
+              onClick={() => setConsultType(t)}
+              className={`px-3 py-2 rounded border text-sm font-medium transition-colors text-left ${
+                consultType === t
+                  ? "border-primary bg-primary/10 text-primary"
+                  : "border-border text-muted-foreground hover:border-primary/40"
+              }`}
+            >
+              {t}
+            </button>
+          ))}
+        </div>
+        {errors.consultType && <p className="mt-1.5 text-xs text-red-500">{errors.consultType}</p>}
       </div>
 
       {/* Request detail */}

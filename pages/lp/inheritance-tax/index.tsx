@@ -47,7 +47,6 @@ export default function LpInheritanceTaxPage() {
         }
         painPoints={painPoints}
         requestDetailExamples={requestDetailExamples}
-        defaultConsultType="相続税・贈与税"
       />
     </>
   );
