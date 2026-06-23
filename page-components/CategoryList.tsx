@@ -54,7 +54,7 @@ export default function CategoryList({ category, offices: filteredOffices }: Cat
   const documentDescription = isIndustry
     ? `${category.name}業界に強いの税理士・会計事務所の一覧です。お困りの方は紹介料無料の税理士紹介サービスをご利用ください。`
     : `${category.name}に強いの税理士・会計事務所の一覧です。お困りの方は紹介料無料の税理士紹介サービスをご利用ください。`;
-  usePageTitle(documentTitle, documentDescription);
+  usePageTitle(documentTitle, documentDescription, filteredOffices.length === 0);
 
   const pageDesc = isIndustry
     ? `${category.name}業界に強い税理士・会計事務所を掲載しています。専門的な知識を持つ税理士がお客様のニーズに合わせてサポートします。`

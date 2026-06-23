@@ -244,9 +244,9 @@ function IntroductionForm({ thanksPath, sourcePage }: { thanksPath: string; sour
           />
           <span className="text-sm text-foreground leading-snug">
             当社規定の「
-            <Link href="/privacy" className="text-primary hover:underline">
+            <a href="https://orb-inc.co.jp/privacy-policy" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
               プライバシーポリシー
-            </Link>
+            </a>
             」の内容に同意する
           </span>
         </label>
@@ -297,10 +297,10 @@ export default function IntroductionVariantPage({
   useEffect(() => {
     const el = document.createElement("link");
     el.rel = "canonical";
-    el.href = `/introduction-${pageNumber}`;
+    el.href = "/introduction";
     document.head.appendChild(el);
     return () => { document.head.removeChild(el); };
-  }, [pageNumber]);
+  }, []);
 
   const thanksPath = `/introduction-${pageNumber}/thanks`;
   const headlineLines = headline.split("||");

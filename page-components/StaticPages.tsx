@@ -75,47 +75,6 @@ export function Terms() {
   );
 }
 
-export function Privacy() {
-  usePageTitle("プライバシーポリシー | 税理士クラウド");
-  return (
-    <StaticPageLayout title="プライバシーポリシー" breadcrumbLabel="プライバシーポリシー">
-      <section className="mb-8">
-        <h2 className="font-serif text-lg font-bold text-foreground mb-3">個人情報の取り扱いについて</h2>
-        <p className="text-sm text-muted-foreground leading-relaxed mb-4">
-          税理士クラウド（以下「当サイト」）は、ユーザーの個人情報の取り扱いについて、以下のとおりプライバシーポリシーを定めます。
-        </p>
-      </section>
-      <section className="mb-8">
-        <h2 className="font-serif text-lg font-bold text-foreground mb-3">収集する情報</h2>
-        <p className="text-sm text-muted-foreground leading-relaxed mb-4">
-          当サイトでは、紹介サービスのご利用時に、お名前、メールアドレス、電話番号、ご相談内容等の情報をお預かりする場合があります。
-          また、アクセスログ、Cookie等の情報を自動的に収集する場合があります。
-        </p>
-      </section>
-      <section className="mb-8">
-        <h2 className="font-serif text-lg font-bold text-foreground mb-3">利用目的</h2>
-        <p className="text-sm text-muted-foreground leading-relaxed mb-4">
-          収集した個人情報は、以下の目的で利用いたします。
-          紹介サービスの提供、お問い合わせへの対応、サービスの改善、統計データの作成。
-        </p>
-      </section>
-      <section className="mb-8">
-        <h2 className="font-serif text-lg font-bold text-foreground mb-3">第三者提供</h2>
-        <p className="text-sm text-muted-foreground leading-relaxed mb-4">
-          当サイトは、法令に基づく場合を除き、ユーザーの同意なく個人情報を第三者に提供することはありません。
-          ただし、紹介サービスにおいて、ご紹介先の税理士にご相談内容等を共有する場合があります。
-        </p>
-      </section>
-      <section className="mb-8">
-        <h2 className="font-serif text-lg font-bold text-foreground mb-3">お問い合わせ</h2>
-        <p className="text-sm text-muted-foreground leading-relaxed">
-          個人情報の取り扱いに関するお問い合わせは、当サイトのお問い合わせフォームよりご連絡ください。
-        </p>
-      </section>
-    </StaticPageLayout>
-  );
-}
-
 export function Company() {
   return (
     <StaticPageLayout title="運営会社" breadcrumbLabel="運営会社">

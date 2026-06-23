@@ -258,9 +258,9 @@ function IntroductionForm() {
           />
           <span className="text-sm text-foreground leading-snug">
             当社規定の「
-            <Link href="/privacy" className="text-primary hover:underline">
+            <a href="https://orb-inc.co.jp/privacy-policy" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
               プライバシーポリシー
-            </Link>
+            </a>
             」の内容に同意する
           </span>
         </label>

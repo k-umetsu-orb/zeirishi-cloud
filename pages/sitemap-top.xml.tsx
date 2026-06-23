@@ -21,9 +21,8 @@ export const getServerSideProps: GetServerSideProps = async ({ res }) => {
     { loc: `${SITE_URL}/introduction-06`, lastmod: today, changefreq: 'monthly', priority: 0.7 },
     // 会社情報
     { loc: `${SITE_URL}/company`,         lastmod: today, changefreq: 'monthly', priority: 0.5 },
-    // 利用規約・プライバシーポリシー
+    // 利用規約
     { loc: `${SITE_URL}/terms`,           lastmod: today, changefreq: 'yearly',  priority: 0.3 },
-    { loc: `${SITE_URL}/privacy`,         lastmod: today, changefreq: 'yearly',  priority: 0.3 },
   ];
 
   sendXml(res, buildSitemapXml(urls));

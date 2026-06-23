@@ -56,7 +56,6 @@ export default function SitemapPage() {
               </h2>
               <ul className="space-y-2">
                 <li><Link href="/company" className="text-sm text-muted-foreground hover:text-primary transition-colors">運営会社</Link></li>
-                <li><Link href="/privacy" className="text-sm text-muted-foreground hover:text-primary transition-colors">プライバシーポリシー</Link></li>
                 <li><Link href="/terms" className="text-sm text-muted-foreground hover:text-primary transition-colors">利用規約</Link></li>
               </ul>
             </div>
