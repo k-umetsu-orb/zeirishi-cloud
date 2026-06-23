@@ -3,10 +3,10 @@ import { buildStationListUrls } from '@/lib/sitemapData';
 import { buildSitemapXml, getSitemapChunk, sendXml } from '@/lib/sitemap';
 
 const CHUNK_SIZE = 3000;
-const PART_NUMBER = 2;
+const PART_NUMBER = 8;
 const TOTAL_PARTS = 14;
 
-export default function SitemapListSta02() {
+export default function SitemapListSta08() {
   return null;
 }
 

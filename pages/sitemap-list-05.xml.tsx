@@ -1,17 +1,17 @@
 import type { GetServerSideProps } from 'next';
-import { buildStationListUrls } from '@/lib/sitemapData';
+import { buildListUrls } from '@/lib/sitemapData';
 import { buildSitemapXml, getSitemapChunk, sendXml } from '@/lib/sitemap';
 
 const CHUNK_SIZE = 3000;
-const PART_NUMBER = 2;
-const TOTAL_PARTS = 14;
+const PART_NUMBER = 5;
+const TOTAL_PARTS = 5;
 
-export default function SitemapListSta02() {
+export default function SitemapList05() {
   return null;
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ res }) => {
-  const chunk = getSitemapChunk(buildStationListUrls(), CHUNK_SIZE, PART_NUMBER, TOTAL_PARTS);
+  const chunk = getSitemapChunk(buildListUrls(), CHUNK_SIZE, PART_NUMBER, TOTAL_PARTS);
   sendXml(res, buildSitemapXml(chunk));
   return { props: {} };
 };
