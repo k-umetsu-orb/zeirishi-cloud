@@ -1,20 +1,17 @@
-import type { GetServerSideProps } from 'next';
-import { getAllPrefectures, getCitiesByPrefecture } from '@/lib/data';
+import { getAllPrefectures, getCitiesByPrefecture, getAllStationsWithContext } from '@/lib/data';
 import { CATEGORIES } from '@/lib/categorySlugMap';
 import { getAllOffices } from '@/lib/offices-server';
-import { SITE_URL, buildSitemapXml, sendXml, type UrlEntry } from '@/lib/sitemap';
+import { SITE_URL, type UrlEntry } from '@/lib/sitemap';
 
-export default function SitemapList() {
-  return null;
-}
-
-export const getServerSideProps: GetServerSideProps = async ({ res }) => {
+/**
+ * 都道府県・市区町村・行政区・カテゴリ（全国／都道府県×／市区町村×／行政区×）の一覧URL。
+ * 事務所が1件もない組み合わせは含めない。
+ */
+export function buildListUrls(): UrlEntry[] {
   const urls: UrlEntry[] = [];
 
-  // 検索ページ
   urls.push({ loc: `${SITE_URL}/search`, changefreq: 'weekly', priority: 0.9 });
 
-  // ── 事務所が1件以上ある（都道府県／市区町村／行政区／カテゴリ）組み合わせを事前計算 ──
   const prefHasOffice = new Set<string>();
   const cityHasOffice = new Set<string>();
   const wardHasOffice = new Set<string>();
@@ -38,7 +35,6 @@ export const getServerSideProps: GetServerSideProps = async ({ res }) => {
     }
   }
 
-  // カテゴリページ（全国）：事務所0件を除外
   for (const cat of CATEGORIES) {
     if (catNationwideHasOffice.has(cat.slug)) {
       urls.push({ loc: `${SITE_URL}/${cat.slug}`, changefreq: 'weekly', priority: 0.7 });
@@ -46,18 +42,15 @@ export const getServerSideProps: GetServerSideProps = async ({ res }) => {
   }
 
   for (const pref of getAllPrefectures()) {
-    // 都道府県ページ：事務所0件を除外
     if (!prefHasOffice.has(pref.slug)) continue;
     urls.push({ loc: `${SITE_URL}/${pref.slug}`, changefreq: 'weekly', priority: 0.7 });
 
-    // 都道府県×カテゴリ
     for (const cat of CATEGORIES) {
       if (catPrefHasOffice.has(`${cat.slug}:${pref.slug}`)) {
         urls.push({ loc: `${SITE_URL}/${pref.slug}/${cat.slug}`, changefreq: 'weekly', priority: 0.6 });
       }
     }
 
-    // 市区町村ページ + 市区町村×カテゴリ
     for (const city of getCitiesByPrefecture(pref.slug)) {
       if (cityHasOffice.has(`${pref.slug}:${city.slug}`)) {
         urls.push({ loc: `${SITE_URL}/${pref.slug}/${city.slug}`, changefreq: 'weekly', priority: 0.6 });
@@ -69,7 +62,6 @@ export const getServerSideProps: GetServerSideProps = async ({ res }) => {
         }
       }
 
-      // 行政区ページ + 行政区×カテゴリ
       for (const ward of city.wards ?? []) {
         if (!wardHasOffice.has(`${pref.slug}:${city.slug}:${ward.slug}`)) continue;
         urls.push({ loc: `${SITE_URL}/${pref.slug}/${city.slug}/${ward.slug}`, changefreq: 'monthly', priority: 0.5 });
@@ -83,6 +75,40 @@ export const getServerSideProps: GetServerSideProps = async ({ res }) => {
     }
   }
 
-  sendXml(res, buildSitemapXml(urls));
-  return { props: {} };
-};
+  return urls;
+}
+
+/** 駅・駅×カテゴリの一覧URL。事務所が1件もない組み合わせは含めない。 */
+export function buildStationListUrls(): UrlEntry[] {
+  const stationHasOffice = new Set<string>();
+  const catStationHasOffice = new Set<string>();
+  for (const office of getAllOffices()) {
+    for (const slug of office.nearestStations) {
+      stationHasOffice.add(slug);
+    }
+    for (const cat of CATEGORIES) {
+      const field = cat.type === 'industry' ? office.industries : office.services;
+      if (!cat.dbValues.some((v) => field.includes(v))) continue;
+      for (const slug of office.nearestStations) {
+        catStationHasOffice.add(`${cat.slug}:${slug}`);
+      }
+    }
+  }
+
+  const urls: UrlEntry[] = [];
+  for (const { station, prefSlug, citySlug, wardSlug } of getAllStationsWithContext()) {
+    if (!stationHasOffice.has(station.slug)) continue;
+    const path = wardSlug
+      ? `/${prefSlug}/${citySlug}/${wardSlug}/${station.slug}`
+      : `/${prefSlug}/${citySlug}/${station.slug}`;
+    urls.push({ loc: `${SITE_URL}${path}`, changefreq: 'weekly', priority: 0.5 });
+
+    for (const cat of CATEGORIES) {
+      if (catStationHasOffice.has(`${cat.slug}:${station.slug}`)) {
+        urls.push({ loc: `${SITE_URL}${path}/${cat.slug}`, changefreq: 'weekly', priority: 0.4 });
+      }
+    }
+  }
+
+  return urls;
+}

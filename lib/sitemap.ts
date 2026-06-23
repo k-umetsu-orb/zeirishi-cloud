@@ -43,6 +43,16 @@ export function buildSitemapIndexXml(sitemaps: Array<{ loc: string; lastmod?: st
   );
 }
 
+/**
+ * urls を固定件数で分割し、partNumber 番目（1始まり）の範囲を返す。
+ * 最終パート（partNumber === totalParts）は残り全件を含む（データ増加時もURLを欠落させない）。
+ */
+export function getSitemapChunk<T>(items: T[], chunkSize: number, partNumber: number, totalParts: number): T[] {
+  const start = (partNumber - 1) * chunkSize;
+  if (partNumber >= totalParts) return items.slice(start);
+  return items.slice(start, start + chunkSize);
+}
+
 export function sendXml(res: import('http').ServerResponse, xml: string, maxAge = 86400): void {
   res.setHeader('Content-Type', 'application/xml; charset=utf-8');
   res.setHeader('Cache-Control', `public, s-maxage=${maxAge}, stale-while-revalidate=3600`);
