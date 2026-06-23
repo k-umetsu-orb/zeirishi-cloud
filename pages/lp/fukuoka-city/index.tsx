@@ -18,6 +18,11 @@ const painPoints = [
   <>どの事務所が良いか{hi("地域内で比較")}したい</>,
 ];
 
+const requestDetailExamples = [
+  "福岡市内で対応してくれる税理士を探している",
+  "近くで直接相談できる事務所を希望している",
+];
+
 export default function LpFukuokaCityPage() {
   return (
     <>
@@ -41,6 +46,7 @@ export default function LpFukuokaCityPage() {
           </>
         }
         painPoints={painPoints}
+        requestDetailExamples={requestDetailExamples}
         defaultPrefectureSlug="fukuoka"
       />
     </>

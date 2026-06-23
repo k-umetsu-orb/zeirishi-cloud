@@ -12,6 +12,11 @@ const painPoints = [
   <>本業に集中するために<>{hi("記帳業務をまるごと任せたい")}</></>,
 ];
 
+const requestDetailExamples = [
+  "確定申告書の作成・提出を依頼したい",
+  "副業分の確定申告をお願いしたい",
+];
+
 export default function Introduction02Page() {
   return (
     <>
@@ -24,6 +29,7 @@ export default function Introduction02Page() {
         headline="確定申告・年末調整に||強い税理士を無料でご紹介します"
         subtext="専門コーディネーターがご要望に合った税理士を複数名ご紹介。比較検討の上、最適な税理士をお選びいただけます。"
         painPoints={painPoints}
+        requestDetailExamples={requestDetailExamples}
         documentTitle="確定申告・年末調整に強い税理士の無料紹介 | 税理士クラウド"
         documentDescription="確定申告・年末調整に強い税理士をお探しなら税理士クラウドへ。専門コーディネーターが無料で最適な税理士をご紹介します。"
         breadcrumbLabel="確定申告・年末調整の税理士紹介"

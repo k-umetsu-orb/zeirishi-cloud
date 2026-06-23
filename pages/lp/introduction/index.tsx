@@ -18,6 +18,11 @@ const painPoints = [
   <>複数の税理士を{hi("比較して納得して選びたい")}</>,
 ];
 
+const requestDetailExamples = [
+  "今の税理士から切り替えを検討している",
+  "複数の税理士を比較して選びたい",
+];
+
 export default function LpIntroductionPage() {
   return (
     <>
@@ -41,6 +46,7 @@ export default function LpIntroductionPage() {
           </>
         }
         painPoints={painPoints}
+        requestDetailExamples={requestDetailExamples}
       />
     </>
   );

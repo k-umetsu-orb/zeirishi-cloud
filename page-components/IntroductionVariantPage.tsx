@@ -36,7 +36,15 @@ const faqItems = [
   { question: "法人でなくても利用できますか？",                  answer: "はい、個人事業主・確定申告・相続相談など個人のお客様もご利用いただけます。" },
 ];
 
-function IntroductionForm({ thanksPath, sourcePage }: { thanksPath: string; sourcePage: string }) {
+function IntroductionForm({
+  thanksPath,
+  sourcePage,
+  requestDetailExamples,
+}: {
+  thanksPath: string;
+  sourcePage: string;
+  requestDetailExamples: string[];
+}) {
   const router = useRouter();
   const [clientType, setClientType] = useState<string>("法人");
   const [consultType, setConsultType] = useState<string>("");
@@ -45,6 +53,7 @@ function IntroductionForm({ thanksPath, sourcePage }: { thanksPath: string; sour
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [phone, setPhone] = useState<string>("");
+  const [requestDetail, setRequestDetail] = useState<string>("");
   const [agreed, setAgreed] = useState<boolean>(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
@@ -62,6 +71,7 @@ function IntroductionForm({ thanksPath, sourcePage }: { thanksPath: string; sour
     if (!name.trim()) newErrors.name        = "お名前を入力してください";
     if (!email.trim()) newErrors.email      = "メールアドレスを入力してください";
     if (!phone.trim()) newErrors.phone      = "電話番号を入力してください";
+    if (!requestDetail.trim()) newErrors.requestDetail = "依頼したい内容を入力してください";
     if (!agreed)      newErrors.agreed      = "プライバシーポリシーへの同意が必要です";
     setErrors(newErrors);
     if (Object.keys(newErrors).length > 0) return;
@@ -81,6 +91,7 @@ function IntroductionForm({ thanksPath, sourcePage }: { thanksPath: string; sour
           name,
           email,
           phone,
+          requestDetail,
         }),
       });
       if (!res.ok) throw new Error();
@@ -230,6 +241,21 @@ function IntroductionForm({ thanksPath, sourcePage }: { thanksPath: string; sour
         {errors.phone && <p className="mt-1 text-xs text-red-500">{errors.phone}</p>}
       </div>
 
+      {/* Request detail */}
+      <div className="mb-8">
+        <label className="block text-sm font-semibold text-foreground mb-1">
+          税理士に依頼したい内容 <span className="text-red-500 text-xs ml-1">必須</span>
+        </label>
+        <textarea
+          placeholder={`例\n${requestDetailExamples.map((t) => `・${t}`).join("\n")}`}
+          value={requestDetail}
+          onChange={(e) => setRequestDetail(e.target.value)}
+          rows={3}
+          className="w-full border border-border rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary resize-none"
+        />
+        {errors.requestDetail && <p className="mt-1 text-xs text-red-500">{errors.requestDetail}</p>}
+      </div>
+
       {/* Privacy policy */}
       <div className="mb-6">
         <p className="text-xs text-muted-foreground mb-3">
@@ -280,6 +306,7 @@ interface IntroductionVariantPageProps {
   documentTitle: string;
   documentDescription: string;
   breadcrumbLabel: string;
+  requestDetailExamples: string[];
 }
 
 // ─── Page ──────────────────────────────────────────────────────────────────────
@@ -292,6 +319,7 @@ export default function IntroductionVariantPage({
   documentTitle,
   documentDescription,
   breadcrumbLabel,
+  requestDetailExamples,
 }: IntroductionVariantPageProps) {
   usePageTitle(documentTitle, documentDescription);
   useEffect(() => {
@@ -439,7 +467,11 @@ export default function IntroductionVariantPage({
             <p className="text-center text-sm text-muted-foreground mb-8">
               入力後、担当コーディネーターよりご連絡いたします
             </p>
-            <IntroductionForm thanksPath={thanksPath} sourcePage={`/introduction-${pageNumber}`} />
+            <IntroductionForm
+              thanksPath={thanksPath}
+              sourcePage={`/introduction-${pageNumber}`}
+              requestDetailExamples={requestDetailExamples}
+            />
           </div>
         </section>
 

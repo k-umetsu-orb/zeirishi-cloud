@@ -18,6 +18,11 @@ const painPoints = [
   <>{hi("本当に無料か")}・登録が必要かが不安</>,
 ];
 
+const requestDetailExamples = [
+  "複数の税理士を比較したうえで選びたい",
+  "営業電話なしで候補だけ知りたい",
+];
+
 export default function LpComparisonPage() {
   return (
     <>
@@ -41,6 +46,7 @@ export default function LpComparisonPage() {
           </>
         }
         painPoints={painPoints}
+        requestDetailExamples={requestDetailExamples}
       />
     </>
   );

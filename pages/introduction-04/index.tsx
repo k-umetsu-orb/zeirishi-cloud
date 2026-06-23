@@ -12,6 +12,11 @@ const painPoints = [
   <>日頃から<>{hi("税務上の処理を適正に管理できているか")}</>確認したい</>,
 ];
 
+const requestDetailExamples = [
+  "税務調査の事前対応について相談したい",
+  "税務調査当日の立会いを依頼したい",
+];
+
 export default function Introduction04Page() {
   return (
     <>
@@ -24,6 +29,7 @@ export default function Introduction04Page() {
         headline="税務調査に強い税理士を無料でご紹介します"
         subtext="専門コーディネーターがご要望に合った税理士を複数名ご紹介。比較検討の上、最適な税理士をお選びいただけます。"
         painPoints={painPoints}
+        requestDetailExamples={requestDetailExamples}
         documentTitle="税務調査に強い税理士の無料紹介 | 税理士クラウド"
         documentDescription="税務調査に強い税理士をお探しなら税理士クラウドへ。専門コーディネーターが無料で最適な税理士をご紹介します。"
         breadcrumbLabel="税務調査の税理士紹介"

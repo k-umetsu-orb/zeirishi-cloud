@@ -12,6 +12,11 @@ const painPoints = [
   <>生前贈与があり<>{hi("早急に専門家に相談したい")}</></>,
 ];
 
+const requestDetailExamples = [
+  "相続税の申告書作成を依頼したい",
+  "相続税がいくらかかるか事前に相談したい",
+];
+
 export default function Introduction03Page() {
   return (
     <>
@@ -24,6 +29,7 @@ export default function Introduction03Page() {
         headline="相続税に強い税理士を無料でご紹介します"
         subtext="専門コーディネーターがご要望に合った税理士を複数名ご紹介。比較検討の上、最適な税理士をお選びいただけます。"
         painPoints={painPoints}
+        requestDetailExamples={requestDetailExamples}
         documentTitle="相続税に強い税理士の無料紹介 | 税理士クラウド"
         documentDescription="相続税・贈与税に強い税理士をお探しなら税理士クラウドへ。専門コーディネーターが無料で最適な税理士をご紹介します。"
         breadcrumbLabel="相続税の税理士紹介"

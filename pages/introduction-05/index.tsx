@@ -12,6 +12,11 @@ const painPoints = [
   <>事業承継に伴う<>{hi("税務処理を丸ごと任せたい")}</></>,
 ];
 
+const requestDetailExamples = [
+  "後継者への事業承継プランを相談したい",
+  "自社株式の評価や税務対策を依頼したい",
+];
+
 export default function Introduction05Page() {
   return (
     <>
@@ -24,6 +29,7 @@ export default function Introduction05Page() {
         headline="事業承継に強い税理士を無料でご紹介します"
         subtext="専門コーディネーターがご要望に合った税理士を複数名ご紹介。比較検討の上、最適な税理士をお選びいただけます。"
         painPoints={painPoints}
+        requestDetailExamples={requestDetailExamples}
         documentTitle="事業承継に強い税理士の無料紹介 | 税理士クラウド"
         documentDescription="事業承継・会社売却に強い税理士をお探しなら税理士クラウドへ。専門コーディネーターが無料で最適な税理士をご紹介します。"
         breadcrumbLabel="事業承継の税理士紹介"

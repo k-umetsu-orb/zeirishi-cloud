@@ -34,6 +34,11 @@ const steps = [
 
 const CONSULT_TYPES = ["法人の決算・申告", "個人事業主の確定申告", "相続税・贈与税", "記帳代行", "起業・会社設立", "その他"];
 
+const REQUEST_DETAIL_EXAMPLES = [
+  "決算と確定申告をまとめて依頼したい",
+  "会社設立の支援をしてほしい",
+];
+
 const faqItems = [
   { question: "紹介サービスの利用に費用はかかりますか？",     answer: "いいえ、ご相談から紹介まですべて無料でご利用いただけます。成功報酬も一切かかりません。" },
   { question: "どのような税理士を紹介してもらえますか？",     answer: "法人税・所得税・相続税・事業承継など多様な分野に対応する税理士をご紹介します。地域・予算のご希望にも対応いたします。" },
@@ -53,6 +58,7 @@ function IntroductionForm() {
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [phone, setPhone] = useState<string>("");
+  const [requestDetail, setRequestDetail] = useState<string>("");
   const [agreed, setAgreed] = useState<boolean>(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
@@ -70,6 +76,7 @@ function IntroductionForm() {
     if (!name.trim()) newErrors.name        = "お名前を入力してください";
     if (!email.trim()) newErrors.email      = "メールアドレスを入力してください";
     if (!phone.trim()) newErrors.phone      = "電話番号を入力してください";
+    if (!requestDetail.trim()) newErrors.requestDetail = "依頼したい内容を入力してください";
     if (!agreed)      newErrors.agreed      = "プライバシーポリシーへの同意が必要です";
     setErrors(newErrors);
     if (Object.keys(newErrors).length > 0) return;
@@ -89,6 +96,7 @@ function IntroductionForm() {
           name,
           email,
           phone,
+          requestDetail,
         }),
       });
       if (!res.ok) throw new Error();
@@ -236,6 +244,21 @@ function IntroductionForm() {
           className="w-full border border-border rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary"
         />
         {errors.phone && <p className="mt-1 text-xs text-red-500">{errors.phone}</p>}
+      </div>
+
+      {/* Request detail */}
+      <div className="mb-8">
+        <label className="block text-sm font-semibold text-foreground mb-1">
+          税理士に依頼したい内容 <span className="text-red-500 text-xs ml-1">必須</span>
+        </label>
+        <textarea
+          placeholder={`例\n${REQUEST_DETAIL_EXAMPLES.map((t) => `・${t}`).join("\n")}`}
+          value={requestDetail}
+          onChange={(e) => setRequestDetail(e.target.value)}
+          rows={3}
+          className="w-full border border-border rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary resize-none"
+        />
+        {errors.requestDetail && <p className="mt-1 text-xs text-red-500">{errors.requestDetail}</p>}
       </div>
 
       {/* Privacy policy consent */}

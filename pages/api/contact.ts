@@ -16,6 +16,7 @@ type ContactPayload = {
   name?: string;
   email?: string;
   phone?: string;
+  requestDetail?: string;
 };
 
 function escapeHtml(text: string) {
@@ -68,9 +69,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     name,
     email,
     phone,
+    requestDetail,
   } = req.body as ContactPayload;
 
-  if (!consultType || !prefectureName || !name?.trim() || !email?.trim() || !phone?.trim()) {
+  if (
+    !consultType ||
+    !prefectureName ||
+    !name?.trim() ||
+    !email?.trim() ||
+    !phone?.trim() ||
+    !requestDetail?.trim()
+  ) {
     res.status(400).json({ ok: false, error: "必須項目が未入力です" });
     return;
   }
@@ -91,6 +100,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         `【お名前】${name}`,
         `【メールアドレス】${email}`,
         `【電話番号】${phone || "未入力"}`,
+        `【依頼したい内容】${requestDetail}`,
       ].join("\n"),
     });
 
@@ -110,6 +120,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         `【お名前】${name}`,
         `【メールアドレス】${email}`,
         `【電話番号】${phone || "未入力"}`,
+        `【依頼したい内容】${requestDetail}`,
         "",
         "内容を確認のうえ、担当のコーディネーターより1〜3営業日以内にご連絡いたします。",
         "今しばらくお待ちください。",

@@ -12,6 +12,11 @@ const painPoints = [
   <>起業と同時に<>{hi("記帳代行の依頼と相談をスタート")}</>させたい</>,
 ];
 
+const requestDetailExamples = [
+  "会社設立の手続きを依頼したい",
+  "設立後の税務・経理体制を相談したい",
+];
+
 export default function Introduction06Page() {
   return (
     <>
@@ -24,6 +29,7 @@ export default function Introduction06Page() {
         headline="会社設立に強い税理士を無料でご紹介します"
         subtext="専門コーディネーターがご要望に合った税理士を複数名ご紹介。比較検討の上、最適な税理士をお選びいただけます。"
         painPoints={painPoints}
+        requestDetailExamples={requestDetailExamples}
         documentTitle="会社設立に強い税理士の無料紹介 | 税理士クラウド"
         documentDescription="会社設立・起業に強い税理士をお探しなら税理士クラウドへ。専門コーディネーターが無料で最適な税理士をご紹介します。"
         breadcrumbLabel="会社設立の税理士紹介"

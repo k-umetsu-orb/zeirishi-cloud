@@ -18,6 +18,11 @@ const painPoints = [
   <>起業と同時に{hi("記帳代行の依頼と相談をスタート")}させたい</>,
 ];
 
+const requestDetailExamples = [
+  "会社設立の手続きを依頼したい",
+  "設立後の税務・経理体制を相談したい",
+];
+
 export default function LpCompanyEstablishmentPage() {
   return (
     <>
@@ -41,6 +46,7 @@ export default function LpCompanyEstablishmentPage() {
           </>
         }
         painPoints={painPoints}
+        requestDetailExamples={requestDetailExamples}
         defaultConsultType="起業・会社設立"
       />
     </>

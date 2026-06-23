@@ -18,6 +18,11 @@ const painPoints = [
   <>生前贈与があり{hi("早急に専門家に相談したい")}</>,
 ];
 
+const requestDetailExamples = [
+  "相続税の申告書作成を依頼したい",
+  "相続税がいくらかかるか事前に相談したい",
+];
+
 export default function LpInheritanceTaxPage() {
   return (
     <>
@@ -41,6 +46,7 @@ export default function LpInheritanceTaxPage() {
           </>
         }
         painPoints={painPoints}
+        requestDetailExamples={requestDetailExamples}
         defaultConsultType="相続税・贈与税"
       />
     </>
