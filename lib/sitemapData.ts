@@ -3,11 +3,18 @@ import { CATEGORIES } from '@/lib/categorySlugMap';
 import { getAllOffices } from '@/lib/offices-server';
 import { SITE_URL, type UrlEntry } from '@/lib/sitemap';
 
+// offices.json/areas.json はデプロイ単位で固定のため、プロセス内に一度だけ計算結果をキャッシュする
+// （リクエストごとに毎回数万件のループを再計算すると、Search Console等の同時クロールでタイムアウトしうる）
+let listUrlsCache: UrlEntry[] | null = null;
+let stationListUrlsCache: UrlEntry[] | null = null;
+
 /**
  * 都道府県・市区町村・行政区・カテゴリ（全国／都道府県×／市区町村×／行政区×）の一覧URL。
  * 事務所が1件もない組み合わせは含めない。
  */
 export function buildListUrls(): UrlEntry[] {
+  if (listUrlsCache) return listUrlsCache;
+
   const urls: UrlEntry[] = [];
 
   urls.push({ loc: `${SITE_URL}/search`, changefreq: 'weekly', priority: 0.9 });
@@ -75,11 +82,14 @@ export function buildListUrls(): UrlEntry[] {
     }
   }
 
+  listUrlsCache = urls;
   return urls;
 }
 
 /** 駅・駅×カテゴリの一覧URL。事務所が1件もない組み合わせは含めない。 */
 export function buildStationListUrls(): UrlEntry[] {
+  if (stationListUrlsCache) return stationListUrlsCache;
+
   const stationHasOffice = new Set<string>();
   const catStationHasOffice = new Set<string>();
   for (const office of getAllOffices()) {
@@ -110,5 +120,6 @@ export function buildStationListUrls(): UrlEntry[] {
     }
   }
 
+  stationListUrlsCache = urls;
   return urls;
 }
