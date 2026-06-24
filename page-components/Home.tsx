@@ -12,7 +12,6 @@ import GlobalHeader from "@/components/GlobalHeader";
 import GlobalFooter from "@/components/GlobalFooter";
 import FAQ from "@/components/FAQ";
 import ArticleCard from "@/components/ArticleCard";
-import ComingSoonNotice from "@/components/ComingSoonNotice";
 import { CONTENT_COMING_SOON } from "@/lib/contentVisibility";
 import {
   getAllInterviews,
@@ -1090,7 +1089,7 @@ export default function Home({ officeCount, interviewUrls }: { officeCount: numb
         {/* ══════════════════════════════════════════════════════
             5. インタビュー
         ═══════════════════════════════════════════════════════ */}
-        {(CONTENT_COMING_SOON || interviews.length > 0) && (
+        {!CONTENT_COMING_SOON && interviews.length > 0 && (
           <section className="py-12 md:py-16 bg-white border-b border-border">
             <div className="container">
               <SectionHeading
@@ -1100,105 +1099,99 @@ export default function Home({ officeCount, interviewUrls }: { officeCount: numb
                 インタビュー
               </SectionHeading>
 
-              {CONTENT_COMING_SOON ? (
-                <ComingSoonNotice label="インタビュー" className="py-10" />
-              ) : (
-                <>
-                  {/* SP: 横スクロール */}
-                  <div className="md:hidden overflow-x-auto pb-2 -mx-4 px-4">
-                    <div className="flex gap-4">
-                      {interviews.map((iv) => {
-                        return (
-                          <Link
-                            key={iv.id}
-                            href={interviewUrls[iv.id] ?? "/interview"}
-                            className="group block flex-shrink-0"
-                            style={{ width: "78vw" }}
-                          >
-                            <article className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all h-full flex flex-col">
-                              <div className="aspect-video overflow-hidden">
-                                <img
-                                  src="/images/interview-placeholder.svg"
-                                  alt={iv.officeName}
-                                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                                />
-                              </div>
-                              <div className="p-4 flex flex-col flex-1">
-                                <h3 className="font-bold text-sm text-primary leading-snug line-clamp-2 mb-2 group-hover:underline">
-                                  {iv.title}
-                                </h3>
-                                <p className="text-xs text-muted-foreground mt-auto">
-                                  {iv.officeName}
-                                </p>
-                              </div>
-                            </article>
-                          </Link>
-                        );
-                      })}
-                    </div>
-                  </div>
-
-                  {/* PC: Carousel */}
-                  <div className="hidden md:block relative">
-                    {/* Left button */}
-                    <button
-                      onClick={() => setInterviewIndex((i) => Math.max(0, i - 1))}
-                      disabled={interviewIndex === 0}
-                      className="absolute -left-5 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-white shadow-md border border-border flex items-center justify-center text-foreground disabled:opacity-30 hover:bg-gray-50 transition-colors"
-                    >
-                      <ArrowRight className="w-4 h-4 rotate-180" />
-                    </button>
-
-                    {/* Cards */}
-                    <div className="overflow-hidden mx-4">
-                      <div
-                        className="flex gap-4 transition-transform duration-300"
-                        style={{ transform: `translateX(calc(-${interviewIndex} * (100% / ${INTERVIEW_VISIBLE} + 16px / ${INTERVIEW_VISIBLE})))` }}
+              {/* SP: 横スクロール */}
+              <div className="md:hidden overflow-x-auto pb-2 -mx-4 px-4">
+                <div className="flex gap-4">
+                  {interviews.map((iv) => {
+                    return (
+                      <Link
+                        key={iv.id}
+                        href={interviewUrls[iv.id] ?? "/interview"}
+                        className="group block flex-shrink-0"
+                        style={{ width: "78vw" }}
                       >
-                        {interviews.map((iv) => {
-                          return (
-                            <Link
-                              key={iv.id}
-                              href={interviewUrls[iv.id] ?? "/interview"}
-                              className="group block flex-shrink-0"
-                              style={{ width: `calc(100% / ${INTERVIEW_VISIBLE} - 16px * ${INTERVIEW_VISIBLE - 1} / ${INTERVIEW_VISIBLE})` }}
-                            >
-                              <article className="bg-white rounded-xl overflow-hidden hover:shadow-lg transition-all h-full flex flex-col">
-                                {/* Photo */}
-                                <div className="aspect-video overflow-hidden">
-                                  <img
-                                    src="/images/interview-placeholder.svg"
-                                    alt={iv.officeName}
-                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                                  />
-                                </div>
-                                {/* Content */}
-                                <div className="p-4 flex flex-col flex-1">
-                                  <h3 className="font-bold text-sm text-primary leading-snug line-clamp-2 mb-2 group-hover:underline">
-                                    {iv.title}
-                                  </h3>
-                                  <p className="text-xs text-muted-foreground mt-auto">
-                                    {iv.officeName}
-                                  </p>
-                                </div>
-                              </article>
-                            </Link>
-                          );
-                        })}
-                      </div>
-                    </div>
+                        <article className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all h-full flex flex-col">
+                          <div className="aspect-video overflow-hidden">
+                            <img
+                              src="/images/interview-placeholder.svg"
+                              alt={iv.officeName}
+                              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                            />
+                          </div>
+                          <div className="p-4 flex flex-col flex-1">
+                            <h3 className="font-bold text-sm text-primary leading-snug line-clamp-2 mb-2 group-hover:underline">
+                              {iv.title}
+                            </h3>
+                            <p className="text-xs text-muted-foreground mt-auto">
+                              {iv.officeName}
+                            </p>
+                          </div>
+                        </article>
+                      </Link>
+                    );
+                  })}
+                </div>
+              </div>
 
-                    {/* Right button */}
-                    <button
-                      onClick={() => setInterviewIndex((i) => Math.min(interviews.length - INTERVIEW_VISIBLE, i + 1))}
-                      disabled={interviewIndex >= interviews.length - INTERVIEW_VISIBLE}
-                      className="absolute -right-5 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-white shadow-md border border-border flex items-center justify-center text-foreground disabled:opacity-30 hover:bg-gray-50 transition-colors"
-                    >
-                      <ArrowRight className="w-4 h-4" />
-                    </button>
-                  </div>{/* end PC carousel */}
-                </>
-              )}
+              {/* PC: Carousel */}
+              <div className="hidden md:block relative">
+                {/* Left button */}
+                <button
+                  onClick={() => setInterviewIndex((i) => Math.max(0, i - 1))}
+                  disabled={interviewIndex === 0}
+                  className="absolute -left-5 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-white shadow-md border border-border flex items-center justify-center text-foreground disabled:opacity-30 hover:bg-gray-50 transition-colors"
+                >
+                  <ArrowRight className="w-4 h-4 rotate-180" />
+                </button>
+
+                {/* Cards */}
+                <div className="overflow-hidden mx-4">
+                  <div
+                    className="flex gap-4 transition-transform duration-300"
+                    style={{ transform: `translateX(calc(-${interviewIndex} * (100% / ${INTERVIEW_VISIBLE} + 16px / ${INTERVIEW_VISIBLE})))` }}
+                  >
+                    {interviews.map((iv) => {
+                      return (
+                        <Link
+                          key={iv.id}
+                          href={interviewUrls[iv.id] ?? "/interview"}
+                          className="group block flex-shrink-0"
+                          style={{ width: `calc(100% / ${INTERVIEW_VISIBLE} - 16px * ${INTERVIEW_VISIBLE - 1} / ${INTERVIEW_VISIBLE})` }}
+                        >
+                          <article className="bg-white rounded-xl overflow-hidden hover:shadow-lg transition-all h-full flex flex-col">
+                            {/* Photo */}
+                            <div className="aspect-video overflow-hidden">
+                              <img
+                                src="/images/interview-placeholder.svg"
+                                alt={iv.officeName}
+                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                              />
+                            </div>
+                            {/* Content */}
+                            <div className="p-4 flex flex-col flex-1">
+                              <h3 className="font-bold text-sm text-primary leading-snug line-clamp-2 mb-2 group-hover:underline">
+                                {iv.title}
+                              </h3>
+                              <p className="text-xs text-muted-foreground mt-auto">
+                                {iv.officeName}
+                              </p>
+                            </div>
+                          </article>
+                        </Link>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Right button */}
+                <button
+                  onClick={() => setInterviewIndex((i) => Math.min(interviews.length - INTERVIEW_VISIBLE, i + 1))}
+                  disabled={interviewIndex >= interviews.length - INTERVIEW_VISIBLE}
+                  className="absolute -right-5 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-white shadow-md border border-border flex items-center justify-center text-foreground disabled:opacity-30 hover:bg-gray-50 transition-colors"
+                >
+                  <ArrowRight className="w-4 h-4" />
+                </button>
+              </div>{/* end PC carousel */}
 
               <MoreLink href="/interview" label="すべてのインタビューを見る" />
             </div>
@@ -1208,76 +1201,68 @@ export default function Home({ officeCount, interviewUrls }: { officeCount: numb
         {/* ══════════════════════════════════════════════════════
             6. 選び方ガイド
         ═══════════════════════════════════════════════════════ */}
-        <section className="py-12 md:py-16 bg-[#f4f7fb] border-b border-border">
-          <div className="container">
-            <SectionHeading sub="税務・会計に関する基礎知識をまとめています。" tag="Guide">
-              選び方ガイド
-            </SectionHeading>
+        {!CONTENT_COMING_SOON && (
+          <section className="py-12 md:py-16 bg-[#f4f7fb] border-b border-border">
+            <div className="container">
+              <SectionHeading sub="税務・会計に関する基礎知識をまとめています。" tag="Guide">
+                選び方ガイド
+              </SectionHeading>
 
-            {CONTENT_COMING_SOON ? (
-              <ComingSoonNotice label="選び方ガイド" className="py-10" />
-            ) : (
-              <>
-                {/* SP: 横スクロール */}
-                <div className="md:hidden overflow-x-auto pb-2 -mx-4 px-4">
-                  <div className="flex gap-4">
-                    {guideArticles.map((article) => (
-                      <div key={article.id} className="flex-shrink-0" style={{ width: "78vw" }}>
-                        <ArticleCard article={article} />
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* PC: グリッド */}
-                <div className="hidden md:grid grid-cols-2 lg:grid-cols-4 gap-4">
+              {/* SP: 横スクロール */}
+              <div className="md:hidden overflow-x-auto pb-2 -mx-4 px-4">
+                <div className="flex gap-4">
                   {guideArticles.map((article) => (
-                    <ArticleCard key={article.id} article={article} />
+                    <div key={article.id} className="flex-shrink-0" style={{ width: "78vw" }}>
+                      <ArticleCard article={article} />
+                    </div>
                   ))}
                 </div>
-              </>
-            )}
+              </div>
 
-            <MoreLink href="/guide" label="選び方ガイド一覧" />
-          </div>
-        </section>
+              {/* PC: グリッド */}
+              <div className="hidden md:grid grid-cols-2 lg:grid-cols-4 gap-4">
+                {guideArticles.map((article) => (
+                  <ArticleCard key={article.id} article={article} />
+                ))}
+              </div>
+
+              <MoreLink href="/guide" label="選び方ガイド一覧" />
+            </div>
+          </section>
+        )}
 
         {/* ══════════════════════════════════════════════════════
             7. コラム
         ═══════════════════════════════════════════════════════ */}
-        <section className="py-12 md:py-16 bg-white border-b border-border">
-          <div className="container">
-            <SectionHeading sub="税理士選びや税務に役立つコラムをお届けします。" tag="Column">
-              コラム
-            </SectionHeading>
+        {!CONTENT_COMING_SOON && (
+          <section className="py-12 md:py-16 bg-white border-b border-border">
+            <div className="container">
+              <SectionHeading sub="税理士選びや税務に役立つコラムをお届けします。" tag="Column">
+                コラム
+              </SectionHeading>
 
-            {CONTENT_COMING_SOON ? (
-              <ComingSoonNotice label="コラム" className="py-10" />
-            ) : (
-              <>
-                {/* SP: 横スクロール */}
-                <div className="md:hidden overflow-x-auto pb-2 -mx-4 px-4">
-                  <div className="flex gap-4">
-                    {columnArticles.map((article) => (
-                      <div key={article.id} className="flex-shrink-0" style={{ width: "78vw" }}>
-                        <ArticleCard article={article} />
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* PC: グリッド */}
-                <div className="hidden md:grid grid-cols-2 lg:grid-cols-4 gap-4">
+              {/* SP: 横スクロール */}
+              <div className="md:hidden overflow-x-auto pb-2 -mx-4 px-4">
+                <div className="flex gap-4">
                   {columnArticles.map((article) => (
-                    <ArticleCard key={article.id} article={article} />
+                    <div key={article.id} className="flex-shrink-0" style={{ width: "78vw" }}>
+                      <ArticleCard article={article} />
+                    </div>
                   ))}
                 </div>
-              </>
-            )}
+              </div>
 
-            <MoreLink href="/column" label="コラム一覧" />
-          </div>
-        </section>
+              {/* PC: グリッド */}
+              <div className="hidden md:grid grid-cols-2 lg:grid-cols-4 gap-4">
+                {columnArticles.map((article) => (
+                  <ArticleCard key={article.id} article={article} />
+                ))}
+              </div>
+
+              <MoreLink href="/column" label="コラム一覧" />
+            </div>
+          </section>
+        )}
 
         {/* ══════════════════════════════════════════════════════
             8. 紹介サービス CTA
