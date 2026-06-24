@@ -14,6 +14,8 @@ import Pagination from "@/components/Pagination";
 import ArticleCard from "@/components/ArticleCard";
 import type { Prefecture, City, Ward, Station, Office, Article } from "@/lib/data";
 import { getCategoriesByType } from "@/lib/categorySlugMap";
+import { useWouterSearch } from "@/lib/useWouterSearch";
+import { getPageFromSearch, buildPageHref } from "@/lib/pagination";
 import areaContentsData from "@/data/areaContents.json";
 
 function buildSearchUrl(prefSlug: string, citySlug?: string, wardSlug?: string, stationSlug?: string): string {
@@ -22,22 +24,6 @@ function buildSearchUrl(prefSlug: string, citySlug?: string, wardSlug?: string, 
   if (wardSlug) url += `/${wardSlug}`;
   if (stationSlug) url += `/${stationSlug}`;
   return url;
-}
-
-// wouter useSearch → Next.js query string
-function useWouterSearch(): string {
-  const router = useRouter();
-  if (typeof window !== "undefined") {
-    return window.location.search.replace(/^\?/, "");
-  }
-  const q = router.query;
-  if (!q) return "";
-  const params = new URLSearchParams();
-  Object.entries(q).forEach(([k, v]) => {
-    if (Array.isArray(v)) v.forEach(val => params.append(k, val));
-    else if (v) params.append(k, v);
-  });
-  return params.toString();
 }
 
 const ITEMS_PER_PAGE = 12;
@@ -54,7 +40,6 @@ interface OfficeListProps {
 }
 
 export default function OfficeList({ prefecture, city, ward, station, cities, stations, relatedArticles }: OfficeListProps) {
-  const [currentPage, setCurrentPage] = useState(1);
   const [offices, setOffices] = useState<Office[]>([]);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -67,7 +52,15 @@ export default function OfficeList({ prefecture, city, ward, station, cities, st
 
   const search = useWouterSearch();
   const router = useRouter();
-  const qs = search ? `?${search}` : "";
+  const currentPage = getPageFromSearch(search);
+
+  // Area-navigation links (city/ward/station chips) should carry filters but not the current page
+  const filterSearch = useMemo(() => {
+    const params = new URLSearchParams(search);
+    params.delete("page");
+    return params.toString();
+  }, [search]);
+  const qs = filterSearch ? `?${filterSearch}` : "";
 
   // Derive applied filters from URL (source of truth)
   const selectedIndustries = useMemo(() => new URLSearchParams(search).getAll("industry"), [search]);
@@ -93,7 +86,6 @@ export default function OfficeList({ prefecture, city, ward, station, cities, st
     pendingServices.forEach((s) => params.append("service", s));
     const qs = params.toString();
     router.push(qs ? `${basePath}?${qs}` : basePath);
-    setCurrentPage(1);
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
@@ -101,7 +93,6 @@ export default function OfficeList({ prefecture, city, ward, station, cities, st
     setPendingIndustries([]);
     setPendingServices([]);
     router.push(basePath);
-    setCurrentPage(1);
   }
 
   // Breadcrumb
@@ -167,7 +158,8 @@ export default function OfficeList({ prefecture, city, ward, station, cities, st
   const noindex =
     selectedIndustries.length > 0 ||
     selectedServices.length > 0 ||
-    (!loading && total === 0);
+    (!loading && total === 0) ||
+    (!loading && totalPages > 0 && currentPage > totalPages);
   usePageTitle(documentTitle, documentDescription, noindex);
 
   const currentAreaLabel = [
@@ -515,10 +507,8 @@ export default function OfficeList({ prefecture, city, ward, station, cities, st
               <Pagination
                 currentPage={currentPage}
                 totalPages={totalPages}
-                onPageChange={(page) => {
-                  setCurrentPage(page);
-                  window.scrollTo({ top: 0, behavior: "smooth" });
-                }}
+                buildHref={(page) => buildPageHref(basePath, search, page)}
+                onNavigate={() => window.scrollTo({ top: 0, behavior: "smooth" })}
               />
 
               {/* Related articles */}

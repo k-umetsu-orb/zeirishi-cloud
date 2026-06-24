@@ -16,22 +16,8 @@ import { getAllPrefectures, getCitiesByPrefecture } from "@/lib/data";
 import type { Office } from "@/lib/data";
 import japanMapImg from "@/images/japan map_ver2.png";
 import { OPTION_NAME_TO_SLUG } from "@/lib/categorySlugMap";
-
-// wouter useSearch → Next.js query string
-function useWouterSearch(): string {
-  const router = useRouter();
-  if (typeof window !== "undefined") {
-    return window.location.search.replace(/^\?/, "");
-  }
-  const q = router.query;
-  if (!q) return "";
-  const params = new URLSearchParams();
-  Object.entries(q).forEach(([k, v]) => {
-    if (Array.isArray(v)) v.forEach(val => params.append(k, val));
-    else if (v) params.append(k, v);
-  });
-  return params.toString();
-}
+import { useWouterSearch } from "@/lib/useWouterSearch";
+import { getPageFromSearch, buildPageHref } from "@/lib/pagination";
 
 // ─── Region map data ────────────────────────────────────────────────────────
 
@@ -367,7 +353,7 @@ export default function SearchTop() {
   );
   const router = useRouter();
   const search = useWouterSearch();
-  const [resultPage, setResultPage] = useState(1);
+  const resultPage = getPageFromSearch(search);
   const [filterResults, setFilterResults] = useState<Office[]>([]);
   const [filterTotal, setFilterTotal] = useState(0);
   const [filterLoading, setFilterLoading] = useState(false);
@@ -413,11 +399,10 @@ export default function SearchTop() {
       return;
     }
     setFilterLoading(true);
-    setResultPage(1);
     const q = new URLSearchParams();
     filterParams.industries.forEach((i) => q.append("industry", i));
     filterParams.services.forEach((s) => q.append("service", s));
-    q.set("page", "1");
+    q.set("page", String(resultPage));
     q.set("limit", String(ITEMS_PER_PAGE));
     fetch(`/api/offices?${q.toString()}`)
       .then((r) => r.json())
@@ -428,19 +413,6 @@ export default function SearchTop() {
       });
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search]);
-
-  useEffect(() => {
-    if (resultPage === 1 || !hasFilter) return;
-    const q = new URLSearchParams();
-    filterParams.industries.forEach((i) => q.append("industry", i));
-    filterParams.services.forEach((s) => q.append("service", s));
-    q.set("page", String(resultPage));
-    q.set("limit", String(ITEMS_PER_PAGE));
-    fetch(`/api/offices?${q.toString()}`)
-      .then((r) => r.json())
-      .then((data) => { setFilterResults(data.offices ?? []); });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [resultPage]);
 
   const totalResultPages = Math.ceil(filterTotal / ITEMS_PER_PAGE);
 
@@ -524,10 +496,8 @@ export default function SearchTop() {
               <Pagination
                 currentPage={resultPage}
                 totalPages={totalResultPages}
-                onPageChange={(page) => {
-                  setResultPage(page);
-                  window.scrollTo({ top: 0, behavior: "smooth" });
-                }}
+                buildHref={(page) => buildPageHref("/search", search, page)}
+                onNavigate={() => window.scrollTo({ top: 0, behavior: "smooth" })}
               />
             </div>
           </section>

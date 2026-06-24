@@ -19,6 +19,8 @@ import Pagination from "@/components/Pagination";
 import ArticleCard from "@/components/ArticleCard";
 import type { Prefecture, City, Ward, Station, Office, Article } from "@/lib/data";
 import { type CategoryInfo, getCategoriesByType } from "@/lib/categorySlugMap";
+import { useWouterSearch } from "@/lib/useWouterSearch";
+import { getPageFromSearch, buildPageHref } from "@/lib/pagination";
 
 function buildSearchUrl(prefSlug: string, citySlug?: string, wardSlug?: string, stationSlug?: string): string {
   let url = `/${prefSlug}`;
@@ -54,10 +56,11 @@ export default function PrefCategoryList({
   stations,
   relatedArticles,
 }: PrefCategoryListProps) {
-  const [currentPage, setCurrentPage] = useState(1);
   const [showAllCities, setShowAllCities] = useState(false);
   const [showFull, setShowFull] = useState(false);
   const router = useRouter();
+  const search = useWouterSearch();
+  const currentPage = getPageFromSearch(search);
 
   const isIndustry = category.type === "industry";
 
@@ -136,13 +139,14 @@ export default function PrefCategoryList({
   const documentDescription = isIndustry
     ? `${descArea}で${category.name}業界に強いの税理士・会計事務所の一覧です。お困りの方は紹介料無料の税理士紹介サービスをご利用ください。`
     : `${descArea}で${category.name}に強いの税理士・会計事務所の一覧です。お困りの方は紹介料無料の税理士紹介サービスをご利用ください。`;
-  usePageTitle(documentTitle, documentDescription, filteredOffices.length === 0);
 
   const totalPages = Math.ceil(filteredOffices.length / ITEMS_PER_PAGE);
   const paginatedOffices = filteredOffices.slice(
     (currentPage - 1) * ITEMS_PER_PAGE,
     currentPage * ITEMS_PER_PAGE
   );
+
+  usePageTitle(documentTitle, documentDescription, filteredOffices.length === 0 || currentPage > totalPages);
 
   // ── Sub-navigation data ──────────────────────────────────────
   const visibleCities = showAllCities ? cities : cities.slice(0, CITIES_INITIAL_SHOW);
@@ -154,6 +158,9 @@ export default function PrefCategoryList({
     : ward ? `/${prefecture.slug}/${city!.slug}/${ward.slug}`
     : city ? `/${prefecture.slug}/${city.slug}`
     : `/${prefecture.slug}`;
+
+  // This page's own URL (area + category slug, without query)
+  const basePath = `${areaBase}/${category.slug}`;
 
   const allServiceCategories = getCategoriesByType("service");
   const allIndustryCategories = getCategoriesByType("industry");
@@ -424,10 +431,8 @@ export default function PrefCategoryList({
               <Pagination
                 currentPage={currentPage}
                 totalPages={totalPages}
-                onPageChange={(page) => {
-                  setCurrentPage(page);
-                  window.scrollTo({ top: 0, behavior: "smooth" });
-                }}
+                buildHref={(page) => buildPageHref(basePath, search, page)}
+                onNavigate={() => window.scrollTo({ top: 0, behavior: "smooth" })}
               />
 
               {/* Related articles */}

@@ -1,12 +1,23 @@
+import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 interface PaginationProps {
   currentPage: number;
   totalPages: number;
-  onPageChange: (page: number) => void;
+  buildHref: (page: number) => string;
+  onNavigate?: () => void;
 }
 
-export default function Pagination({ currentPage, totalPages, onPageChange }: PaginationProps) {
+const navBtnClass =
+  "p-2 rounded-md border border-border text-muted-foreground hover:bg-muted transition-colors";
+const navBtnDisabledClass =
+  "p-2 rounded-md border border-border text-muted-foreground/40 cursor-not-allowed";
+const pageBtnClass =
+  "w-9 h-9 flex items-center justify-center rounded-md text-sm font-medium border border-border text-muted-foreground hover:bg-muted transition-colors";
+const pageBtnActiveClass =
+  "w-9 h-9 flex items-center justify-center rounded-md text-sm font-medium bg-primary text-primary-foreground";
+
+export default function Pagination({ currentPage, totalPages, buildHref, onNavigate }: PaginationProps) {
   if (totalPages <= 1) return null;
 
   const pages: (number | "...")[] = [];
@@ -24,42 +35,39 @@ export default function Pagination({ currentPage, totalPages, onPageChange }: Pa
 
   return (
     <nav aria-label="ページネーション" className="flex items-center justify-center gap-1 mt-8">
-      <button
-        onClick={() => onPageChange(currentPage - 1)}
-        disabled={currentPage === 1}
-        className="p-2 rounded-md border border-border text-muted-foreground hover:bg-muted disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
-        aria-label="前のページ"
-      >
-        <ChevronLeft className="w-4 h-4" />
-      </button>
+      {currentPage > 1 ? (
+        <Link href={buildHref(currentPage - 1)} onClick={onNavigate} className={navBtnClass} aria-label="前のページ">
+          <ChevronLeft className="w-4 h-4" />
+        </Link>
+      ) : (
+        <span className={navBtnDisabledClass} aria-disabled="true">
+          <ChevronLeft className="w-4 h-4" />
+        </span>
+      )}
 
       {pages.map((page, i) =>
         page === "..." ? (
           <span key={`dots-${i}`} className="px-2 text-muted-foreground">...</span>
-        ) : (
-          <button
-            key={page}
-            onClick={() => onPageChange(page)}
-            className={`w-9 h-9 rounded-md text-sm font-medium transition-colors ${
-              page === currentPage
-                ? "bg-primary text-primary-foreground"
-                : "border border-border text-muted-foreground hover:bg-muted"
-            }`}
-            aria-current={page === currentPage ? "page" : undefined}
-          >
+        ) : page === currentPage ? (
+          <span key={page} aria-current="page" className={pageBtnActiveClass}>
             {page}
-          </button>
+          </span>
+        ) : (
+          <Link key={page} href={buildHref(page)} onClick={onNavigate} className={pageBtnClass}>
+            {page}
+          </Link>
         )
       )}
 
-      <button
-        onClick={() => onPageChange(currentPage + 1)}
-        disabled={currentPage === totalPages}
-        className="p-2 rounded-md border border-border text-muted-foreground hover:bg-muted disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
-        aria-label="次のページ"
-      >
-        <ChevronRight className="w-4 h-4" />
-      </button>
+      {currentPage < totalPages ? (
+        <Link href={buildHref(currentPage + 1)} onClick={onNavigate} className={navBtnClass} aria-label="次のページ">
+          <ChevronRight className="w-4 h-4" />
+        </Link>
+      ) : (
+        <span className={navBtnDisabledClass} aria-disabled="true">
+          <ChevronRight className="w-4 h-4" />
+        </span>
+      )}
     </nav>
   );
 }

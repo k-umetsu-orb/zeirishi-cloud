@@ -4,7 +4,6 @@
  */
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link"
-import { useRouter } from "next/router";
 import { ArrowRight } from "lucide-react";
 import GlobalHeader from "@/components/GlobalHeader";
 import GlobalFooter from "@/components/GlobalFooter";
@@ -13,28 +12,15 @@ import OfficeCard from "@/components/OfficeCard";
 import Pagination from "@/components/Pagination";
 import type { Office } from "@/lib/data";
 import { usePageTitle } from "@/lib/usePageTitle";
-
-// wouter useSearch → Next.js query string
-function useWouterSearch(): string {
-  const router = useRouter();
-  if (typeof window !== "undefined") {
-    return window.location.search.replace(/^\?/, "");
-  }
-  const q = router.query;
-  if (!q) return "";
-  const params = new URLSearchParams();
-  Object.entries(q).forEach(([k, v]) => {
-    if (Array.isArray(v)) v.forEach(val => params.append(k, val));
-    else if (v) params.append(k, v);
-  });
-  return params.toString();
-}
+import { useWouterSearch } from "@/lib/useWouterSearch";
+import { getPageFromSearch, buildPageHref } from "@/lib/pagination";
 
 const ITEMS_PER_PAGE = 12;
+const BASE_PATH = "/search/results";
 
 export default function SearchResults() {
   const search = useWouterSearch();
-  const [currentPage, setCurrentPage] = useState(1);
+  const currentPage = getPageFromSearch(search);
   const [offices, setOffices] = useState<Office[]>([]);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -45,11 +31,10 @@ export default function SearchResults() {
 
   useEffect(() => {
     setLoading(true);
-    setCurrentPage(1);
     const query = new URLSearchParams();
     industries.forEach((i) => query.append("industry", i));
     services.forEach((s) => query.append("service", s));
-    query.set("page", "1");
+    query.set("page", String(currentPage));
     query.set("limit", String(ITEMS_PER_PAGE));
     fetch(`/api/offices?${query.toString()}`)
       .then((r) => r.json())
@@ -60,21 +45,6 @@ export default function SearchResults() {
       });
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search]);
-
-  useEffect(() => {
-    if (currentPage === 1) return;
-    const query = new URLSearchParams();
-    industries.forEach((i) => query.append("industry", i));
-    services.forEach((s) => query.append("service", s));
-    query.set("page", String(currentPage));
-    query.set("limit", String(ITEMS_PER_PAGE));
-    fetch(`/api/offices?${query.toString()}`)
-      .then((r) => r.json())
-      .then((data) => {
-        setOffices(data.offices ?? []);
-      });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPage]);
 
   const totalPages = Math.ceil(total / ITEMS_PER_PAGE);
 
@@ -93,7 +63,11 @@ export default function SearchResults() {
   } else {
     pageTitle = "税理士・会計事務所 検索結果";
   }
-  const noindex = industries.length > 0 || services.length > 0 || total === 0;
+  const noindex =
+    industries.length > 0 ||
+    services.length > 0 ||
+    total === 0 ||
+    (!loading && totalPages > 0 && currentPage > totalPages);
   usePageTitle(`${pageTitle} | 税理士検索ナビ`, undefined, noindex);
 
   return (
@@ -154,10 +128,8 @@ export default function SearchResults() {
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}
-            onPageChange={(page) => {
-              setCurrentPage(page);
-              window.scrollTo({ top: 0, behavior: "smooth" });
-            }}
+            buildHref={(page) => buildPageHref(BASE_PATH, search, page)}
+            onNavigate={() => window.scrollTo({ top: 0, behavior: "smooth" })}
           />
         </div>
       </main>

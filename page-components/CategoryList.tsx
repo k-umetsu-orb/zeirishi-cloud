@@ -13,6 +13,8 @@ import OfficeCard from "@/components/OfficeCard";
 import Pagination from "@/components/Pagination";
 import type { Office } from "@/lib/data";
 import { type CategoryInfo, getCategoriesByType } from "@/lib/categorySlugMap";
+import { useWouterSearch } from "@/lib/useWouterSearch";
+import { getPageFromSearch, buildPageHref } from "@/lib/pagination";
 
 const ITEMS_PER_PAGE = 12;
 
@@ -22,7 +24,9 @@ interface CategoryListProps {
 }
 
 export default function CategoryList({ category, offices: filteredOffices }: CategoryListProps) {
-  const [currentPage, setCurrentPage] = useState(1);
+  const search = useWouterSearch();
+  const currentPage = getPageFromSearch(search);
+  const basePath = `/${category.slug}`;
   const [showAllChips, setShowAllChips] = useState(false);
 
   const isIndustry = category.type === "industry";
@@ -54,7 +58,7 @@ export default function CategoryList({ category, offices: filteredOffices }: Cat
   const documentDescription = isIndustry
     ? `${category.name}業界に強いの税理士・会計事務所の一覧です。お困りの方は紹介料無料の税理士紹介サービスをご利用ください。`
     : `${category.name}に強いの税理士・会計事務所の一覧です。お困りの方は紹介料無料の税理士紹介サービスをご利用ください。`;
-  usePageTitle(documentTitle, documentDescription, filteredOffices.length === 0);
+  usePageTitle(documentTitle, documentDescription, filteredOffices.length === 0 || currentPage > totalPages);
 
   const pageDesc = isIndustry
     ? `${category.name}業界に強い税理士・会計事務所を掲載しています。専門的な知識を持つ税理士がお客様のニーズに合わせてサポートします。`
@@ -153,10 +157,8 @@ export default function CategoryList({ category, offices: filteredOffices }: Cat
             <Pagination
               currentPage={currentPage}
               totalPages={totalPages}
-              onPageChange={(page) => {
-                setCurrentPage(page);
-                window.scrollTo({ top: 0, behavior: "smooth" });
-              }}
+              buildHref={(page) => buildPageHref(basePath, search, page)}
+              onNavigate={() => window.scrollTo({ top: 0, behavior: "smooth" })}
             />
           </section>
 
