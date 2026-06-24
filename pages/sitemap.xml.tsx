@@ -5,8 +5,8 @@ export default function SitemapIndex() {
   return null;
 }
 
-const LIST_PARTS = 5;
-const LIST_STA_PARTS = 14;
+const LIST_PARTS = 2;
+const LIST_STA_PARTS = 4;
 
 export const getServerSideProps: GetServerSideProps = async ({ res }) => {
   const today = new Date().toISOString().split('T')[0];
