@@ -15,7 +15,8 @@ import ArticleCard from "@/components/ArticleCard";
 import type { Prefecture, City, Ward, Station, Office, Article } from "@/lib/data";
 import { getCategoriesByType } from "@/lib/categorySlugMap";
 import { useWouterSearch } from "@/lib/useWouterSearch";
-import { getPageFromSearch, buildPageHref } from "@/lib/pagination";
+import { ITEMS_PER_PAGE, getPageFromSearch, buildPageHref, hasExplicitFirstPage } from "@/lib/pagination";
+import { useCanonicalLink } from "@/lib/useCanonicalLink";
 import areaContentsData from "@/data/areaContents.json";
 
 function buildSearchUrl(prefSlug: string, citySlug?: string, wardSlug?: string, stationSlug?: string): string {
@@ -25,8 +26,6 @@ function buildSearchUrl(prefSlug: string, citySlug?: string, wardSlug?: string, 
   if (stationSlug) url += `/${stationSlug}`;
   return url;
 }
-
-const ITEMS_PER_PAGE = 12;
 const CITIES_INITIAL_SHOW = 24;
 
 interface OfficeListProps {
@@ -79,6 +78,9 @@ export default function OfficeList({ prefecture, city, ward, station, cities, st
     : ward ? `/${prefecture.slug}/${city!.slug}/${ward.slug}`
     : city ? `/${prefecture.slug}/${city.slug}`
     : `/${prefecture.slug}`;
+
+  // ?page=1 is identical content to the URL without the page param — canonicalize to it.
+  useCanonicalLink(hasExplicitFirstPage(search) ? buildPageHref(basePath, search, 1) : null);
 
   function applyFilters() {
     const params = new URLSearchParams();

@@ -13,14 +13,15 @@ import Pagination from "@/components/Pagination";
 import type { Office } from "@/lib/data";
 import { usePageTitle } from "@/lib/usePageTitle";
 import { useWouterSearch } from "@/lib/useWouterSearch";
-import { getPageFromSearch, buildPageHref } from "@/lib/pagination";
+import { ITEMS_PER_PAGE, getPageFromSearch, buildPageHref, hasExplicitFirstPage } from "@/lib/pagination";
+import { useCanonicalLink } from "@/lib/useCanonicalLink";
 
-const ITEMS_PER_PAGE = 12;
 const BASE_PATH = "/search/results";
 
 export default function SearchResults() {
   const search = useWouterSearch();
   const currentPage = getPageFromSearch(search);
+  useCanonicalLink(hasExplicitFirstPage(search) ? buildPageHref(BASE_PATH, search, 1) : null);
   const [offices, setOffices] = useState<Office[]>([]);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);

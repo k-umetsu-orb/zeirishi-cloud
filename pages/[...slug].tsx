@@ -54,6 +54,7 @@ import {
   getOfficeById,
   getOfficesByArea,
 } from "@/lib/offices-server";
+import { filterOfficesByCategoryAndArea } from "@/lib/officeFilters";
 import { CATEGORIES, getCategoryBySlug, type CategoryInfo } from "@/lib/categorySlugMap";
 import { CONTENT_COMING_SOON } from "@/lib/contentVisibility";
 import dynamic from "next/dynamic";
@@ -212,10 +213,7 @@ export const getStaticProps: GetStaticProps<SlugPageProps> = async ({ params }) 
     const cat = getCategoryBySlug(seg0);
     if (cat) {
       const isIndustry = cat.type === "industry";
-      const catOffices = getAllOffices().filter(o => {
-        const field = isIndustry ? o.industries : o.services;
-        return cat.dbValues.some(v => field.includes(v));
-      });
+      const catOffices = filterOfficesByCategoryAndArea(getAllOffices(), cat, {});
       return {
         props: {
           pageType: "category" as const,
@@ -268,11 +266,7 @@ export const getStaticProps: GetStaticProps<SlugPageProps> = async ({ params }) 
           pageType: "prefCategory" as const,
           prefecture: pref,
           category: cat,
-          offices: getAllOffices().filter(o => {
-            if (o.prefecture !== pref.slug) return false;
-            const field = isIndustry ? o.industries : o.services;
-            return cat.dbValues.some(v => field.includes(v));
-          }),
+          offices: filterOfficesByCategoryAndArea(getAllOffices(), cat, { prefecture: pref.slug }),
           cities: getCitiesByPrefecture(pref.slug),
           stations: [],
           relatedArticles: getArticlesForPrefecture(pref.slug).slice(0, 4),
@@ -338,11 +332,7 @@ export const getStaticProps: GetStaticProps<SlugPageProps> = async ({ params }) 
           prefecture: pref,
           category: cat,
           city,
-          offices: getAllOffices().filter(o => {
-            if (o.prefecture !== pref.slug || o.city !== city.slug) return false;
-            const field = isIndustry ? o.industries : o.services;
-            return cat.dbValues.some(v => field.includes(v));
-          }),
+          offices: filterOfficesByCategoryAndArea(getAllOffices(), cat, { prefecture: pref.slug, city: city.slug }),
           cities: getCitiesByPrefecture(pref.slug),
           stations: getStationsForCity(pref.slug, city.slug),
           relatedArticles: getArticlesForPrefecture(pref.slug).slice(0, 4),
@@ -437,11 +427,7 @@ export const getStaticProps: GetStaticProps<SlugPageProps> = async ({ params }) 
             category: cat,
             city,
             ward,
-            offices: getAllOffices().filter(o => {
-              if (o.prefecture !== pref.slug || o.city !== city.slug || o.ward !== ward.slug) return false;
-              const field = isIndustry ? o.industries : o.services;
-              return cat.dbValues.some(v => field.includes(v));
-            }),
+            offices: filterOfficesByCategoryAndArea(getAllOffices(), cat, { prefecture: pref.slug, city: city.slug, ward: ward.slug }),
             cities: getCitiesByPrefecture(pref.slug),
             stations: getStationsForCity(pref.slug, city.slug, ward.slug),
             relatedArticles: getArticlesForPrefecture(pref.slug).slice(0, 4),
@@ -505,11 +491,7 @@ export const getStaticProps: GetStaticProps<SlugPageProps> = async ({ params }) 
             category: cat,
             city,
             station,
-            offices: getAllOffices().filter(o => {
-              if (!o.nearestStations.includes(station.slug)) return false;
-              const field = isIndustry ? o.industries : o.services;
-              return cat.dbValues.some(v => field.includes(v));
-            }),
+            offices: filterOfficesByCategoryAndArea(getAllOffices(), cat, { station: station.slug }),
             cities: getCitiesByPrefecture(pref.slug),
             stations: getStationsForCity(pref.slug, city.slug),
             relatedArticles: getArticlesForPrefecture(pref.slug).slice(0, 4),
@@ -569,11 +551,7 @@ export const getStaticProps: GetStaticProps<SlugPageProps> = async ({ params }) 
               city,
               ward,
               station: wStation,
-              offices: getAllOffices().filter(o => {
-                if (!o.nearestStations.includes(wStation.slug)) return false;
-                const field = isIndustry ? o.industries : o.services;
-                return cat.dbValues.some(v => field.includes(v));
-              }),
+              offices: filterOfficesByCategoryAndArea(getAllOffices(), cat, { station: wStation.slug }),
               cities: getCitiesByPrefecture(pref.slug),
               stations: getStationsForCity(pref.slug, city.slug, ward.slug),
               relatedArticles: getArticlesForPrefecture(pref.slug).slice(0, 4),

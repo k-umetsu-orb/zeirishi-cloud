@@ -20,7 +20,8 @@ import ArticleCard from "@/components/ArticleCard";
 import type { Prefecture, City, Ward, Station, Office, Article } from "@/lib/data";
 import { type CategoryInfo, getCategoriesByType } from "@/lib/categorySlugMap";
 import { useWouterSearch } from "@/lib/useWouterSearch";
-import { getPageFromSearch, buildPageHref } from "@/lib/pagination";
+import { ITEMS_PER_PAGE, getPageFromSearch, buildPageHref, hasExplicitFirstPage } from "@/lib/pagination";
+import { useCanonicalLink } from "@/lib/useCanonicalLink";
 
 function buildSearchUrl(prefSlug: string, citySlug?: string, wardSlug?: string, stationSlug?: string): string {
   let url = `/${prefSlug}`;
@@ -30,7 +31,6 @@ function buildSearchUrl(prefSlug: string, citySlug?: string, wardSlug?: string, 
   return url;
 }
 
-const ITEMS_PER_PAGE = 12;
 const CITIES_INITIAL_SHOW = 24;
 
 interface PrefCategoryListProps {
@@ -161,6 +161,9 @@ export default function PrefCategoryList({
 
   // This page's own URL (area + category slug, without query)
   const basePath = `${areaBase}/${category.slug}`;
+
+  // ?page=1 is identical content to the URL without the page param — canonicalize to it.
+  useCanonicalLink(hasExplicitFirstPage(search) ? buildPageHref(basePath, search, 1) : null);
 
   const allServiceCategories = getCategoriesByType("service");
   const allIndustryCategories = getCategoriesByType("industry");

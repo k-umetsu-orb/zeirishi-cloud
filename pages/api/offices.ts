@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getAllOffices } from "@/lib/offices-server";
+import { filterOfficesByArea } from "@/lib/officeFilters";
 import type { Office } from "@/lib/data";
 
 type OfficesResponse = {
@@ -34,12 +35,13 @@ export default function handler(
   const pageNum = Math.max(1, parseInt(typeof page === "string" ? page : "1", 10) || 1);
   const limitNum = Math.min(100, Math.max(1, parseInt(typeof limit === "string" ? limit : "12", 10) || 12));
 
-  let offices = getAllOffices();
+  let offices = filterOfficesByArea(getAllOffices(), {
+    prefecture: prefSlug,
+    city: citySlug,
+    ward: wardSlug,
+    station: stationSlug,
+  });
 
-  if (prefSlug) offices = offices.filter((o) => o.prefecture === prefSlug);
-  if (citySlug) offices = offices.filter((o) => o.city === citySlug);
-  if (wardSlug) offices = offices.filter((o) => o.ward === wardSlug);
-  if (stationSlug) offices = offices.filter((o) => o.nearestStations.includes(stationSlug));
   if (industries.length > 0) {
     offices = offices.filter((o) =>
       o.industries.some((i) => industries.includes(i))

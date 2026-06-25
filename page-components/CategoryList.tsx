@@ -14,9 +14,8 @@ import Pagination from "@/components/Pagination";
 import type { Office } from "@/lib/data";
 import { type CategoryInfo, getCategoriesByType } from "@/lib/categorySlugMap";
 import { useWouterSearch } from "@/lib/useWouterSearch";
-import { getPageFromSearch, buildPageHref } from "@/lib/pagination";
-
-const ITEMS_PER_PAGE = 12;
+import { ITEMS_PER_PAGE, getPageFromSearch, buildPageHref, hasExplicitFirstPage } from "@/lib/pagination";
+import { useCanonicalLink } from "@/lib/useCanonicalLink";
 
 interface CategoryListProps {
   category: CategoryInfo;
@@ -27,6 +26,7 @@ export default function CategoryList({ category, offices: filteredOffices }: Cat
   const search = useWouterSearch();
   const currentPage = getPageFromSearch(search);
   const basePath = `/${category.slug}`;
+  useCanonicalLink(hasExplicitFirstPage(search) ? buildPageHref(basePath, search, 1) : null);
   const [showAllChips, setShowAllChips] = useState(false);
 
   const isIndustry = category.type === "industry";

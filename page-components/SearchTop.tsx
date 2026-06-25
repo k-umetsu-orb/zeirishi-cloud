@@ -17,7 +17,8 @@ import type { Office } from "@/lib/data";
 import japanMapImg from "@/images/japan map_ver2.png";
 import { OPTION_NAME_TO_SLUG } from "@/lib/categorySlugMap";
 import { useWouterSearch } from "@/lib/useWouterSearch";
-import { getPageFromSearch, buildPageHref } from "@/lib/pagination";
+import { ITEMS_PER_PAGE, getPageFromSearch, buildPageHref, hasExplicitFirstPage } from "@/lib/pagination";
+import { useCanonicalLink } from "@/lib/useCanonicalLink";
 
 // ─── Region map data ────────────────────────────────────────────────────────
 
@@ -344,8 +345,6 @@ function JapanMapArea() {
 
 // ─── Page ───────────────────────────────────────────────────────────────────
 
-const ITEMS_PER_PAGE = 12;
-
 export default function SearchTop() {
   usePageTitle(
     "税理士・会計事務所検索TOP | 税理士クラウド",
@@ -354,6 +353,7 @@ export default function SearchTop() {
   const router = useRouter();
   const search = useWouterSearch();
   const resultPage = getPageFromSearch(search);
+  useCanonicalLink(hasExplicitFirstPage(search) ? buildPageHref("/search", search, 1) : null);
   const [filterResults, setFilterResults] = useState<Office[]>([]);
   const [filterTotal, setFilterTotal] = useState(0);
   const [filterLoading, setFilterLoading] = useState(false);
