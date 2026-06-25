@@ -160,9 +160,4 @@
   .animate-scroll-x {
     animation: scroll-x 85s linear infinite;
   }
-  @media (prefers-reduced-motion: reduce) {
-    .animate-scroll-x {
-      animation: none;
-    }
-  }
 }
