@@ -1057,9 +1057,9 @@ export default function Home({ officeCount, interviewUrls }: { officeCount: numb
             <SectionHeading
               center
               tag="Tax Accountant"
-              sub="全国の税理士・会計事務所が多数登録中"
+              // sub="全国の税理士・会計事務所が多数登録中"
             >
-              登録税理士
+              全国の税理士・会計事務所が多数登録中
             </SectionHeading>
           </div>
 
