@@ -3,7 +3,8 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 import { Menu, X, ChevronRight } from "lucide-react";
-import logo from "@/images/ロゴ7.png";
+import logo from "@/images/税アイコン.png";
+import textLogo from "@/images/ロゴテキスト.png";
 
 const navItems = [
   { label: "税理士検索", href: "/search" },
@@ -34,9 +35,7 @@ export default function GlobalHeader() {
             {/* Logo */}
             <Link href="/" className="flex items-center gap-2 shrink-0" onClick={close}>
               <Image src={logo} alt="税理士クラウド" width={32} height={32} className="object-contain bg-white rounded-xl" priority />
-              <span className="font-serif font-bold text-lg text-foreground">
-                税理士クラウド
-              </span>
+              <Image src={textLogo} alt="税理士クラウド" width={144} height={24} className="object-contain" priority />
             </Link>
 
             {/* Desktop nav */}
@@ -93,7 +92,7 @@ export default function GlobalHeader() {
           <div className="flex items-center justify-between px-5 h-16 border-b border-border shrink-0">
             <Link href="/" className="flex items-center gap-2" onClick={close}>
               <Image src={logo} alt="税理士クラウド" width={28} height={28} className="object-contain bg-white rounded-xl" />
-              <span className="font-serif font-bold text-base text-foreground">税理士クラウド</span>
+              <Image src={textLogo} alt="税理士クラウド" width={120} height={20} className="object-contain" />
             </Link>
             <button onClick={close} className="p-2 rounded-md hover:bg-muted" aria-label="閉じる">
               <X className="w-5 h-5 text-foreground/70" />

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
-import logo from "@/images/ロゴ7.png";
+import logo from "@/images/税アイコン.png";
+import textLogo from "@/images/ロゴテキスト.png";
 
 export default function GlobalFooter() {
   return (
@@ -11,7 +12,7 @@ export default function GlobalFooter() {
           <div className="col-span-2 md:col-span-1">
             <Link href="/" className="flex items-center gap-2 mb-3">
               <Image src={logo} alt="税理士クラウド" width={28} height={28} className="object-contain bg-white rounded-xl" />
-              <span className="font-serif font-bold text-foreground">税理士クラウド</span>
+              <Image src={textLogo} alt="税理士クラウド" width={120} height={20} className="object-contain" />
             </Link>
             <p className="text-sm text-muted-foreground leading-relaxed">
               全国の税理士・会計事務所をエリア・得意分野から検索できるポータルサイトです。
