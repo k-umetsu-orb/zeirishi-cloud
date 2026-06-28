@@ -323,7 +323,7 @@ export default function IntroductionVariantPage({
             </div>
 
             <div className="grid grid-cols-[1.1fr_1fr] md:grid-cols-[1.2fr_0.8fr] gap-3 md:gap-6 items-start md:items-end text-left">
-              <div className="pb-6 md:pb-[72px] min-w-0">
+              <div className="pb-6 md:pb-[72px] min-w-0 pl-4 md:pl-0">
                 <div className="hidden md:block relative md:-top-10">
                   <Breadcrumb items={[{ label: breadcrumbLabel }]} variant="light" />
                 </div>

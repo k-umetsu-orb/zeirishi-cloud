@@ -316,7 +316,7 @@ export default function LpVariantPage({
         >
           <div className="container relative pt-10 md:pt-20">
             <div className="grid grid-cols-[1.1fr_1fr] md:grid-cols-[1.2fr_0.8fr] gap-3 md:gap-6 items-start md:items-end text-left">
-              <div className="pb-6 md:pb-[72px] min-w-0">
+              <div className="pb-6 md:pb-[72px] min-w-0 pl-4 md:pl-0">
                 <div className="w-fit ml-auto">
                   {/* Badge */}
                   <div className="flex justify-start mb-2 md:mt-4 md:mb-6">
