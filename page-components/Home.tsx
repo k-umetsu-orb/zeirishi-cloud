@@ -604,7 +604,7 @@ export default function Home({ officeCount, interviewUrls }: { officeCount: numb
           />
 
           {/* ── SP Hero ── */}
-          <div className="relative z-10 px-4 pb-8 pt-8 md:hidden">
+          <div className="relative z-10 px-4 pb-8 pt-4 md:hidden">
             <div
               className="absolute left-0 top-0 h-36 w-40"
               style={{
@@ -622,8 +622,8 @@ export default function Home({ officeCount, interviewUrls }: { officeCount: numb
               aria-hidden
             />
 
-            <div className="relative min-h-[540px] overflow-hidden">
-              <div className="absolute right-[-32px] top-[128px] w-[640px]" aria-hidden>
+            <div className="relative min-h-[520px] overflow-hidden">
+              <div className="absolute right-[-32px] top-[108px] w-[640px]" aria-hidden>
                 <Image
                   src={heroPhoto}
                   alt=""
@@ -636,7 +636,7 @@ export default function Home({ officeCount, interviewUrls }: { officeCount: numb
                 <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[#eef6ff] to-transparent" />
               </div>
 
-              <div className="relative z-10 pt-12">
+              <div className="relative z-10 pt-7">
                 <h1 className="text-[2rem] font-extrabold leading-[1.42] text-[#071b3f]">
                   <span className="text-[#1a50a8]">
                     クラウド会計に
@@ -658,7 +658,24 @@ export default function Home({ officeCount, interviewUrls }: { officeCount: numb
               </div>
             </div>
 
-            <div className="relative z-10 mx-auto -mt-6 flex w-full max-w-[330px] flex-col gap-3">
+            <div className="relative z-10 -mt-8 grid grid-cols-3 divide-x divide-[#cfe0f5]">
+              {[
+                { icon: Users, label: "掲載税理士事務所数", value: "3,000", suffix: "件以上" },
+                { icon: MapPin, label: "対応エリア", value: "全国", suffix: "対応" },
+                { icon: Shield, label: "相談・紹介", value: "無料", suffix: "対応" },
+              ].map((s) => (
+                <div key={s.label} className="flex min-w-0 flex-col items-center px-2 text-center">
+                  <span className="mb-3 flex h-11 w-11 items-center justify-center rounded-full border border-[#bdd3f5] bg-white">
+                    <s.icon className="h-5 w-5 text-[#1a50a8]" />
+                  </span>
+                  <p className="min-h-[2.6em] text-[11px] font-bold leading-snug text-[#12325f]">{s.label}</p>
+                  <p className="mt-2 whitespace-nowrap text-[1.65rem] font-extrabold leading-none text-[#071b3f]">{s.value}</p>
+                  <p className="mt-1 text-xs font-bold text-[#071b3f]">{s.suffix}</p>
+                </div>
+              ))}
+            </div>
+
+            <div className="relative z-10 mx-auto mt-8 flex w-full max-w-[330px] flex-col gap-3">
               <Link
                 href="/introduction"
                 className="inline-flex h-14 items-center justify-center gap-4 rounded-lg bg-[#1a50a8] px-6 text-base font-bold text-white shadow-[0_14px_32px_rgba(26,80,168,0.24)] transition-colors hover:bg-[#0c3282]"
@@ -673,23 +690,6 @@ export default function Home({ officeCount, interviewUrls }: { officeCount: numb
                 条件から税理士を探す
                 <ChevronRight className="h-5 w-5" />
               </Link>
-            </div>
-
-            <div className="relative z-10 mt-8 grid grid-cols-3 divide-x divide-[#cfe0f5]">
-              {[
-                { icon: Users, label: "掲載税理士事務所数", value: "3,000", suffix: "件以上" },
-                { icon: MapPin, label: "対応エリア", value: "全国", suffix: "対応" },
-                { icon: Shield, label: "相談・紹介", value: "完全無料", suffix: "対応" },
-              ].map((s) => (
-                <div key={s.label} className="flex min-w-0 flex-col items-center px-2 text-center">
-                  <span className="mb-3 flex h-11 w-11 items-center justify-center rounded-full border border-[#bdd3f5] bg-white">
-                    <s.icon className="h-5 w-5 text-[#1a50a8]" />
-                  </span>
-                  <p className="min-h-[2.6em] text-[11px] font-bold leading-snug text-[#12325f]">{s.label}</p>
-                  <p className="mt-2 whitespace-nowrap text-[1.65rem] font-extrabold leading-none text-[#071b3f]">{s.value}</p>
-                  <p className="mt-1 text-xs font-bold text-[#071b3f]">{s.suffix}</p>
-                </div>
-              ))}
             </div>
 
             <div className="relative z-10 mt-8 rounded-2xl border border-[#d8e4f5] bg-white/95 p-4 shadow-[0_16px_44px_rgba(7,27,63,0.08)]">
