@@ -636,17 +636,21 @@ export default function Home({ officeCount, interviewUrls }: { officeCount: numb
                 <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[#eef6ff] to-transparent" />
               </div>
 
-              <div className="relative z-10 pt-7">
+              <div className="relative z-10 pt-4">
+                <div className="relative mb-6 inline-flex h-11 items-center rounded-full bg-[#1a50a8] px-6 text-base font-extrabold text-white shadow-[0_10px_24px_rgba(26,80,168,0.18)]">
+                  クラウド会計に強い
+                  <span
+                    className="absolute -bottom-3 left-5 h-0 w-0"
+                    style={{
+                      borderTop: "15px solid #1a50a8",
+                      borderRight: "13px solid transparent",
+                    }}
+                  />
+                </div>
                 <h1 className="text-[2rem] font-extrabold leading-[1.42] text-[#071b3f]">
-                  <span className="text-[#1a50a8]">
-                    クラウド会計に
-                    <br />
-                    強い税理士を中心に
-                  </span>
+                  <span className="text-[#1a50a8]">あなたにぴったりの</span>
                   <br />
-                  あなたに合った
-                  <br />
-                  相談先を紹介
+                  税理士を紹介
                 </h1>
                 <p className="mt-8 max-w-[250px] text-base font-semibold leading-[2.05] text-[#12325f]">
                   豊富な経験と実績のある
