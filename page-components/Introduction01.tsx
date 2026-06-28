@@ -326,7 +326,7 @@ export default function Introduction01() {
                   </div>
 
                   {/* Headline */}
-                  <h1 className="font-bold text-base md:text-5xl lg:text-[3.25rem] text-white leading-tight mb-2 md:mb-6 tracking-tight">
+                  <h1 className="font-bold text-sm md:text-5xl lg:text-[3.25rem] text-white leading-tight mb-2 md:mb-6 tracking-tight">
                     あなたに合った税理士を<br />
                     <span className="relative inline-block">
                       <span className="relative z-10">無料でご紹介</span>

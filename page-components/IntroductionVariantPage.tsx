@@ -340,7 +340,7 @@ export default function IntroductionVariantPage({
                   </div>
 
                   {/* Headline */}
-                  <h1 className="font-bold text-base md:text-5xl lg:text-[3.25rem] text-white leading-tight mb-2 md:mb-6 tracking-tight">
+                  <h1 className="font-bold text-sm md:text-5xl lg:text-[3.25rem] text-white leading-tight mb-2 md:mb-6 tracking-tight">
                     {headlineLines.slice(0, -1).map((line, i) => (
                       <Fragment key={i}>{line}<br /></Fragment>
                     ))}
