@@ -20,6 +20,7 @@ import {
   getCitiesByPrefecture,
 } from "@/lib/data";
 import japanMapImg from "@/images/japan map_ver2.png";
+import heroPhoto from "@/images/hero-coordinator-30s.png";
 import accountantPhoto1 from "@/images/男性1.png";
 import accountantPhoto2 from "@/images/男性2.png";
 import accountantPhoto3 from "@/images/男性3.png";
@@ -182,12 +183,12 @@ const MAP_CARD_REGIONS = [
 // ─── 悩み別導線 ───────────────────────────────────────────────────────────────
 
 const consultLinks = [
-  { href: "/introduction-01", icon: Search,    label: "顧問税理士を見直したい" },
-  { href: "/introduction-02", icon: RefreshCw, label: "確定申告・年末調整を任せたい" },
-  { href: "/introduction-03", icon: FileText,  label: "相続税について相談したい" },
-  { href: "/introduction-04", icon: Shield,    label: "税務調査に備えたい" },
-  { href: "/introduction-05", icon: Building2, label: "事業承継を進めたい" },
-  { href: "/introduction-06", icon: BookOpen,  label: "会社設立を支援してほしい" },
+  { href: "/introduction-01", icon: Search,    label: "顧問税理士の見直し" },
+  { href: "/introduction-02", icon: RefreshCw, label: "確定申告・年末調整" },
+  { href: "/introduction-03", icon: FileText,  label: "相続税" },
+  { href: "/introduction-04", icon: Shield,    label: "税務調査" },
+  { href: "/introduction-05", icon: Building2, label: "事業承継" },
+  { href: "/introduction-06", icon: BookOpen,  label: "会社設立" },
 ];
 
 // ─── Static data ──────────────────────────────────────────────────────────────
@@ -494,26 +495,6 @@ function MoreLink({ href, label }: { href: string; label: string }) {
   );
 }
 
-// ─── 月桂樹ベジェヘルパー ────────────────────────────────────────────────────────
-type Pt = [number, number];
-function bpt(p0: Pt, p1: Pt, p2: Pt, p3: Pt, t: number): Pt {
-  const m = 1 - t;
-  return [
-    m*m*m*p0[0] + 3*m*m*t*p1[0] + 3*m*t*t*p2[0] + t*t*t*p3[0],
-    m*m*m*p0[1] + 3*m*m*t*p1[1] + 3*m*t*t*p2[1] + t*t*t*p3[1],
-  ];
-}
-function bang(p0: Pt, p1: Pt, p2: Pt, p3: Pt, t: number): number {
-  const m = 1 - t;
-  const dx = 3*m*m*(p1[0]-p0[0]) + 6*m*t*(p2[0]-p1[0]) + 3*t*t*(p3[0]-p2[0]);
-  const dy = 3*m*m*(p1[1]-p0[1]) + 6*m*t*(p2[1]-p1[1]) + 3*t*t*(p3[1]-p2[1]);
-  return Math.atan2(dy, dx) * 180 / Math.PI;
-}
-// 左ステム制御点（SVG 340×260、円中心(170,130) r=90）
-const SL: [Pt,Pt,Pt,Pt] = [[150,224],[26,195],[62,69],[82,24]];
-// 右ステム（x方向を340で反転）
-const SR: [Pt,Pt,Pt,Pt] = [[190,224],[314,195],[278,69],[258,24]];
-
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default function Home({ officeCount, interviewUrls }: { officeCount: number; interviewUrls: Record<string, string> }) {
@@ -574,160 +555,258 @@ export default function Home({ officeCount, interviewUrls }: { officeCount: numb
             1. ヒーロー
         ═══════════════════════════════════════════════════════ */}
         <section
-          className="relative overflow-hidden"
-          style={{ background: "linear-gradient(135deg, #0d3a8c 0%, #1a50a8 55%, #1e5abf 100%)" }}
+          className="relative isolate overflow-hidden"
+          style={{ background: "linear-gradient(180deg, #f7fbff 0%, #eef6ff 100%)" }}
         >
-          {/* 背景装飾：浮遊する書類 */}
-          <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden>
-            {[
-              { w: 56, h: 44, top: "8%",  left: "38%", rotate: "15deg",  op: 0.12 },
-              { w: 44, h: 34, top: "18%", left: "52%", rotate: "-10deg", op: 0.10 },
-              { w: 64, h: 50, top: "5%",  left: "62%", rotate: "25deg",  op: 0.09 },
-              { w: 40, h: 30, top: "30%", left: "45%", rotate: "-18deg", op: 0.08 },
-              { w: 52, h: 40, top: "55%", left: "58%", rotate: "8deg",   op: 0.07 },
-            ].map((d, i) => (
-              <div
-                key={i}
-                className="absolute rounded-sm bg-white"
-                style={{
-                  width: d.w, height: d.h,
-                  top: d.top, left: d.left,
-                  transform: `rotate(${d.rotate})`,
-                  opacity: d.op,
-                }}
-              />
-            ))}
+          {/* 背景装飾 */}
+          <div
+            className="absolute -top-[470px] left-[6%] h-[840px] w-[980px] rounded-full"
+            style={{
+              background: "radial-gradient(circle, rgba(219,234,255,0.86) 0%, rgba(234,244,255,0.62) 48%, rgba(247,251,255,0) 72%)",
+            }}
+            aria-hidden
+          />
+          <div
+            className="absolute inset-y-0 right-0 hidden w-[48%] lg:block"
+            style={{
+              background: "linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.58) 58%, rgba(255,255,255,0.88) 100%)",
+            }}
+            aria-hidden
+          />
+          <div className="absolute inset-y-0 right-0 hidden w-[58%] lg:block" aria-hidden>
+            <Image
+              src={heroPhoto}
+              alt=""
+              fill
+              priority
+              sizes="58vw"
+              className="object-cover object-right"
+              style={{ filter: "contrast(1.06) saturate(1.04)" }}
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-[#f7fbff] via-[#f7fbff]/20 to-transparent" />
+            <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[#eef6ff] to-transparent" />
+          </div>
+          <div
+            className="absolute left-0 top-0 hidden h-52 w-52 md:block"
+            style={{
+              backgroundImage: "radial-gradient(circle, rgba(26,80,168,0.18) 1.2px, transparent 1.3px)",
+              backgroundSize: "14px 14px",
+            }}
+            aria-hidden
+          />
+          <div
+            className="absolute right-0 top-6 hidden h-72 w-48 md:block"
+            style={{
+              backgroundImage: "radial-gradient(circle, rgba(26,80,168,0.16) 1.2px, transparent 1.3px)",
+              backgroundSize: "14px 14px",
+            }}
+            aria-hidden
+          />
+
+          {/* ── SP Hero ── */}
+          <div className="relative z-10 px-4 pb-8 pt-8 md:hidden">
+            <div
+              className="absolute left-0 top-0 h-36 w-40"
+              style={{
+                backgroundImage: "radial-gradient(circle, rgba(26,80,168,0.2) 1.2px, transparent 1.3px)",
+                backgroundSize: "14px 14px",
+              }}
+              aria-hidden
+            />
+            <div
+              className="absolute bottom-[420px] right-0 h-28 w-20"
+              style={{
+                backgroundImage: "radial-gradient(circle, rgba(26,80,168,0.16) 1.2px, transparent 1.3px)",
+                backgroundSize: "14px 14px",
+              }}
+              aria-hidden
+            />
+
+            <div className="relative min-h-[540px] overflow-hidden">
+              <div className="absolute right-[-32px] top-[128px] w-[640px]" aria-hidden>
+                <Image
+                  src={heroPhoto}
+                  alt=""
+                  priority
+                  sizes="640px"
+                  className="h-auto w-full max-w-none"
+                  style={{ filter: "contrast(1.06) saturate(1.04)" }}
+                />
+                <div className="absolute inset-0 bg-gradient-to-r from-[#f7fbff] via-[#f7fbff]/20 to-transparent" />
+                <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[#eef6ff] to-transparent" />
+              </div>
+
+              <div className="relative z-10 pt-12">
+                <h1 className="text-[2rem] font-extrabold leading-[1.42] text-[#071b3f]">
+                  <span className="text-[#1a50a8]">
+                    クラウド会計に
+                    <br />
+                    強い税理士を中心に
+                  </span>
+                  <br />
+                  あなたに合った
+                  <br />
+                  相談先を紹介
+                </h1>
+                <p className="mt-8 max-w-[250px] text-base font-semibold leading-[2.05] text-[#12325f]">
+                  豊富な経験と実績のある
+                  <br />
+                  税理士・会計事務所を
+                  <br />
+                  相談無料でご紹介します。
+                </p>
+              </div>
+            </div>
+
+            <div className="relative z-10 mx-auto -mt-6 flex w-full max-w-[330px] flex-col gap-3">
+              <Link
+                href="/introduction"
+                className="inline-flex h-14 items-center justify-center gap-4 rounded-lg bg-[#1a50a8] px-6 text-base font-bold text-white shadow-[0_14px_32px_rgba(26,80,168,0.24)] transition-colors hover:bg-[#0c3282]"
+              >
+                無料で紹介してもらう
+                <ChevronRight className="h-5 w-5" />
+              </Link>
+              <Link
+                href="/search"
+                className="inline-flex h-14 items-center justify-center gap-4 rounded-lg border border-[#1a50a8] bg-white/90 px-6 text-base font-bold text-[#1a50a8] transition-colors hover:bg-[#f1f5ff]"
+              >
+                条件から税理士を探す
+                <ChevronRight className="h-5 w-5" />
+              </Link>
+            </div>
+
+            <div className="relative z-10 mt-8 grid grid-cols-3 divide-x divide-[#cfe0f5]">
+              {[
+                { icon: Users, label: "掲載税理士事務所数", value: "3,000", suffix: "件以上" },
+                { icon: MapPin, label: "対応エリア", value: "全国", suffix: "対応" },
+                { icon: Shield, label: "相談・紹介", value: "完全無料", suffix: "対応" },
+              ].map((s) => (
+                <div key={s.label} className="flex min-w-0 flex-col items-center px-2 text-center">
+                  <span className="mb-3 flex h-11 w-11 items-center justify-center rounded-full border border-[#bdd3f5] bg-white">
+                    <s.icon className="h-5 w-5 text-[#1a50a8]" />
+                  </span>
+                  <p className="min-h-[2.6em] text-[11px] font-bold leading-snug text-[#12325f]">{s.label}</p>
+                  <p className="mt-2 whitespace-nowrap text-[1.65rem] font-extrabold leading-none text-[#071b3f]">{s.value}</p>
+                  <p className="mt-1 text-xs font-bold text-[#071b3f]">{s.suffix}</p>
+                </div>
+              ))}
+            </div>
+
+            <div className="relative z-10 mt-8 rounded-2xl border border-[#d8e4f5] bg-white/95 p-4 shadow-[0_16px_44px_rgba(7,27,63,0.08)]">
+              <h2 className="mb-4 text-center text-xl font-extrabold text-[#071b3f]">相談内容から探す</h2>
+              <div className="grid grid-cols-2 gap-2">
+                {consultLinks.map(({ href, icon: Icon, label }) => (
+                  <Link
+                    key={href}
+                    href={href}
+                    className="inline-flex h-12 min-w-0 items-center rounded-full border border-[#d8e4f5] bg-white px-2 text-[11px] font-bold leading-none text-[#071b3f] transition-colors hover:border-[#1a50a8] hover:text-[#1a50a8]"
+                  >
+                    <Icon className="mr-1 h-3.5 w-3.5 shrink-0 text-[#1a50a8]" />
+                    <span className="min-w-0 flex-1 whitespace-nowrap">{label}</span>
+                    <ChevronRight className="ml-1 h-3.5 w-3.5 shrink-0 text-[#071b3f]" />
+                  </Link>
+                ))}
+              </div>
+              <Link
+                href="/introduction"
+                className="mt-5 inline-flex w-full items-center justify-center gap-2 text-sm font-bold text-[#1a50a8]"
+              >
+                自分に合う税理士を紹介してもらう
+                <ChevronRight className="h-4 w-4" />
+              </Link>
+            </div>
           </div>
 
-          <div className="container py-12 md:py-16 relative">
-            <div className="flex flex-col lg:flex-row items-start lg:items-center gap-8 lg:gap-10">
+          <div className="container relative z-10 hidden pt-12 pb-8 md:block md:pt-16 md:pb-10">
+            <div className="grid grid-cols-1 items-center gap-8 lg:min-h-[520px] lg:grid-cols-[minmax(0,1fr)_minmax(360px,0.86fr)] lg:gap-8">
 
-              {/* ── 左：テキスト + バッジ ── */}
-              <div className="flex-1 min-w-0 pl-4 md:pl-16 lg:pl-12 pt-9">
-                {/* キャッチコピー */}
-                <h1 className="mb-6 leading-snug tracking-tight md:pl-12">
-                  <span
-                    className="block font-bold text-white mb-1"
-                    style={{ fontSize: "clamp(1rem, 2vw, 1.375rem)" }}
-                  >
-                    <span className="inline border-b-2 mr-1" style={{ borderColor: "#f0d060" }}>厳選した</span>
-                    豊富な経験と実績のある
+              {/* ── 左：キャッチコピー + CTA + 実績 ── */}
+              <div className="min-w-0 text-left">
+                <h1 className="mb-6 text-[2rem] font-extrabold leading-[1.4] text-[#071b3f] md:text-[2.35rem]">
+                  <span className="block whitespace-nowrap">
+                    <span className="text-[#1a50a8]">クラウド会計に強い</span>税理士を中心に
                   </span>
-                  <span
-                    className="block font-bold text-white mb-1"
-                    style={{ fontSize: "clamp(1.1rem, 2.2vw, 1.5rem)" }}
-                  >
-                    税理士・会計事務所を
-                  </span>
-                  <span
-                    className="block font-extrabold"
-                    style={{ fontSize: "clamp(1.8rem, 4vw, 3rem)", color: "#f0d060", letterSpacing: "-0.02em" }}
-                  >
-                    <span style={{ fontSize: "1.15em" }}>相談無料</span>
-                    <span className="text-white font-bold" style={{ fontSize: "0.65em" }}>&nbsp;でご紹介</span>
-                  </span>
+                  <span className="block whitespace-nowrap">あなたにぴったりの相談先を紹介</span>
                 </h1>
+                <p className="mb-9 max-w-2xl text-base font-semibold leading-[1.9] text-[#12325f] md:text-lg">
+                  <span className="md:whitespace-nowrap">豊富な経験と実績のある厳選した税理士・会計事務所を</span>
+                  <br />
+                  相談無料でご紹介します。
+                </p>
 
-                {/* ── バッジ × 2（月桂樹SVGベジェ生成） ── */}
-                <div className="hidden md:flex mt-2 justify-start">
-                  {([
-                    { lines: [{ t: "全国対応！", fs: 14, fw: 600 }, { t: "3,000件以上", fs: 26, fw: 800 }, { t: "の事務所を掲載", fs: 13, fw: 600 }] },
-                    { lines: [{ t: "安心の料金設計", fs: 12, fw: 600 }, { t: "相談無料", fs: 28, fw: 800 }, { t: "でご紹介可能！", fs: 13, fw: 600 }] },
-                  ] as const).map((badge, bi) => (
-                    <svg key={bi} viewBox="0 0 340 260" className="w-[160px] md:w-[340px]" style={{ height: "auto", marginLeft: bi > 0 ? "-60px" : "0" }} xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                      <defs>
-                        <radialGradient id={`gg${bi}`} cx="38%" cy="30%" r="65%">
-                          <stop offset="0%"   stopColor="#f8e472" />
-                          <stop offset="55%"  stopColor="#d4a020" />
-                          <stop offset="100%" stopColor="#a87010" />
-                        </radialGradient>
-                      </defs>
-                      <path d={`M${SL[0]} C${SL[1]} ${SL[2]} ${SL[3]}`} stroke="#c8a840" strokeWidth="2" fill="none" strokeLinecap="round" />
-                      <path d={`M${SR[0]} C${SR[1]} ${SR[2]} ${SR[3]}`} stroke="#c8a840" strokeWidth="2" fill="none" strokeLinecap="round" />
-                      {([SL, SR] as const).map((stem, si) =>
-                        Array.from({ length: 9 }, (_, ni) => {
-                          const t = (ni + 0.5) / 9;
-                          const [px, py] = bpt(stem[0], stem[1], stem[2], stem[3], t);
-                          const a = bang(stem[0], stem[1], stem[2], stem[3], t);
-                          const pr = (a + 90) * Math.PI / 180;
-                          const d = 12;
-                          const ox = px + d * Math.cos(pr), oy = py + d * Math.sin(pr);
-                          const ix = px - d * Math.cos(pr), iy = py - d * Math.sin(pr);
-                          return (
-                            <g key={`${si}-${ni}`}>
-                              <ellipse cx={ox} cy={oy} rx="13" ry="5" fill="#c8a840" transform={`rotate(${a + 42} ${ox} ${oy})`} />
-                              <ellipse cx={ix} cy={iy} rx="13" ry="5" fill="#c8a840" transform={`rotate(${a - 42} ${ix} ${iy})`} />
-                            </g>
-                          );
-                        })
-                      )}
-                      <circle cx="170" cy="130" r="90" fill={`url(#gg${bi})`} filter="drop-shadow(0 4px 14px rgba(0,0,0,0.45))" />
-                      <text x="170" y="105" textAnchor="middle" dominantBaseline="middle" fontSize={badge.lines[0].fs} fontWeight={badge.lines[0].fw} fill="white">{badge.lines[0].t}</text>
-                      <text x="170" y="133" textAnchor="middle" dominantBaseline="middle" fontSize={badge.lines[1].fs} fontWeight={badge.lines[1].fw} fill="white">{badge.lines[1].t}</text>
-                      <text x="170" y="160" textAnchor="middle" dominantBaseline="middle" fontSize={badge.lines[2].fs} fontWeight={badge.lines[2].fw} fill="white">{badge.lines[2].t}</text>
-                    </svg>
+                <div className="mb-11 flex flex-col gap-3 sm:flex-row">
+                  <Link
+                    href="/introduction"
+                    className="inline-flex h-14 items-center justify-center gap-3 rounded-lg bg-[#1a50a8] px-8 text-base font-bold text-white shadow-[0_14px_32px_rgba(26,80,168,0.24)] transition-colors hover:bg-[#0c3282]"
+                  >
+                    無料で紹介してもらう
+                    <ChevronRight className="w-4 h-4" />
+                  </Link>
+                  <Link
+                    href="/search"
+                    className="inline-flex h-14 items-center justify-center gap-3 rounded-lg border border-[#1a50a8] bg-white/80 px-8 text-base font-bold text-[#1a50a8] transition-colors hover:bg-[#f1f5ff]"
+                  >
+                    条件から税理士を探す
+                    <ChevronRight className="w-4 h-4" />
+                  </Link>
+                </div>
+
+                {/* 安心ポイント */}
+                <div className="grid max-w-3xl grid-cols-1 gap-5 sm:grid-cols-3">
+                  {[
+                    { icon: Users, label: "掲載税理士事務所数", value: "3,000", suffix: "件以上" },
+                    { icon: MapPin, label: "対応エリア", value: "全国", suffix: "対応" },
+                    { icon: Shield, label: "相談・紹介", value: "完全無料", suffix: "対応" },
+                  ].map((s) => (
+                    <div key={s.label} className="flex items-center gap-3">
+                      <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-[#bdd3f5] bg-white">
+                        <s.icon className="h-5 w-5 text-[#1a50a8]" />
+                      </span>
+                      <div className="text-left">
+                        <p className="mb-1 text-xs font-semibold text-[#12325f]">{s.label}</p>
+                        <p className="text-3xl font-extrabold leading-none text-[#071b3f]">
+                          {s.value}
+                          <span className="ml-1 text-sm font-bold">{s.suffix}</span>
+                        </p>
+                      </div>
+                    </div>
                   ))}
                 </div>
               </div>
 
-              {/* ── 右：6ボタンカード ── */}
-              <div className="w-full lg:w-[730px] shrink-0 px-4 md:px-8 lg:px-0 lg:pr-24">
-                <div className="relative rounded-2xl bg-white overflow-hidden shadow-xl mx-auto max-w-lg lg:max-w-none lg:mx-0">
-                  {/* 完全無料リボン */}
-                  <div className="absolute top-0 left-0 w-20 h-20 overflow-hidden pointer-events-none">
-                    <div
-                      className="absolute text-white text-[11px] font-bold text-center leading-tight py-1"
-                      style={{ width: "90px", top: "14px", left: "-22px", transform: "rotate(-45deg)", background: "linear-gradient(90deg,#f97316,#ef4444)" }}
-                    >
-                      完全無料
-                    </div>
-                  </div>
-
-                  {/* ヘッダー */}
-                  <div className="pt-6 pb-5 px-5 border-b border-border">
-                    <div className="flex justify-center mb-1.5">
-                      <span className="inline-block bg-primary/10 text-primary text-xs font-bold px-3 py-0.5 rounded-full">
-                        納得のいく税理士選びをサポート
-                      </span>
-                    </div>
-                    <Link href="/introduction" className="flex items-center justify-center gap-3 group">
-                      <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                        <Users className="w-5 h-5 text-primary" />
-                      </div>
-                      <h2 className="font-bold text-lg md:text-xl text-foreground leading-tight">
-                        自分に合う税理士を紹介してもらう
-                      </h2>
-                      <ChevronRight className="w-5 h-5 text-primary shrink-0 group-hover:translate-x-1 transition-transform" />
-                    </Link>
-                  </div>
-
-                  {/* 6ボタン */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-2 p-5">
-                    {/* <Link
-                      href="/introduction-01"
-                      className="col-span-2 flex items-center gap-3 px-4 h-[64px] rounded-xl text-white font-bold text-sm hover:opacity-90 transition-opacity"
-                      style={{ background: "linear-gradient(135deg,#0f2660,#1a50a8)" }}
-                    >
-                      <Users className="w-5 h-5 shrink-0" />
-                      <span className="flex-1 leading-snug">顧問税理士を見直したい</span>
-                      <ChevronRight className="w-4 h-4 shrink-0 opacity-70" />
-                    </Link> */}
-                    {consultLinks.map(({ href, icon: Icon, label }, i) => (
-                      <Link
-                        key={href}
-                        href={href}
-                        className={`${i === 3 || i === 4 ? "hidden md:flex" : "flex"} items-center gap-3 px-4 h-[64px] rounded-xl text-white font-bold text-[13.5px] md:text-sm hover:opacity-90 transition-opacity`}
-                        style={{ background: "linear-gradient(135deg,#0f2660,#1a50a8)" }}
-                      >
-                        <Icon className="w-5 h-5 shrink-0" />
-                        <span className="flex-1 leading-snug">{label}</span>
-                        <ChevronRight className="w-4 h-4 shrink-0 opacity-70" />
-                      </Link>
-                    ))}
-                  </div>
-                </div>
+              {/* ── 右：写真（SP/タブレット用） ── */}
+              <div className="relative flex min-h-[260px] w-full items-end justify-center overflow-hidden rounded-[28px] bg-white/50 md:min-h-[340px] lg:hidden">
+                <Image
+                  src={heroPhoto}
+                  alt=""
+                  priority
+                  className="absolute inset-0 h-full w-full object-cover object-right"
+                  style={{ filter: "contrast(1.06) saturate(1.04)" }}
+                />
+                <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-[#eef6ff] to-transparent" />
               </div>
 
+            </div>
+
+            {/* ── 人気の相談内容から探す ── */}
+            <div className="mt-8 rounded-2xl border border-[#e2ebf8] bg-white/95 p-5 shadow-[0_16px_44px_rgba(7,27,63,0.08)] md:mt-10 md:p-8">
+              <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:gap-8">
+                <h2 className="shrink-0 text-lg font-extrabold leading-snug text-[#071b3f] md:text-xl">
+                  相談内容から探す
+                </h2>
+                <div className="flex flex-wrap items-center gap-3">
+                  {consultLinks.map(({ href, icon: Icon, label }) => (
+                    <Link
+                      key={href}
+                      href={href}
+                      className="inline-flex h-12 w-[184px] shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-full border border-[#d8e4f5] bg-white px-4 text-sm font-bold text-[#071b3f] transition-colors hover:border-[#1a50a8] hover:text-[#1a50a8]"
+                    >
+                      <Icon className="h-4 w-4 shrink-0 text-[#1a50a8]" />
+                      <span>{label}</span>
+                    </Link>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
         </section>
