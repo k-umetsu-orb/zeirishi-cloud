@@ -513,8 +513,8 @@ export default function OfficeList({ prefecture, city, ward, station, cities, st
                 onNavigate={() => window.scrollTo({ top: 0, behavior: "smooth" })}
               />
 
-              {/* Related articles */}
-              {relatedArticles.length > 0 && (
+              {/* Related articles（記事未公開のため一旦非表示） */}
+              {false && relatedArticles.length > 0 && (
                 <section className="mt-16">
                   <h2 className="text-xl font-bold text-foreground mb-5">関連記事</h2>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
