@@ -816,6 +816,43 @@ export default function Home({ officeCount, interviewUrls }: { officeCount: numb
         </section>
 
         {/* ══════════════════════════════════════════════════════
+            1.5. 登録税理士・会計事務所スライダー
+        ═══════════════════════════════════════════════════════ */}
+        <section className="py-12 md:py-16 bg-[#f4f7fb] border-b border-border overflow-hidden">
+          <div className="container">
+            <SectionHeading
+              center
+              tag="Tax Accountant"
+              // sub="全国の税理士・会計事務所が多数登録中"
+            >
+              全国の税理士・会計事務所が多数登録中
+            </SectionHeading>
+          </div>
+
+          <div className="relative">
+            {/* 左右フェードマスク */}
+            <div className="pointer-events-none absolute inset-y-0 left-0 w-12 md:w-24 bg-gradient-to-r from-[#f4f7fb] to-transparent z-10" />
+            <div className="pointer-events-none absolute inset-y-0 right-0 w-12 md:w-24 bg-gradient-to-l from-[#f4f7fb] to-transparent z-10" />
+
+            <div className="flex w-max animate-scroll-x">
+              {[...MARQUEE_PHOTOS, ...MARQUEE_PHOTOS].map((photo, i) => (
+                <div key={i} className="shrink-0 mx-4 md:mx-7">
+                  <div className="relative w-28 h-28 md:w-40 md:h-40 rounded-full overflow-hidden shadow-md border-4 border-white">
+                    <Image
+                      src={photo}
+                      alt="登録税理士・会計事務所"
+                      fill
+                      sizes="160px"
+                      className="object-cover"
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ══════════════════════════════════════════════════════
             2. まずはかんたん税理士検索（日本地図 + タブ）
         ═══════════════════════════════════════════════════════ */}
         <section className="py-10 md:py-14 bg-white border-b border-border">
@@ -1133,47 +1170,10 @@ export default function Home({ officeCount, interviewUrls }: { officeCount: numb
         </section>
 
         {/* ══════════════════════════════════════════════════════
-            4.5. 登録税理士・会計事務所スライダー
-        ═══════════════════════════════════════════════════════ */}
-        <section className="py-12 md:py-16 bg-[#f4f7fb] overflow-hidden">
-          <div className="container">
-            <SectionHeading
-              center
-              tag="Tax Accountant"
-              // sub="全国の税理士・会計事務所が多数登録中"
-            >
-              全国の税理士・会計事務所が多数登録中
-            </SectionHeading>
-          </div>
-
-          <div className="relative">
-            {/* 左右フェードマスク */}
-            <div className="pointer-events-none absolute inset-y-0 left-0 w-12 md:w-24 bg-gradient-to-r from-[#f4f7fb] to-transparent z-10" />
-            <div className="pointer-events-none absolute inset-y-0 right-0 w-12 md:w-24 bg-gradient-to-l from-[#f4f7fb] to-transparent z-10" />
-
-            <div className="flex w-max animate-scroll-x">
-              {[...MARQUEE_PHOTOS, ...MARQUEE_PHOTOS].map((photo, i) => (
-                <div key={i} className="shrink-0 mx-4 md:mx-7">
-                  <div className="relative w-28 h-28 md:w-40 md:h-40 rounded-full overflow-hidden shadow-md border-4 border-white">
-                    <Image
-                      src={photo}
-                      alt="登録税理士・会計事務所"
-                      fill
-                      sizes="160px"
-                      className="object-cover"
-                    />
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ══════════════════════════════════════════════════════
             5. インタビュー
         ═══════════════════════════════════════════════════════ */}
         {!CONTENT_COMING_SOON && interviews.length > 0 && (
-          <section className="py-12 md:py-16 bg-white border-b border-border">
+          <section className="py-12 md:py-16 bg-[#f4f7fb] border-b border-border">
             <div className="container">
               <SectionHeading
                 sub="会計事務所の実際の声をご紹介します。"
@@ -1285,7 +1285,7 @@ export default function Home({ officeCount, interviewUrls }: { officeCount: numb
             6. 選び方ガイド
         ═══════════════════════════════════════════════════════ */}
         {!CONTENT_COMING_SOON && (
-          <section className="py-12 md:py-16 bg-[#f4f7fb] border-b border-border">
+          <section className="py-12 md:py-16 bg-white border-b border-border">
             <div className="container">
               <SectionHeading sub="税務・会計に関する基礎知識をまとめています。" tag="Guide">
                 選び方ガイド
@@ -1318,7 +1318,7 @@ export default function Home({ officeCount, interviewUrls }: { officeCount: numb
             7. コラム
         ═══════════════════════════════════════════════════════ */}
         {!CONTENT_COMING_SOON && (
-          <section className="py-12 md:py-16 bg-white border-b border-border">
+          <section className="py-12 md:py-16 bg-[#f4f7fb] border-b border-border">
             <div className="container">
               <SectionHeading sub="税理士選びや税務に役立つコラムをお届けします。" tag="Column">
                 コラム
@@ -1389,7 +1389,7 @@ export default function Home({ officeCount, interviewUrls }: { officeCount: numb
         {/* ══════════════════════════════════════════════════════
             9. よくある質問
         ═══════════════════════════════════════════════════════ */}
-        <section className="py-12 md:py-16 bg-[#f4f7fb]">
+        <section className="py-12 md:py-16 bg-white">
           <div className="container max-w-3xl">
             <SectionHeading tag="FAQ">よくある質問</SectionHeading>
             <FAQ items={faqItems} />
