@@ -760,7 +760,7 @@ export default function Home({ officeCount, interviewUrls }: { officeCount: numb
                   {[
                     { icon: Users, label: "掲載税理士事務所数", value: "3,000", suffix: "件以上" },
                     { icon: MapPin, label: "対応エリア", value: "全国", suffix: "対応" },
-                    { icon: Shield, label: "相談・紹介", value: "完全無料", suffix: "対応" },
+                    { icon: Shield, label: "相談・紹介", value: "無料", suffix: "対応" },
                   ].map((s) => (
                     <div key={s.label} className="flex items-center gap-3">
                       <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-[#bdd3f5] bg-white">
