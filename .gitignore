@@ -30,6 +30,21 @@
 # LP wireframe source (ad LP reference material, not part of the app)
 /listing-ads-lp/
 
+# test LP (design experiment, not for push)
+/pages/lp/test-lp/
+/page-components/TestLp.tsx
+
+# introduction test page (design experiment, not for push)
+/pages/introduction-test/
+/page-components/IntroductionTest.tsx
+
+# ad LP pages (temporarily unpublished; kept locally, excluded from deploy)
+/pages/lp/company-establishment/
+/pages/lp/comparison/
+/pages/lp/fukuoka-city/
+/pages/lp/inheritance-tax/
+/pages/lp/introduction/
+
 # debug
 npm-debug.log*
 yarn-debug.log*
