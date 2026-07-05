@@ -18,6 +18,12 @@ const navItems = [
 export default function GlobalHeader() {
   const router = useRouter(); const location = router.pathname;
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const shouldShowActiveNav = !(
+    location === "/introduction" ||
+    location.startsWith("/introduction/") ||
+    location.startsWith("/introduction-") ||
+    location.startsWith("/lp/")
+  );
 
   // メニュー開閉時にbodyスクロールを制御
   useEffect(() => {
@@ -41,7 +47,7 @@ export default function GlobalHeader() {
             {/* Desktop nav */}
             <nav className="hidden lg:flex items-center gap-1">
               {navItems.map((item) => {
-                const isActive = location === item.href || location.startsWith(item.href + "/");
+                const isActive = shouldShowActiveNav && (location === item.href || location.startsWith(item.href + "/"));
                 return (
                   <Link
                     key={item.href}
@@ -114,7 +120,7 @@ export default function GlobalHeader() {
 
             {/* 通常ナビ（税理士紹介サービスを除く） */}
             {navItems.filter((item) => item.href !== "/introduction").map((item) => {
-              const isActive = location === item.href || location.startsWith(item.href + "/");
+              const isActive = shouldShowActiveNav && (location === item.href || location.startsWith(item.href + "/"));
               return (
                 <Link
                   key={item.href}
