@@ -7,14 +7,16 @@ interface PageMetaProps {
   title: string;
   description?: string;
   noindex?: boolean;
+  canonical?: string;
 }
 
-export function PageMeta({ title, description, noindex }: PageMetaProps) {
+export function PageMeta({ title, description, noindex, canonical }: PageMetaProps) {
   return (
     <Head>
       <title>{title}</title>
       <meta name="description" content={description ?? DEFAULT_DESCRIPTION} />
       {noindex && <meta name="robots" content="noindex" />}
+      {!noindex && canonical && <link rel="canonical" href={canonical} />}
     </Head>
   );
 }
