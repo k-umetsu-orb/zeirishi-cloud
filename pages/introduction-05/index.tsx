@@ -27,7 +27,12 @@ export default function Introduction05Page() {
       <IntroductionVariantPage
         pageNumber="05"
         headline="事業承継に強い税理士を無料でご紹介します"
-        subtext="専門コーディネーターがご要望に合った税理士を複数名ご紹介。比較検討の上、最適な税理士をお選びいただけます。"
+        subtext={<>
+          専門コーディネーターが<br className="md:hidden" />
+          ご要望に合った税理士を紹介<br />
+          比較の上、最適な税理士を<br className="md:hidden" />
+          お選びいただけます
+        </>}
         painPoints={painPoints}
         requestDetailExamples={requestDetailExamples}
         documentTitle="事業承継に強い税理士の無料紹介 | 税理士クラウド"

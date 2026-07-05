@@ -1,15 +1,121 @@
-import { useState, useEffect, Fragment } from "react";
+import { useState, useEffect, ReactNode } from "react";
 import { usePageTitle } from "@/lib/usePageTitle";
-import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { ArrowRight, Users, CalendarCheck, Shield, Globe, ChevronDown, CheckSquare } from "lucide-react";
+import { ArrowRight, Users, CalendarCheck, Shield, Globe, ChevronDown, CheckSquare, CircleCheck, Monitor, Phone } from "lucide-react";
 import GlobalHeader from "@/components/GlobalHeader";
 import GlobalFooter from "@/components/GlobalFooter";
 import Breadcrumb from "@/components/Breadcrumb";
 import FAQ from "@/components/FAQ";
 import { getAllPrefectures, getCitiesByPrefecture } from "@/lib/data";
-import womanImage from "@/images/女性1_crop.png";
+import heroImage from "@/images/hero-coordinator-30s.png";
+
+const PHONE_NUMBER = "03-6403-3202";
+
+function HeroTrustSignal({ className = "" }: { className?: string }) {
+  return (
+    <div className={`testlp-trust ${className}`}>
+      <p className="testlp-trust__label">
+        全国対応！
+      </p>
+      <div className="testlp-trust__line">
+        <span className="testlp-trust__chevron">❮</span>
+        <p className="testlp-trust__count">
+          掲載数 <span>3,000件以上</span>
+        </p>
+        <span className="testlp-trust__chevron">❯</span>
+      </div>
+      <p className="testlp-trust__note">
+        ※2026年7月時点
+      </p>
+    </div>
+  );
+}
+
+function HeroPhoneCta() {
+  return (
+    <a
+      href={`tel:${PHONE_NUMBER}`}
+      aria-label={`電話で相談する ${PHONE_NUMBER}`}
+      className="testlp-phone-cta"
+    >
+      <div className="testlp-phone-cta__main">
+        <div
+          className="testlp-phone-cta__icon"
+          style={{ background: "linear-gradient(135deg,#0b68b7 0%,#004b9f 100%)" }}
+        >
+          <Phone className="testlp-phone-cta__icon-svg" />
+        </div>
+        <div className="testlp-phone-cta__body">
+          <p className="testlp-phone-cta__label">
+            ＼ お電話でのご相談・お問い合わせ ／
+          </p>
+          <p className="testlp-phone-cta__number">
+            {PHONE_NUMBER}
+          </p>
+        </div>
+      </div>
+      <div className="testlp-phone-cta__hours">
+        <p>
+          <CircleCheck className="testlp-phone-cta__check" />
+          <span>受付時間：9時〜22時（平日）</span>
+        </p>
+      </div>
+    </a>
+  );
+}
+
+function HeroFormCta() {
+  return (
+    <a
+      href="#form"
+      className="testlp-form-cta group"
+      style={{ background: "linear-gradient(135deg,#ff9f1c 0%,#f97316 48%,#fb4b1f 100%)" }}
+    >
+      <div className="testlp-form-cta__main">
+        <div className="testlp-form-cta__free">
+          無料
+        </div>
+        <div className="testlp-form-cta__body">
+          <p className="testlp-form-cta__label">＼ カンタン30秒 ／</p>
+          <p className="testlp-form-cta__title">
+            無料で相談する
+          </p>
+        </div>
+        <div className="testlp-form-cta__arrow">
+          <ArrowRight className="testlp-form-cta__arrow-svg" />
+        </div>
+      </div>
+      <div className="testlp-form-cta__sub">
+        <Monitor className="testlp-form-cta__monitor" />
+        <span>フォームからお気軽にご相談ください</span>
+      </div>
+    </a>
+  );
+}
+
+function PcContactLead() {
+  return (
+    <section className="testlp-pc-contact" aria-label="無料相談・お問い合わせ">
+      <div className="testlp-pc-contact__inner">
+        <div className="testlp-pc-contact__heading">
+          <h2>税理士選びで迷ったら、まずは無料でご相談ください</h2>
+          <p>専門コーディネーターが状況を伺い、相性のよい税理士探しをサポートします。</p>
+        </div>
+
+        <div className="testlp-pc-contact__cards">
+          <HeroPhoneCta />
+          <HeroFormCta />
+        </div>
+
+        <div className="testlp-pc-contact__note">
+          <Shield className="testlp-pc-contact__note-icon" />
+          <p>ご相談・ご紹介はすべて無料です。無理な営業はいたしませんので、ご安心ください。</p>
+        </div>
+      </div>
+    </section>
+  );
+}
 
 const merits = [
   { icon: <Shield className="w-8 h-8" />,       title: "完全無料",            desc: "ご相談から紹介まで一切費用はかかりません。成功報酬も不要です。" },
@@ -56,7 +162,7 @@ function IntroductionForm({
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [submitError, setSubmitError] = useState<string>("");
 
-  const clientTypes = ["法人", "個人事業主", "個人（確定申告等）"];
+  const clientTypes = ["法人", "個人事業主・フリーランスの方", "その他（確定申告など）"];
   const allPrefectures = getAllPrefectures();
   const cityOptions = prefecture ? getCitiesByPrefecture(prefecture) : [];
 
@@ -67,7 +173,6 @@ function IntroductionForm({
     if (!name.trim()) newErrors.name        = "お名前を入力してください";
     if (!email.trim()) newErrors.email      = "メールアドレスを入力してください";
     if (!phone.trim()) newErrors.phone      = "電話番号を入力してください";
-    if (!requestDetail.trim()) newErrors.requestDetail = "依頼したい内容を入力してください";
     if (!agreed)      newErrors.agreed      = "プライバシーポリシーへの同意が必要です";
     setErrors(newErrors);
     if (Object.keys(newErrors).length > 0) return;
@@ -215,7 +320,7 @@ function IntroductionForm({
       {/* Request detail */}
       <div className="mb-8">
         <label className="block text-sm font-semibold text-foreground mb-1">
-          税理士に依頼したい内容 <span className="text-red-500 text-xs ml-1">必須</span>
+          税理士に依頼したい内容 <span className="text-muted-foreground text-xs ml-1">任意</span>
         </label>
         <textarea
           placeholder={`例\n${requestDetailExamples.map((t) => `・${t}`).join("\n")}`}
@@ -272,7 +377,7 @@ function IntroductionForm({
 interface IntroductionVariantPageProps {
   pageNumber: string;
   headline: string;
-  subtext: string;
+  subtext: ReactNode;
   painPoints: React.ReactNode[];
   documentTitle: string;
   documentDescription: string;
@@ -305,6 +410,11 @@ export default function IntroductionVariantPage({
   const headlineLines = headline.split("||");
   const lastHeadlineLine = headlineLines[headlineLines.length - 1];
   const [headlineBefore, headlineAfter] = lastHeadlineLine.split("無料で");
+  const longestLine = Math.max(
+    ...headlineLines.slice(0, -1).map((line) => line.length),
+    headlineBefore.length,
+  );
+  const isLongHeadline = longestLine > 12;
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -313,90 +423,66 @@ export default function IntroductionVariantPage({
       <main className="flex-1">
 
         {/* ── Hero ── */}
-        <section
-          className="relative overflow-hidden"
-          style={{ background: "linear-gradient(135deg,#0f2660 0%,#1a50a8 60%,#1d4ed8 100%)" }}
-        >
-          <div className="container relative pt-10 md:pt-24">
+        <section className="testlp-hero">
+          <div className="testlp-hero__wash" />
+          <div className="testlp-hero__top-fade" />
+          <div className="testlp-hero__ring testlp-hero__ring--top" />
+          <div className="testlp-hero__ring testlp-hero__ring--bottom" />
+
+          <div className="testlp-hero__inner">
             <div className="block md:hidden relative -top-6">
-              <Breadcrumb items={[{ label: breadcrumbLabel }]} variant="light" />
+              <Breadcrumb items={[{ label: breadcrumbLabel }]} />
+            </div>
+            <div className="hidden md:block absolute left-8 right-8 top-6">
+              <Breadcrumb items={[{ label: breadcrumbLabel }]} />
             </div>
 
-            <div className="grid grid-cols-[1.1fr_1fr] md:grid-cols-[1.2fr_0.8fr] gap-3 md:gap-6 items-start md:items-end text-left">
-              <div className="pb-6 md:pb-[72px] min-w-0 pl-4 md:pl-0">
-                <div className="hidden md:block relative md:-top-10">
-                  <Breadcrumb items={[{ label: breadcrumbLabel }]} variant="light" />
-                </div>
+            <Image
+              src={heroImage}
+              alt=""
+              priority
+              sizes="(max-width: 767px) 240vw, 100vw"
+              className="testlp-hero__image"
+            />
+            <div className="testlp-hero__copy">
+              <span className="testlp-hero__badge">
+                完全無料・全国対応
+              </span>
 
-                <div className="w-fit ml-auto">
-                  {/* Badge */}
-                  <div className="flex justify-start mb-2 md:mt-4 md:mb-6">
-                    <span
-                      className="inline-flex items-center px-3 py-1 md:px-5 md:py-1.5 rounded-full text-[10px] md:text-xs font-bold text-white"
-                      style={{ background: "linear-gradient(90deg,#f97316,#ef4444)" }}
-                    >
-                      完全無料・全国対応
+              <h1 className={`testlp-hero__title ${isLongHeadline ? "testlp-hero__title--compact" : ""}`}>
+                {headlineLines.slice(0, -1).map((line, i) => (
+                  <span className="testlp-hero__title-line" key={i}>{line}</span>
+                ))}
+                {headlineAfter !== undefined ? (
+                  <>
+                    <span className="testlp-hero__title-line">{headlineBefore}</span>
+                    <span className="testlp-hero__title-line">
+                      <span className="testlp-hero__highlight">
+                        <span>無料で</span>
+                      </span>
+                      {headlineAfter}
                     </span>
-                  </div>
+                  </>
+                ) : (
+                  <span className="testlp-hero__title-line">{lastHeadlineLine}</span>
+                )}
+              </h1>
 
-                  {/* Headline */}
-                  <h1 className="font-bold text-sm md:text-5xl lg:text-[3.25rem] text-white leading-tight mb-2 md:mb-6 tracking-tight">
-                    {headlineLines.slice(0, -1).map((line, i) => (
-                      <Fragment key={i}>{line}<br /></Fragment>
-                    ))}
-                    {headlineAfter !== undefined ? (
-                      <>
-                        {headlineBefore}<br />
-                        <span className="relative inline-block">
-                          <span className="relative z-10">無料で</span>
-                          <span className="absolute bottom-1 left-0 right-0 h-3 bg-amber-400/40 -z-0" />
-                        </span>
-                        {headlineAfter}
-                      </>
-                    ) : lastHeadlineLine}
-                  </h1>
+              <p className="testlp-hero__lead">
+                {subtext}
+              </p>
 
-                  {/* Subtext */}
-                  <p className="text-white/80 text-[11px] md:text-lg leading-relaxed md:max-w-xl mb-3 md:mb-10">
-                    {subtext}
-                  </p>
-
-                  {/* CTA button */}
-                  <a
-                    href="#form"
-                    className="inline-flex items-center gap-1.5 px-3 py-2 md:px-10 md:py-4 rounded-lg md:rounded-xl font-bold text-xs md:text-lg text-white transition-opacity hover:opacity-90 shadow-lg"
-                    style={{ background: "linear-gradient(90deg,#f97316,#ef4444)" }}
-                  >
-                    無料で相談する
-                    <ArrowRight className="w-3 h-3 md:w-5 md:h-5" />
-                  </a>
-
-                  {/* Trust signal */}
-                  <div className="mt-3 md:mt-10 flex justify-start items-center gap-1.5 md:gap-4">
-                    <div className="text-amber-400 text-base md:text-3xl leading-none">❮</div>
-                    <div className="text-center">
-                      <p className="text-white/60 text-[9px] md:text-xs mb-0.5">全国対応！</p>
-                      <p className="text-white font-extrabold text-sm md:text-2xl leading-none">
-                        掲載数<span className="text-amber-400"> 3,000件以上</span>
-                      </p>
-                      <p className="text-white/40 text-[8px] md:text-[10px] mt-1">※2026年3月時点</p>
-                    </div>
-                    <div className="text-amber-400 text-base md:text-3xl leading-none">❯</div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex justify-start self-end md:items-end md:h-full">
-                <Image
-                  src={womanImage}
-                  alt="コーディネーター"
-                  className="w-full max-w-[155px] md:max-w-none md:w-[310px] h-auto"
-                  priority
-                />
+              <div className="testlp-hero__mobile-ctas">
+                <HeroPhoneCta />
+                <HeroFormCta />
               </div>
             </div>
+
+            <HeroTrustSignal className="testlp-hero__trust" />
           </div>
         </section>
+
+        <PcContactLead />
 
         {/* ── Pain Points ── */}
         <section className="py-14 bg-white">
@@ -542,6 +628,676 @@ export default function IntroductionVariantPage({
       </main>
 
       <GlobalFooter />
+      <style jsx global>{`
+        .testlp-hero {
+          position: relative;
+          isolation: isolate;
+          overflow: hidden;
+          background: #eef6fd;
+        }
+
+        .testlp-hero__image {
+          position: absolute;
+          z-index: -30;
+          top: 42vw;
+          right: -20vw;
+          width: 223vw;
+          height: auto;
+          max-width: none;
+          -webkit-mask-image: linear-gradient(180deg, transparent 0, rgba(0, 0, 0, 0.86) 6vw, #000 13vw);
+          mask-image: linear-gradient(180deg, transparent 0, rgba(0, 0, 0, 0.86) 6vw, #000 13vw);
+          pointer-events: none;
+        }
+
+        .testlp-hero__wash,
+        .testlp-hero__top-fade,
+        .testlp-hero__ring {
+          position: absolute;
+          pointer-events: none;
+        }
+
+        .testlp-hero__wash {
+          inset: 0;
+          z-index: -20;
+          background: linear-gradient(90deg, rgba(244, 250, 255, 0.98) 0%, rgba(244, 250, 255, 0.92) 43%, rgba(244, 250, 255, 0.2) 67%, rgba(244, 250, 255, 0.02) 100%);
+        }
+
+        .testlp-hero__top-fade {
+          inset: 0 0 auto;
+          z-index: -10;
+          height: 260px;
+          background: linear-gradient(180deg, rgba(255, 255, 255, 0.72) 0%, rgba(255, 255, 255, 0) 100%);
+        }
+
+        .testlp-hero__ring {
+          display: none;
+          z-index: -10;
+          border: 1px solid rgba(255, 255, 255, 0.78);
+          border-radius: 9999px;
+        }
+
+        .testlp-hero__ring--top {
+          top: -120px;
+          right: -170px;
+          width: 410px;
+          height: 410px;
+        }
+
+        .testlp-hero__ring--bottom {
+          display: none;
+        }
+
+        .testlp-hero__inner {
+          position: relative;
+          max-width: 1440px;
+          min-height: 170vw;
+          margin: 0 auto;
+          padding: 12vw 5.1vw 2vw;
+        }
+
+        .testlp-hero__copy {
+          max-width: 74vw;
+        }
+
+        .testlp-hero__badge {
+          display: inline-flex;
+          align-items: center;
+          border-radius: 9999px;
+          background: #1556b7;
+          padding: 3.2vw 5.8vw;
+          color: #fff;
+          font-size: clamp(0.84rem, 3.65vw, 1rem);
+          font-weight: 800;
+          line-height: 1;
+          box-shadow: 0 8px 22px rgba(21, 86, 183, 0.22);
+        }
+
+        .testlp-hero__title {
+          margin: 5.4vw 0 0;
+          color: #061d47;
+          font-family: "Noto Serif JP", serif;
+          font-size: clamp(1.58rem, 6.9vw, 1.9rem);
+          font-weight: 700;
+          letter-spacing: 0;
+          line-height: 1.52;
+        }
+
+        .testlp-hero__title--compact {
+          font-size: clamp(1.05rem, 4.75vw, 1.3rem);
+        }
+
+        .testlp-hero__title-line {
+          display: block;
+          white-space: nowrap;
+        }
+
+        .testlp-hero__highlight {
+          position: relative;
+          display: inline-block;
+        }
+
+        .testlp-hero__highlight span {
+          position: relative;
+          z-index: 1;
+        }
+
+        .testlp-hero__highlight::after {
+          position: absolute;
+          left: 0;
+          right: 0;
+          bottom: 0.22em;
+          z-index: 0;
+          height: 0.28em;
+          background: rgba(241, 220, 130, 0.78);
+          content: "";
+        }
+
+        .testlp-hero__lead {
+          max-width: 70vw;
+          margin: 5.8vw 0 0;
+          color: #181818;
+          font-size: clamp(0.84rem, 3.65vw, 0.98rem);
+          font-weight: 600;
+          line-height: 1.88;
+        }
+
+        .testlp-hero__mobile-ctas {
+          display: flex;
+          flex-direction: column;
+          gap: 2.7vw;
+          margin-top: 5.6vw;
+        }
+
+        .testlp-trust {
+          margin-top: 10vw;
+          text-align: center;
+        }
+
+        .testlp-trust__label {
+          margin: 0 0 4px;
+          color: #111827;
+          font-size: 0.95rem;
+          font-weight: 800;
+          line-height: 1.35;
+        }
+
+        .testlp-trust__line {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 6px;
+        }
+
+        .testlp-trust__chevron {
+          color: #1a50a8;
+          font-size: 2.2rem;
+          font-weight: 900;
+          line-height: 1;
+        }
+
+        .testlp-trust__count {
+          margin: 0;
+          color: #050505;
+          font-size: 1.35rem;
+          font-weight: 900;
+          line-height: 1;
+          white-space: nowrap;
+        }
+
+        .testlp-trust__count span {
+          color: #1a50a8;
+        }
+
+        .testlp-trust__note {
+          margin: 8px 0 0;
+          color: #8a8a8a;
+          font-size: 1rem;
+          font-weight: 400;
+          line-height: 1.3;
+        }
+
+        .testlp-phone-cta,
+        .testlp-form-cta {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          width: min(61vw, 252px);
+          min-height: min(27.5vw, 108px);
+          max-width: none;
+          box-sizing: border-box;
+          border-radius: 2.1vw;
+          text-decoration: none;
+        }
+
+        .testlp-phone-cta {
+          border: 2px solid #1a50a8;
+          background: rgba(255, 255, 255, 0.97);
+          padding: 2.5vw 3vw;
+          box-shadow: 0 12px 28px rgba(26, 80, 168, 0.12);
+        }
+
+        .testlp-phone-cta__main {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 2vw;
+        }
+
+        .testlp-phone-cta__icon {
+          display: flex;
+          width: 9.9vw;
+          height: 9.9vw;
+          align-items: center;
+          justify-content: center;
+          border-radius: 9999px;
+          color: #fff;
+          box-shadow: 0 8px 18px rgba(26, 80, 168, 0.20);
+        }
+
+        .testlp-phone-cta__icon-svg {
+          width: 5.3vw;
+          height: 5.3vw;
+        }
+
+        .testlp-phone-cta__body {
+          min-width: 0;
+          text-align: center;
+        }
+
+        .testlp-phone-cta__label {
+          margin: 0 0 1.1vw;
+          color: #0b4b91;
+          font-size: clamp(0.46rem, 2.05vw, 0.58rem);
+          font-weight: 900;
+          line-height: 1.2;
+          white-space: nowrap;
+        }
+
+        .testlp-phone-cta__number {
+          margin: 0;
+          color: #0b4b91;
+          font-size: clamp(1rem, 5.1vw, 1.25rem);
+          font-weight: 900;
+          line-height: 1;
+          white-space: nowrap;
+        }
+
+        .testlp-phone-cta__hours {
+          margin-top: 2vw;
+          border-top: 1px dashed #b7d1ec;
+          padding-top: 2vw;
+        }
+
+        .testlp-phone-cta__hours p {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 1.6vw;
+          margin: 0;
+          color: #1f3f68;
+          font-size: clamp(0.62rem, 2.9vw, 0.78rem);
+          font-weight: 800;
+          line-height: 1.4;
+        }
+
+        .testlp-phone-cta__check {
+          width: 4vw;
+          height: 4vw;
+          flex: 0 0 auto;
+          color: #1a50a8;
+        }
+
+        .testlp-form-cta {
+          padding: 2.5vw 3vw;
+          color: #fff;
+          box-shadow: 0 12px 28px rgba(249, 115, 22, 0.20);
+          transition: transform 0.18s ease;
+        }
+
+        .testlp-form-cta:hover {
+          transform: translateY(-2px);
+        }
+
+        .testlp-form-cta__main {
+          display: grid;
+          grid-template-columns: 9.3vw minmax(0, 1fr) 7.5vw;
+          align-items: center;
+          gap: 1vw;
+        }
+
+        .testlp-form-cta__free {
+          display: flex;
+          width: 9.3vw;
+          height: 9.3vw;
+          align-items: center;
+          justify-content: center;
+          border: 3px solid rgba(255, 255, 255, 0.62);
+          border-radius: 9999px;
+          background: #fff;
+          color: #f97316;
+          font-size: clamp(0.64rem, 2.85vw, 0.82rem);
+          font-weight: 900;
+          line-height: 1;
+        }
+
+        .testlp-form-cta__body {
+          min-width: 0;
+          text-align: center;
+        }
+
+        .testlp-form-cta__label {
+          margin: 0 0 0.8vw;
+          font-size: clamp(0.52rem, 2.35vw, 0.66rem);
+          font-weight: 800;
+          line-height: 1.25;
+        }
+
+        .testlp-form-cta__title {
+          margin: 0;
+          font-size: clamp(0.92rem, 4.25vw, 1.08rem);
+          font-weight: 900;
+          line-height: 1.18;
+          white-space: nowrap;
+        }
+
+        .testlp-form-cta__arrow {
+          display: flex;
+          width: 7.5vw;
+          height: 7.5vw;
+          align-items: center;
+          justify-content: center;
+          border-radius: 9999px;
+          background: #fff;
+          color: #f97316;
+          transition: transform 0.18s ease;
+        }
+
+        .testlp-form-cta:hover .testlp-form-cta__arrow {
+          transform: translateX(4px);
+        }
+
+        .testlp-form-cta__arrow-svg {
+          width: 4vw;
+          height: 4vw;
+        }
+
+        .testlp-form-cta__sub {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 1.5vw;
+          margin-top: 1.7vw;
+          border-radius: 1.4vw;
+          background: rgba(255, 255, 255, 0.94);
+          padding: 1.45vw 1.6vw;
+          color: #f97316;
+          font-size: clamp(0.5rem, 2.15vw, 0.62rem);
+          font-weight: 800;
+          line-height: 1.4;
+          white-space: nowrap;
+        }
+
+        .testlp-form-cta__monitor {
+          width: 3.5vw;
+          height: 3.5vw;
+          flex: 0 0 auto;
+        }
+
+        .testlp-pc-contact {
+          display: none;
+        }
+
+        @media (min-width: 640px) {
+          .testlp-hero__title {
+            font-size: 2.35rem;
+          }
+
+          .testlp-hero__title--compact {
+            font-size: 1.65rem;
+          }
+        }
+
+        @media (min-width: 768px) {
+          .testlp-hero__image {
+            top: 0;
+            bottom: 0;
+            left: 0;
+            width: calc(100% + max(0px, (100vw - 100%) / 2));
+            max-width: none;
+            height: 100%;
+            transform: none;
+            object-fit: cover;
+            object-position: center top;
+            -webkit-mask-image: none;
+            mask-image: none;
+          }
+
+          .testlp-hero__wash {
+            background: linear-gradient(90deg, rgba(244, 250, 255, 0.92) 0%, rgba(244, 250, 255, 0.62) 42%, rgba(244, 250, 255, 0.12) 68%, rgba(244, 250, 255, 0.02) 100%);
+          }
+
+          .testlp-hero__top-fade {
+            height: 280px;
+          }
+
+          .testlp-hero__ring {
+            display: block;
+          }
+
+          .testlp-hero__ring--top {
+            display: none;
+            top: -208px;
+            right: auto;
+            left: 44%;
+            width: 544px;
+            height: 544px;
+          }
+
+          .testlp-hero__ring--bottom {
+            display: block;
+            left: -120px;
+            bottom: -145px;
+            width: 440px;
+            height: 440px;
+          }
+
+          .testlp-hero__inner {
+            min-height: 746px;
+            padding: 116px 24px 40px;
+          }
+
+          .testlp-hero__copy {
+            max-width: 800px;
+          }
+
+          .testlp-hero__badge {
+            display: inline-flex;
+            padding: 14px 36px;
+            font-size: 1.25rem;
+          }
+
+          .testlp-hero__title {
+            margin-top: 48px;
+            font-size: 3.35rem;
+            line-height: 1.34;
+          }
+
+          .testlp-hero__lead {
+            max-width: 700px;
+            margin-top: 40px;
+            font-size: 1.45rem;
+            line-height: 1.75;
+          }
+
+          .testlp-hero__mobile-ctas {
+            display: none;
+          }
+
+          .testlp-hero__trust {
+            position: absolute;
+            left: 24px;
+            bottom: 80px;
+            width: 440px;
+            margin-top: 0;
+          }
+
+          .testlp-trust__label {
+            margin-bottom: 6px;
+            font-size: 1.125rem;
+          }
+
+          .testlp-trust__line {
+            gap: 18px;
+          }
+
+          .testlp-trust__chevron {
+            font-size: 2.5rem;
+          }
+
+          .testlp-trust__count {
+            font-size: 2rem;
+          }
+
+          .testlp-trust__note {
+            margin-top: 6px;
+            font-size: 0.875rem;
+          }
+
+          .testlp-pc-contact {
+            display: block;
+            background: linear-gradient(180deg, #eaf4ff 0%, #deebf7 100%);
+            padding: 46px 24px 38px;
+          }
+
+          .testlp-pc-contact__inner {
+            max-width: 1280px;
+            margin: 0 auto;
+          }
+
+          .testlp-pc-contact__heading {
+            margin-bottom: 32px;
+            text-align: center;
+          }
+
+          .testlp-pc-contact__heading h2 {
+            margin: 0;
+            color: #1a50a8;
+            font-family: "Noto Serif JP", serif;
+            font-size: 2.15rem;
+            font-weight: 800;
+            line-height: 1.35;
+            letter-spacing: 0;
+          }
+
+          .testlp-pc-contact__heading p {
+            margin: 16px 0 0;
+            color: #1f3f68;
+            font-size: 1.2rem;
+            font-weight: 800;
+            line-height: 1.5;
+          }
+
+          .testlp-pc-contact__cards {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+            gap: 24px;
+          }
+
+          .testlp-pc-contact .testlp-phone-cta,
+          .testlp-pc-contact .testlp-form-cta {
+            width: 100%;
+            height: auto;
+            max-width: none;
+            min-height: 190px;
+            border-radius: 10px;
+            padding: 26px 30px;
+          }
+
+          .testlp-pc-contact .testlp-phone-cta {
+            border-width: 3px;
+          }
+
+          .testlp-pc-contact .testlp-phone-cta__main {
+            gap: 22px;
+          }
+
+          .testlp-pc-contact .testlp-phone-cta__icon {
+            width: 84px;
+            height: 84px;
+          }
+
+          .testlp-pc-contact .testlp-phone-cta__icon-svg {
+            width: 42px;
+            height: 42px;
+          }
+
+          .testlp-pc-contact .testlp-phone-cta__label {
+            margin-bottom: 10px;
+            font-size: 1.25rem;
+          }
+
+          .testlp-pc-contact .testlp-phone-cta__number {
+            font-size: 3.2rem;
+          }
+
+          .testlp-pc-contact .testlp-phone-cta__hours {
+            margin-top: 22px;
+            padding-top: 18px;
+          }
+
+          .testlp-pc-contact .testlp-phone-cta__hours p {
+            font-size: 1.2rem;
+          }
+
+          .testlp-pc-contact .testlp-phone-cta__check {
+            width: 22px;
+            height: 22px;
+          }
+
+          .testlp-pc-contact .testlp-form-cta__main {
+            grid-template-columns: 112px minmax(0, 1fr) 56px;
+            gap: 18px;
+          }
+
+          .testlp-pc-contact .testlp-form-cta__free {
+            width: 90px;
+            height: 90px;
+            font-size: 1.75rem;
+          }
+
+          .testlp-pc-contact .testlp-form-cta__label {
+            margin-bottom: 10px;
+            font-size: 1.25rem;
+          }
+
+          .testlp-pc-contact .testlp-form-cta__title {
+            font-size: clamp(2.15rem, 3.35vw, 3rem);
+          }
+
+          .testlp-pc-contact .testlp-form-cta__arrow {
+            width: 54px;
+            height: 54px;
+          }
+
+          .testlp-pc-contact .testlp-form-cta__arrow-svg {
+            width: 28px;
+            height: 28px;
+          }
+
+          .testlp-pc-contact .testlp-form-cta__sub {
+            margin-top: 24px;
+            border-radius: 8px;
+            padding: 14px 18px;
+            font-size: 1.1rem;
+          }
+
+          .testlp-pc-contact .testlp-form-cta__monitor {
+            width: 24px;
+            height: 24px;
+          }
+
+          .testlp-pc-contact__note {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 34px;
+            border-top: 1px solid #c5d5e7;
+            padding-top: 26px;
+            color: #1d334f;
+          }
+
+          .testlp-pc-contact__note p {
+            margin: 0;
+            font-size: 1.15rem;
+            font-weight: 800;
+            line-height: 1.45;
+          }
+
+          .testlp-pc-contact__note-icon {
+            width: 24px;
+            height: 24px;
+            flex: 0 0 auto;
+            color: #1a50a8;
+          }
+        }
+
+        @media (min-width: 1024px) {
+          .testlp-hero__title {
+            font-size: 3.75rem;
+          }
+        }
+
+        @media (min-width: 2200px) {
+          .testlp-hero__inner {
+            max-width: 1800px;
+          }
+
+          .testlp-pc-contact__inner {
+            max-width: 1500px;
+          }
+        }
+      `}</style>
     </div>
   );
 }

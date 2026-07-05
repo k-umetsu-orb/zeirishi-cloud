@@ -26,8 +26,13 @@ export default function Introduction02Page() {
       />
       <IntroductionVariantPage
         pageNumber="02"
-        headline="確定申告・年末調整に||強い税理士を無料でご紹介します"
-        subtext="専門コーディネーターがご要望に合った税理士を複数名ご紹介。比較検討の上、最適な税理士をお選びいただけます。"
+        headline="確定申告・年末調整に強い税理士を無料でご紹介します"
+        subtext={<>
+          専門コーディネーターが<br className="md:hidden" />
+          ご要望に合った税理士を紹介<br />
+          比較の上、最適な税理士を<br className="md:hidden" />
+          お選びいただけます
+        </>}
         painPoints={painPoints}
         requestDetailExamples={requestDetailExamples}
         documentTitle="確定申告・年末調整に強い税理士の無料紹介 | 税理士クラウド"
