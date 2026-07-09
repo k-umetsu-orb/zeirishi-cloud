@@ -5,8 +5,6 @@ import Script from "next/script";
 
 const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
 const GOOGLE_ADS_ID = "AW-18309633981";
-const PHONE_CONVERSION_LABEL = "LgGcCNvAz80cEL2v25pE";
-const PHONE_CONVERSION_NUMBER = "03-6403-3202";
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
@@ -33,7 +31,6 @@ export default function App({ Component, pageProps }: AppProps) {
               gtag('js', new Date());
               gtag('config', '${GA_ID}');
               gtag('config', '${GOOGLE_ADS_ID}');
-              gtag('config', '${GOOGLE_ADS_ID}/${PHONE_CONVERSION_LABEL}', { 'phone_conversion_number': '${PHONE_CONVERSION_NUMBER}' });
             `}
           </Script>
         </>

@@ -12,6 +12,14 @@ import heroImage from "@/images/hero-coordinator-30s.png";
 
 const PHONE_NUMBER = "03-6403-3202";
 
+function reportPhoneConversion() {
+  window.gtag?.("event", "conversion", {
+    send_to: "AW-18309633981/l7z9CMu21c0cEL2v25pE",
+    value: 50000.0,
+    currency: "JPY",
+  });
+}
+
 function HeroTrustSignal({ className = "" }: { className?: string }) {
   return (
     <div className={`testlp-trust ${className}`}>
@@ -38,6 +46,7 @@ function HeroPhoneCta() {
       href={`tel:${PHONE_NUMBER}`}
       aria-label={`電話で相談する ${PHONE_NUMBER}`}
       className="testlp-phone-cta"
+      onClick={reportPhoneConversion}
     >
       <div className="testlp-phone-cta__main">
         <div
