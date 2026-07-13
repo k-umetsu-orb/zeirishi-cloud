@@ -36,9 +36,10 @@ interface OfficeListProps {
   cities: City[];
   stations: Station[];
   relatedArticles: Article[];
+  availableCategorySlugs: string[];
 }
 
-export default function OfficeList({ prefecture, city, ward, station, cities, stations, relatedArticles }: OfficeListProps) {
+export default function OfficeList({ prefecture, city, ward, station, cities, stations, relatedArticles, availableCategorySlugs }: OfficeListProps) {
   const [offices, setOffices] = useState<Office[]>([]);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -178,8 +179,11 @@ export default function OfficeList({ prefecture, city, ward, station, cities, st
     : city ? `/${prefecture.slug}/${city.slug}`
     : `/${prefecture.slug}`;
 
-  const allServiceCategories = getCategoriesByType("service");
-  const allIndustryCategories = getCategoriesByType("industry");
+  // 事務所が0件の組み合わせは404化されているため、そのページへのリンクは出さない
+  // （事務所が増えれば次回デプロイでavailableCategorySlugsに含まれ、自動的にリンクも復活する）
+  const availableCategorySlugSet = new Set(availableCategorySlugs);
+  const allServiceCategories = getCategoriesByType("service").filter((c) => availableCategorySlugSet.has(c.slug));
+  const allIndustryCategories = getCategoriesByType("industry").filter((c) => availableCategorySlugSet.has(c.slug));
 
   // Tab labels
   const navTabs = [

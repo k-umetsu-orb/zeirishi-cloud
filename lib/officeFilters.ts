@@ -46,3 +46,29 @@ export function filterOfficesByCategoryAndArea(
     return category.dbValues.some((v) => field.includes(v));
   });
 }
+
+/**
+ * 与えられたカテゴリ一覧のうち、指定エリアで事務所が1件以上あるものだけのslugを返す。
+ * カテゴリ×エリアの導線リンクを、0件で404化されたページに向けないために使う
+ * （pages/[...slug].tsx, pages/sitemap.tsx で共通利用し、判定基準のズレを防ぐ）。
+ */
+export function getAvailableCategorySlugs(
+  offices: Office[],
+  categories: CategoryInfo[],
+  scope: AreaScope
+): string[] {
+  return categories.filter((cat) => filterOfficesByCategoryAndArea(offices, cat, scope).length > 0).map((c) => c.slug);
+}
+
+/**
+ * 単一カテゴリについて、兄弟エリア（市区町村/行政区/駅など）のうち事務所が1件以上あるものだけのslugを返す。
+ * PrefCategoryListの「他のエリアで探す」チップを、0件で404化されたページに向けないために使う。
+ */
+export function getAvailableAreaSlugsForCategory(
+  offices: Office[],
+  category: CategoryInfo,
+  areas: { slug: string }[],
+  scopeFor: (slug: string) => AreaScope
+): string[] {
+  return areas.filter((a) => filterOfficesByCategoryAndArea(offices, category, scopeFor(a.slug)).length > 0).map((a) => a.slug);
+}

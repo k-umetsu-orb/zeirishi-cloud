@@ -10,14 +10,20 @@ import { getRegions, getPrefecturesByRegion, getCitiesByPrefecture } from "@/lib
 import { getCategoriesByType } from "@/lib/categorySlugMap";
 import { usePageTitle } from "@/lib/usePageTitle";
 
-export default function SitemapPage() {
+interface SitemapPageProps {
+  availableCategorySlugs: string[];
+}
+
+export default function SitemapPage({ availableCategorySlugs }: SitemapPageProps) {
   usePageTitle(
     "サイトマップ | 税理士クラウド",
     "税理士クラウドのサイトマップです。税理士・会計事務所をお探しなら税理士クラウド。",
   );
   const regions = getRegions();
-  const industries = getCategoriesByType("industry");
-  const services = getCategoriesByType("service");
+  // 事務所が0件（404化されている）カテゴリへのリンクは出さない
+  const availableCategorySlugSet = new Set(availableCategorySlugs);
+  const industries = getCategoriesByType("industry").filter((c) => availableCategorySlugSet.has(c.slug));
+  const services = getCategoriesByType("service").filter((c) => availableCategorySlugSet.has(c.slug));
 
   return (
     <div className="min-h-screen flex flex-col">

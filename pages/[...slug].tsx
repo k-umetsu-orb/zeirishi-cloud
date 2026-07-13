@@ -54,7 +54,7 @@ import {
   getOfficeById,
   getOfficesByArea,
 } from "@/lib/offices-server";
-import { filterOfficesByArea, filterOfficesByCategoryAndArea } from "@/lib/officeFilters";
+import { filterOfficesByArea, filterOfficesByCategoryAndArea, getAvailableCategorySlugs, getAvailableAreaSlugsForCategory } from "@/lib/officeFilters";
 import { CATEGORIES, getCategoryBySlug, type CategoryInfo } from "@/lib/categorySlugMap";
 import { CONTENT_COMING_SOON } from "@/lib/contentVisibility";
 import { SITE_URL } from "@/lib/sitemap";
@@ -92,15 +92,15 @@ type AreaListData = {
 };
 
 export type SlugPageProps =
-  | ({ pageType: "prefecture"; prefecture: Prefecture } & AreaListData & PageMeta)
-  | ({ pageType: "city"; prefecture: Prefecture; city: City } & AreaListData & PageMeta)
-  | ({ pageType: "ward"; prefecture: Prefecture; city: City; ward: Ward } & AreaListData & PageMeta)
-  | ({ pageType: "station"; prefecture: Prefecture; city: City; ward?: Ward; station: Station } & AreaListData & PageMeta)
+  | ({ pageType: "prefecture"; prefecture: Prefecture; availableCategorySlugs: string[] } & AreaListData & PageMeta)
+  | ({ pageType: "city"; prefecture: Prefecture; city: City; availableCategorySlugs: string[] } & AreaListData & PageMeta)
+  | ({ pageType: "ward"; prefecture: Prefecture; city: City; ward: Ward; availableCategorySlugs: string[] } & AreaListData & PageMeta)
+  | ({ pageType: "station"; prefecture: Prefecture; city: City; ward?: Ward; station: Station; availableCategorySlugs: string[] } & AreaListData & PageMeta)
   | ({ pageType: "office"; prefecture: Prefecture; city: City; ward?: Ward; station?: Station; office: Office; sameAreaOffices: Office[] } & PageMeta)
   | ({ pageType: "interview"; prefecture: Prefecture; city: City; ward?: Ward; station?: Station; office: Office; interview: Interview } & PageMeta)
   | ({ pageType: "article"; article: Article; prefecture?: Prefecture; city?: City } & PageMeta)
-  | ({ pageType: "category"; category: CategoryInfo; offices: Office[] } & PageMeta)
-  | ({ pageType: "prefCategory"; prefecture: Prefecture; category: CategoryInfo; city?: City; ward?: Ward; station?: Station; offices: Office[] } & AreaListData & PageMeta);
+  | ({ pageType: "category"; category: CategoryInfo; offices: Office[]; availableCategorySlugs: string[] } & PageMeta)
+  | ({ pageType: "prefCategory"; prefecture: Prefecture; category: CategoryInfo; city?: City; ward?: Ward; station?: Station; offices: Office[]; availableAreaSlugs: string[] } & AreaListData & PageMeta);
 
 // ─── getStaticPaths ──────────────────────────────────────────────────────────
 
@@ -217,18 +217,19 @@ export const getStaticProps: GetStaticProps<SlugPageProps> = async ({ params }) 
     if (cat) {
       const isIndustry = cat.type === "industry";
       const catOffices = filterOfficesByCategoryAndArea(getAllOffices(), cat, {});
+      if (catOffices.length === 0) return { notFound: true };
       return {
         props: {
           pageType: "category" as const,
           category: cat,
           offices: catOffices,
+          availableCategorySlugs: getAvailableCategorySlugs(getAllOffices(), CATEGORIES, {}),
           title: isIndustry
             ? `${cat.name}業界に強い税理士・会計事務所の検索や相談なら【税理士クラウド】`
             : `${cat.name}に強い税理士・会計事務所の検索や相談なら【税理士クラウド】`,
           description: isIndustry
             ? `${cat.name}業界に強い税理士・会計事務所の一覧です。お困りの方は紹介料無料の税理士紹介サービスをご利用ください。`
             : `${cat.name}に強い税理士・会計事務所の一覧です。お困りの方は紹介料無料の税理士紹介サービスをご利用ください。`,
-          noindex: catOffices.length === 0,
           officeCount: catOffices.length,
           canonical: `${SITE_URL}/${cat.slug}`,
         },
@@ -246,6 +247,7 @@ export const getStaticProps: GetStaticProps<SlugPageProps> = async ({ params }) 
           cities: getCitiesByPrefecture(pref.slug),
           stations: [],
           relatedArticles: getArticlesForPrefecture(pref.slug).slice(0, 4),
+          availableCategorySlugs: getAvailableCategorySlugs(getAllOffices(), CATEGORIES, { prefecture: pref.slug }),
           title: `${pref.name}の税理士・会計事務所の検索や相談なら【税理士クラウド】`,
           description: `${pref.name}の税理士・会計事務所の一覧です。得意な業種や業務内容から税理士・会計事務所を探すことができます。無料の紹介サービスもご利用ください。`,
           noindex: prefOffices.length === 0,
@@ -272,6 +274,7 @@ export const getStaticProps: GetStaticProps<SlugPageProps> = async ({ params }) 
       const isIndustry = cat.type === "industry";
       const categoryLabel = isIndustry ? `${cat.name}業界` : cat.name;
       const prefCatOffices = filterOfficesByCategoryAndArea(getAllOffices(), cat, { prefecture: pref.slug });
+      if (prefCatOffices.length === 0) return { notFound: true };
       return {
         props: {
           pageType: "prefCategory" as const,
@@ -280,10 +283,15 @@ export const getStaticProps: GetStaticProps<SlugPageProps> = async ({ params }) 
           offices: prefCatOffices,
           cities: getCitiesByPrefecture(pref.slug),
           stations: [],
+          availableAreaSlugs: getAvailableAreaSlugsForCategory(
+            getAllOffices(),
+            cat,
+            getCitiesByPrefecture(pref.slug),
+            (slug) => ({ prefecture: pref.slug, city: slug })
+          ),
           relatedArticles: getArticlesForPrefecture(pref.slug).slice(0, 4),
           title: `${pref.name}で${categoryLabel}に強い税理士・会計事務所の検索や相談なら【税理士クラウド】`,
           description: `${pref.name}で${categoryLabel}に強い税理士・会計事務所の一覧です。お困りの方は紹介料無料の税理士紹介サービスをご利用ください。`,
-          noindex: prefCatOffices.length === 0,
           officeCount: prefCatOffices.length,
           canonical: `${SITE_URL}/${pref.slug}/${cat.slug}`,
         },
@@ -302,6 +310,7 @@ export const getStaticProps: GetStaticProps<SlugPageProps> = async ({ params }) 
           cities: getCitiesByPrefecture(pref.slug),
           stations: getStationsForCity(pref.slug, city.slug),
           relatedArticles: getArticlesForPrefecture(pref.slug).slice(0, 4),
+          availableCategorySlugs: getAvailableCategorySlugs(getAllOffices(), CATEGORIES, { prefecture: pref.slug, city: city.slug }),
           title: `${pref.name}${city.name}の税理士・会計事務所の検索や相談なら【税理士クラウド】`,
           description: `${pref.name}${city.name}の税理士・会計事務所の一覧です。得意な業種や業務内容から税理士・会計事務所を探すことができます。無料の紹介サービスもご利用ください。`,
           noindex: cityOffices.length === 0,
@@ -345,6 +354,7 @@ export const getStaticProps: GetStaticProps<SlugPageProps> = async ({ params }) 
       const isIndustry = cat.type === "industry";
       const categoryLabel = isIndustry ? `${cat.name}業界` : cat.name;
       const cityCatOffices = filterOfficesByCategoryAndArea(getAllOffices(), cat, { prefecture: pref.slug, city: city.slug });
+      if (cityCatOffices.length === 0) return { notFound: true };
       return {
         props: {
           pageType: "prefCategory" as const,
@@ -354,10 +364,23 @@ export const getStaticProps: GetStaticProps<SlugPageProps> = async ({ params }) 
           offices: cityCatOffices,
           cities: getCitiesByPrefecture(pref.slug),
           stations: getStationsForCity(pref.slug, city.slug),
+          availableAreaSlugs: [
+            ...getAvailableAreaSlugsForCategory(
+              getAllOffices(),
+              cat,
+              city.wards ?? [],
+              (slug) => ({ prefecture: pref.slug, city: city.slug, ward: slug })
+            ),
+            ...getAvailableAreaSlugsForCategory(
+              getAllOffices(),
+              cat,
+              getStationsForCity(pref.slug, city.slug),
+              (slug) => ({ station: slug })
+            ),
+          ],
           relatedArticles: getArticlesForPrefecture(pref.slug).slice(0, 4),
           title: `${pref.name}${city.name}で${categoryLabel}に強い税理士・会計事務所の検索や相談なら【税理士クラウド】`,
           description: `${pref.name}${city.name}で${categoryLabel}に強い税理士・会計事務所の一覧です。お困りの方は紹介料無料の税理士紹介サービスをご利用ください。`,
-          noindex: cityCatOffices.length === 0,
           officeCount: cityCatOffices.length,
           canonical: `${SITE_URL}/${pref.slug}/${city.slug}/${cat.slug}`,
         },
@@ -377,6 +400,7 @@ export const getStaticProps: GetStaticProps<SlugPageProps> = async ({ params }) 
           cities: getCitiesByPrefecture(pref.slug),
           stations: getStationsForCity(pref.slug, city.slug, ward.slug),
           relatedArticles: getArticlesForPrefecture(pref.slug).slice(0, 4),
+          availableCategorySlugs: getAvailableCategorySlugs(getAllOffices(), CATEGORIES, { prefecture: pref.slug, city: city.slug, ward: ward.slug }),
           title: `${city.name}${ward.name}の税理士・会計事務所の検索や相談なら【税理士クラウド】`,
           description: `${city.name}${ward.name}の税理士・会計事務所の一覧です。得意な業種や業務内容から税理士・会計事務所を探すことができます。無料の紹介サービスもご利用ください。`,
           noindex: wardOffices.length === 0,
@@ -399,6 +423,7 @@ export const getStaticProps: GetStaticProps<SlugPageProps> = async ({ params }) 
           cities: getCitiesByPrefecture(pref.slug),
           stations: getStationsForCity(pref.slug, city.slug),
           relatedArticles: getArticlesForPrefecture(pref.slug).slice(0, 4),
+          availableCategorySlugs: getAvailableCategorySlugs(getAllOffices(), CATEGORIES, { prefecture: pref.slug, city: city.slug, station: station.slug }),
           title: `${station.name}(${pref.name})の税理士・会計事務所の検索や相談なら【税理士クラウド】`,
           description: `${station.name}の税理士・会計事務所の一覧です。得意な業種や業務内容から税理士・会計事務所を探すことができます。無料の紹介サービスもご利用ください。`,
           noindex: stationOffices.length === 0,
@@ -451,6 +476,7 @@ export const getStaticProps: GetStaticProps<SlugPageProps> = async ({ params }) 
         const isIndustry = cat.type === "industry";
         const categoryLabel = isIndustry ? `${cat.name}業界` : cat.name;
         const wardCatOffices = filterOfficesByCategoryAndArea(getAllOffices(), cat, { prefecture: pref.slug, city: city.slug, ward: ward.slug });
+        if (wardCatOffices.length === 0) return { notFound: true };
         return {
           props: {
             pageType: "prefCategory" as const,
@@ -461,10 +487,15 @@ export const getStaticProps: GetStaticProps<SlugPageProps> = async ({ params }) 
             offices: wardCatOffices,
             cities: getCitiesByPrefecture(pref.slug),
             stations: getStationsForCity(pref.slug, city.slug, ward.slug),
+            availableAreaSlugs: getAvailableAreaSlugsForCategory(
+              getAllOffices(),
+              cat,
+              getStationsForCity(pref.slug, city.slug, ward.slug),
+              (slug) => ({ station: slug })
+            ),
             relatedArticles: getArticlesForPrefecture(pref.slug).slice(0, 4),
             title: `${city.name}${ward.name}で${categoryLabel}に強い税理士・会計事務所の検索や相談なら【税理士クラウド】`,
             description: `${city.name}${ward.name}で${categoryLabel}に強い税理士・会計事務所の一覧です。お困りの方は紹介料無料の税理士紹介サービスをご利用ください。`,
-            noindex: wardCatOffices.length === 0,
             officeCount: wardCatOffices.length,
             canonical: `${SITE_URL}/${pref.slug}/${city.slug}/${ward.slug}/${cat.slug}`,
           },
@@ -485,6 +516,7 @@ export const getStaticProps: GetStaticProps<SlugPageProps> = async ({ params }) 
             cities: getCitiesByPrefecture(pref.slug),
             stations: getStationsForCity(pref.slug, city.slug, ward.slug),
             relatedArticles: getArticlesForPrefecture(pref.slug).slice(0, 4),
+            availableCategorySlugs: getAvailableCategorySlugs(getAllOffices(), CATEGORIES, { prefecture: pref.slug, city: city.slug, ward: ward.slug, station: wStation.slug }),
             title: `${wStation.name}(${pref.name})の税理士・会計事務所の検索や相談なら【税理士クラウド】`,
             description: `${wStation.name}の税理士・会計事務所の一覧です。得意な業種や業務内容から税理士・会計事務所を探すことができます。無料の紹介サービスもご利用ください。`,
             noindex: wardStationOffices.length === 0,
@@ -523,6 +555,7 @@ export const getStaticProps: GetStaticProps<SlugPageProps> = async ({ params }) 
         const isIndustry = cat.type === "industry";
         const categoryLabel = isIndustry ? `${cat.name}業界` : cat.name;
         const stationCatOffices = filterOfficesByCategoryAndArea(getAllOffices(), cat, { station: station.slug });
+        if (stationCatOffices.length === 0) return { notFound: true };
         return {
           props: {
             pageType: "prefCategory" as const,
@@ -533,10 +566,15 @@ export const getStaticProps: GetStaticProps<SlugPageProps> = async ({ params }) 
             offices: stationCatOffices,
             cities: getCitiesByPrefecture(pref.slug),
             stations: getStationsForCity(pref.slug, city.slug),
+            availableAreaSlugs: getAvailableAreaSlugsForCategory(
+              getAllOffices(),
+              cat,
+              getStationsForCity(pref.slug, city.slug),
+              (slug) => ({ station: slug })
+            ),
             relatedArticles: getArticlesForPrefecture(pref.slug).slice(0, 4),
             title: `${station.name}(${pref.name})で${categoryLabel}に強い税理士・会計事務所の検索や相談なら【税理士クラウド】`,
             description: `${station.name}で${categoryLabel}に強い税理士・会計事務所の一覧です。お困りの方は紹介料無料の税理士紹介サービスをご利用ください。`,
-            noindex: stationCatOffices.length === 0,
             officeCount: stationCatOffices.length,
             canonical: `${SITE_URL}/${pref.slug}/${city.slug}/${station.slug}/${cat.slug}`,
           },
@@ -586,6 +624,7 @@ export const getStaticProps: GetStaticProps<SlugPageProps> = async ({ params }) 
           const isIndustry = cat.type === "industry";
           const categoryLabel = isIndustry ? `${cat.name}業界` : cat.name;
           const wardStationCatOffices = filterOfficesByCategoryAndArea(getAllOffices(), cat, { station: wStation.slug });
+          if (wardStationCatOffices.length === 0) return { notFound: true };
           return {
             props: {
               pageType: "prefCategory" as const,
@@ -597,10 +636,15 @@ export const getStaticProps: GetStaticProps<SlugPageProps> = async ({ params }) 
               offices: wardStationCatOffices,
               cities: getCitiesByPrefecture(pref.slug),
               stations: getStationsForCity(pref.slug, city.slug, ward.slug),
+              availableAreaSlugs: getAvailableAreaSlugsForCategory(
+                getAllOffices(),
+                cat,
+                getStationsForCity(pref.slug, city.slug, ward.slug),
+                (slug) => ({ station: slug })
+              ),
               relatedArticles: getArticlesForPrefecture(pref.slug).slice(0, 4),
               title: `${wStation.name}(${pref.name})で${categoryLabel}に強い税理士・会計事務所の検索や相談なら【税理士クラウド】`,
               description: `${wStation.name}で${categoryLabel}に強い税理士・会計事務所の一覧です。お困りの方は紹介料無料の税理士紹介サービスをご利用ください。`,
-              noindex: wardStationCatOffices.length === 0,
               officeCount: wardStationCatOffices.length,
               canonical: `${SITE_URL}/${pref.slug}/${city.slug}/${ward.slug}/${wStation.slug}/${cat.slug}`,
             },
@@ -735,10 +779,10 @@ export default function SlugPage(props: SlugPageProps) {
 
   switch (props.pageType) {
     case "prefecture":
-      return <>{meta}<OfficeList prefecture={props.prefecture} cities={props.cities} stations={props.stations} relatedArticles={props.relatedArticles} /></>;
+      return <>{meta}<OfficeList prefecture={props.prefecture} cities={props.cities} stations={props.stations} relatedArticles={props.relatedArticles} availableCategorySlugs={props.availableCategorySlugs} /></>;
 
     case "city":
-      return <>{meta}<OfficeList prefecture={props.prefecture} city={props.city} cities={props.cities} stations={props.stations} relatedArticles={props.relatedArticles} /></>;
+      return <>{meta}<OfficeList prefecture={props.prefecture} city={props.city} cities={props.cities} stations={props.stations} relatedArticles={props.relatedArticles} availableCategorySlugs={props.availableCategorySlugs} /></>;
 
     case "ward":
       return (
@@ -749,6 +793,7 @@ export default function SlugPage(props: SlugPageProps) {
           cities={props.cities}
           stations={props.stations}
           relatedArticles={props.relatedArticles}
+          availableCategorySlugs={props.availableCategorySlugs}
         /></>
       );
 
@@ -762,6 +807,7 @@ export default function SlugPage(props: SlugPageProps) {
           cities={props.cities}
           stations={props.stations}
           relatedArticles={props.relatedArticles}
+          availableCategorySlugs={props.availableCategorySlugs}
         /></>
       );
 
@@ -799,7 +845,7 @@ export default function SlugPage(props: SlugPageProps) {
       );
 
     case "category":
-      return <>{meta}<CategoryList category={props.category} offices={props.offices} /></>;
+      return <>{meta}<CategoryList category={props.category} offices={props.offices} availableCategorySlugs={props.availableCategorySlugs} /></>;
 
     case "prefCategory":
       return (
@@ -813,6 +859,7 @@ export default function SlugPage(props: SlugPageProps) {
           cities={props.cities}
           stations={props.stations}
           relatedArticles={props.relatedArticles}
+          availableAreaSlugs={props.availableAreaSlugs}
         /></>
       );
 

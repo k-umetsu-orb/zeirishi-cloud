@@ -20,9 +20,10 @@ import { useCanonicalLink } from "@/lib/useCanonicalLink";
 interface CategoryListProps {
   category: CategoryInfo;
   offices: Office[];
+  availableCategorySlugs: string[];
 }
 
-export default function CategoryList({ category, offices: filteredOffices }: CategoryListProps) {
+export default function CategoryList({ category, offices: filteredOffices, availableCategorySlugs }: CategoryListProps) {
   const search = useWouterSearch();
   const currentPage = getPageFromSearch(search);
   const basePath = `/${category.slug}`;
@@ -44,8 +45,10 @@ export default function CategoryList({ category, offices: filteredOffices }: Cat
   );
 
   // Related categories (same type)
+  // 全国的に0件のカテゴリ（404化されている）へのリンクは出さない
+  const availableCategorySlugSet = new Set(availableCategorySlugs);
   const relatedCategories = getCategoriesByType(category.type).filter(
-    (c) => c.slug !== category.slug
+    (c) => c.slug !== category.slug && availableCategorySlugSet.has(c.slug)
   );
 
   const pageTitle = isIndustry

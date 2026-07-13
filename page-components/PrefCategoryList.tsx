@@ -43,6 +43,7 @@ interface PrefCategoryListProps {
   cities: City[];
   stations: Station[];
   relatedArticles: Article[];
+  availableAreaSlugs: string[];
 }
 
 export default function PrefCategoryList({
@@ -52,9 +53,10 @@ export default function PrefCategoryList({
   ward,
   station,
   offices: filteredOffices,
-  cities,
-  stations,
+  cities: rawCities,
+  stations: rawStations,
   relatedArticles,
+  availableAreaSlugs,
 }: PrefCategoryListProps) {
   const [showAllCities, setShowAllCities] = useState(false);
   const [showFull, setShowFull] = useState(false);
@@ -149,8 +151,12 @@ export default function PrefCategoryList({
   usePageTitle(documentTitle, documentDescription, filteredOffices.length === 0 || currentPage > totalPages);
 
   // ── Sub-navigation data ──────────────────────────────────────
+  // 同カテゴリで事務所が0件（404化されている）の兄弟エリアへのリンクは出さない
+  const availableAreaSlugSet = new Set(availableAreaSlugs);
+  const cities = rawCities.filter((c) => availableAreaSlugSet.has(c.slug));
+  const stations = rawStations.filter((s) => availableAreaSlugSet.has(s.slug));
   const visibleCities = showAllCities ? cities : cities.slice(0, CITIES_INITIAL_SHOW);
-  const wards = city?.wards || [];
+  const wards = (city?.wards || []).filter((w) => availableAreaSlugSet.has(w.slug));
 
   // Base URL for the current area (without category slug)
   const areaBase = station
