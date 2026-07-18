@@ -276,7 +276,8 @@ interface LpVariantPageProps {
   slug: string;
   badge: string;
   headline: ReactNode;
-  subtext: string;
+  headlineCompact?: boolean;
+  subtext: ReactNode;
   trustValue: ReactNode;
   empathyImageCaption: string;
   empathyQuote: ReactNode;
@@ -292,6 +293,7 @@ export default function LpVariantPage({
   slug,
   badge,
   headline,
+  headlineCompact = false,
   subtext,
   trustValue,
   empathyImageCaption,
@@ -329,7 +331,7 @@ export default function LpVariantPage({
                   </div>
 
                   {/* Headline */}
-                  <h1 className="font-bold text-sm md:text-5xl lg:text-[3.25rem] text-white leading-tight mb-2 md:mb-6 tracking-tight">
+                  <h1 className={`font-bold ${headlineCompact ? "text-xs" : "text-sm"} md:text-5xl lg:text-[3.25rem] text-white leading-tight mb-2 md:mb-6 tracking-tight`}>
                     {headline}
                   </h1>
 

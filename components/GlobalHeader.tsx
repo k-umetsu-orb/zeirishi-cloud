@@ -12,7 +12,6 @@ const navItems = [
   { label: "インタビュー", href: "/interview" },
   { label: "選び方ガイド", href: "/guide" },
   { label: "コラム", href: "/column" },
-  { label: "税理士紹介サービス", href: "/introduction" },
 ];
 
 export default function GlobalHeader() {
@@ -62,6 +61,12 @@ export default function GlobalHeader() {
                   </Link>
                 );
               })}
+              <Link
+                href="/introduction"
+                className="ml-2 inline-flex h-10 items-center justify-center rounded-lg bg-[#1a50a8] px-4 text-sm font-bold text-white transition-colors hover:bg-[#0c3282]"
+              >
+                税理士紹介(無料)
+              </Link>
             </nav>
 
             {/* Mobile menu button */}
@@ -118,8 +123,8 @@ export default function GlobalHeader() {
               <ChevronRight className="w-4 h-4 text-white shrink-0" />
             </Link>
 
-            {/* 通常ナビ（税理士紹介サービスを除く） */}
-            {navItems.filter((item) => item.href !== "/introduction").map((item) => {
+            {/* 通常ナビ */}
+            {navItems.map((item) => {
               const isActive = shouldShowActiveNav && (location === item.href || location.startsWith(item.href + "/"));
               return (
                 <Link
