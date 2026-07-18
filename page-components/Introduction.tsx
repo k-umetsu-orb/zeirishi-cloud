@@ -6,7 +6,7 @@ import { useState } from "react";
 import { usePageTitle } from "@/lib/usePageTitle";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { ArrowRight, Users, CalendarCheck, Shield, Globe, ChevronDown, CircleCheck, Monitor, Phone } from "lucide-react";
+import { ArrowRight, Users, CalendarCheck, Shield, Globe, ChevronDown, CircleCheck, Monitor, MousePointerClick, Phone } from "lucide-react";
 import GlobalHeader from "@/components/GlobalHeader";
 import GlobalFooter from "@/components/GlobalFooter";
 import Breadcrumb from "@/components/Breadcrumb";
@@ -27,9 +27,7 @@ function reportPhoneConversion() {
 function HeroTrustSignal({ className = "" }: { className?: string }) {
   return (
     <div className={`testlp-trust ${className}`}>
-      <p className="testlp-trust__label">
-        全国対応！
-      </p>
+      <p className="testlp-trust__label">全国対応！</p>
       <div className="testlp-trust__line">
         <span className="testlp-trust__chevron">❮</span>
         <p className="testlp-trust__count">
@@ -37,10 +35,27 @@ function HeroTrustSignal({ className = "" }: { className?: string }) {
         </p>
         <span className="testlp-trust__chevron">❯</span>
       </div>
-      <p className="testlp-trust__note">
-        ※2026年7月時点
-      </p>
+      <p className="testlp-trust__note">※2026年7月時点</p>
     </div>
+  );
+}
+
+function HeroFeatureChips({ className = "" }: { className?: string }) {
+  return (
+    <ul className={`testlp-hero__features ${className}`} aria-label="税理士紹介サービスの特徴">
+      <li className="testlp-hero__feature">
+        <CircleCheck className="testlp-hero__feature-icon" />
+        <span>全国<span className="testlp-hero__feature-emphasis">3,000件以上</span>から紹介</span>
+      </li>
+      <li className="testlp-hero__feature">
+        <CircleCheck className="testlp-hero__feature-icon" />
+        <span>相談内容に合わせて比較</span>
+      </li>
+      <li className="testlp-hero__feature">
+        <CircleCheck className="testlp-hero__feature-icon" />
+        <span>紹介料・相談料は<span className="testlp-hero__feature-emphasis">完全無料</span></span>
+      </li>
+    </ul>
   );
 }
 
@@ -67,6 +82,10 @@ function HeroPhoneCta() {
             {PHONE_NUMBER}
           </p>
         </div>
+        <div className="testlp-phone-cta__tap" aria-hidden="true">
+          <MousePointerClick className="testlp-phone-cta__tap-icon" />
+          <span>タップで発信</span>
+        </div>
       </div>
       <div className="testlp-phone-cta__hours">
         <p>
@@ -78,7 +97,7 @@ function HeroPhoneCta() {
   );
 }
 
-function HeroFormCta() {
+function HeroFormCta({ title = "今すぐ無料で相談" }: { title?: string }) {
   return (
     <a
       href="#form"
@@ -92,7 +111,7 @@ function HeroFormCta() {
         <div className="testlp-form-cta__body">
           <p className="testlp-form-cta__label">＼ カンタン30秒 ／</p>
           <p className="testlp-form-cta__title">
-            無料で相談する
+            {title}
           </p>
         </div>
         <div className="testlp-form-cta__arrow">
@@ -118,7 +137,7 @@ function PcContactLead() {
 
         <div className="testlp-pc-contact__cards">
           <HeroPhoneCta />
-          <HeroFormCta />
+          <HeroFormCta title="無料で相談する" />
         </div>
 
         <div className="testlp-pc-contact__note">
@@ -465,12 +484,14 @@ export default function Introduction() {
                 </span>
               </h1>
 
-              <p className="testlp-hero__lead">
+              <p className="testlp-hero__lead hidden md:block">
                 専門コーディネーターが<br className="md:hidden" />
                 ご要望に合った税理士を紹介<br />
                 比較の上、最適な税理士を<br className="md:hidden" />
                 お選びいただけます
               </p>
+
+              <HeroFeatureChips className="md:hidden" />
 
               <div className="testlp-hero__mobile-ctas">
                 <HeroPhoneCta />
@@ -478,7 +499,7 @@ export default function Introduction() {
               </div>
             </div>
 
-            <HeroTrustSignal className="testlp-hero__trust" />
+            <HeroTrustSignal className="hidden md:block testlp-hero__trust" />
           </div>
         </section>
 
@@ -611,7 +632,7 @@ export default function Introduction() {
         .testlp-hero__image {
           position: absolute;
           z-index: -30;
-          top: 42vw;
+          top: 32vw;
           right: -20vw;
           width: 223vw;
           height: auto;
@@ -662,9 +683,9 @@ export default function Introduction() {
         .testlp-hero__inner {
           position: relative;
           max-width: 1440px;
-          min-height: 170vw;
+          min-height: 152vw;
           margin: 0 auto;
-          padding: 12vw 5.1vw 2vw;
+          padding: 8.8vw 5.1vw 2vw;
         }
 
         .testlp-hero__copy {
@@ -672,7 +693,7 @@ export default function Introduction() {
         }
 
         .testlp-hero__badge {
-          display: inline-flex;
+          display: none;
           align-items: center;
           border-radius: 9999px;
           background: #1556b7;
@@ -685,7 +706,7 @@ export default function Introduction() {
         }
 
         .testlp-hero__title {
-          margin: 5.4vw 0 0;
+          margin: 0;
           color: #061d47;
           font-family: "Noto Serif JP", serif;
           font-size: clamp(1.58rem, 6.9vw, 1.9rem);
@@ -720,68 +741,49 @@ export default function Introduction() {
           content: "";
         }
 
-        .testlp-hero__lead {
-          max-width: 70vw;
-          margin: 5.8vw 0 0;
-          color: #181818;
-          font-size: clamp(0.84rem, 3.65vw, 0.98rem);
-          font-weight: 600;
-          line-height: 1.88;
+        .testlp-hero__features {
+          display: grid;
+          grid-template-columns: max-content;
+          gap: 2vw;
+          margin: 13.3vw 0 0;
+          padding: 0;
+          list-style: none;
+        }
+
+        .testlp-hero__feature {
+          display: inline-flex;
+          align-items: center;
+          gap: 2.1vw;
+          border-radius: 9999px;
+          background: rgba(255, 255, 255, 0.92);
+          padding: 2vw 3.2vw 2vw 2.3vw;
+          color: #10284d;
+          font-size: clamp(0.7rem, 3.05vw, 0.88rem);
+          font-weight: 800;
+          line-height: 1.35;
+          box-shadow: 0 4px 14px rgba(23, 69, 120, 0.08);
+          box-sizing: border-box;
+          white-space: nowrap;
+        }
+
+        .testlp-hero__feature-icon {
+          width: 5.5vw;
+          height: 5.5vw;
+          flex: 0 0 auto;
+          color: #1262c7;
+        }
+
+        .testlp-hero__feature-emphasis {
+          color: #1262c7;
+          font-weight: 900;
         }
 
         .testlp-hero__mobile-ctas {
           display: flex;
           flex-direction: column;
           gap: 2.7vw;
+          width: min(89.8vw, 560px);
           margin-top: 5.6vw;
-        }
-
-        .testlp-trust {
-          margin-top: 10vw;
-          text-align: center;
-        }
-
-        .testlp-trust__label {
-          margin: 0 0 4px;
-          color: #111827;
-          font-size: 0.95rem;
-          font-weight: 800;
-          line-height: 1.35;
-        }
-
-        .testlp-trust__line {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: 6px;
-        }
-
-        .testlp-trust__chevron {
-          color: #1a50a8;
-          font-size: 2.2rem;
-          font-weight: 900;
-          line-height: 1;
-        }
-
-        .testlp-trust__count {
-          margin: 0;
-          color: #050505;
-          font-size: 1.35rem;
-          font-weight: 900;
-          line-height: 1;
-          white-space: nowrap;
-        }
-
-        .testlp-trust__count span {
-          color: #1a50a8;
-        }
-
-        .testlp-trust__note {
-          margin: 8px 0 0;
-          color: #8a8a8a;
-          font-size: 1rem;
-          font-weight: 400;
-          line-height: 1.3;
         }
 
         .testlp-phone-cta,
@@ -789,7 +791,7 @@ export default function Introduction() {
           display: flex;
           flex-direction: column;
           justify-content: center;
-          width: min(61vw, 252px);
+          width: 100%;
           min-height: min(27.5vw, 108px);
           max-width: none;
           box-sizing: border-box;
@@ -805,10 +807,11 @@ export default function Introduction() {
         }
 
         .testlp-phone-cta__main {
-          display: flex;
+          display: grid;
+          grid-template-columns: 9.9vw minmax(0, 1fr) auto;
           align-items: center;
           justify-content: center;
-          gap: 2vw;
+          gap: 2.4vw;
         }
 
         .testlp-phone-cta__icon {
@@ -832,10 +835,38 @@ export default function Introduction() {
           text-align: center;
         }
 
+        .testlp-phone-cta__tap {
+          display: flex;
+          min-width: 12.5vw;
+          align-items: center;
+          justify-content: center;
+          align-self: stretch;
+          flex-direction: column;
+          gap: 0.7vw;
+          padding-left: 1.4vw;
+          color: #0b4b91;
+          font-size: clamp(0.46rem, 2vw, 0.6rem);
+          font-weight: 900;
+          line-height: 1.3;
+          white-space: nowrap;
+        }
+
+        @media (max-width: 767px) {
+          .testlp-phone-cta__tap {
+            transform: translateX(-5.5vw);
+          }
+        }
+
+        .testlp-phone-cta__tap-icon {
+          width: 5.8vw;
+          height: 5.8vw;
+          color: #1556b7;
+        }
+
         .testlp-phone-cta__label {
           margin: 0 0 1.1vw;
           color: #0b4b91;
-          font-size: clamp(0.46rem, 2.05vw, 0.58rem);
+          font-size: clamp(0.64rem, 2.6vw, 0.78rem);
           font-weight: 900;
           line-height: 1.2;
           white-space: nowrap;
@@ -844,7 +875,7 @@ export default function Introduction() {
         .testlp-phone-cta__number {
           margin: 0;
           color: #0b4b91;
-          font-size: clamp(1rem, 5.1vw, 1.25rem);
+          font-size: clamp(1.15rem, 5.8vw, 1.45rem);
           font-weight: 900;
           line-height: 1;
           white-space: nowrap;
@@ -915,14 +946,14 @@ export default function Introduction() {
 
         .testlp-form-cta__label {
           margin: 0 0 0.8vw;
-          font-size: clamp(0.52rem, 2.35vw, 0.66rem);
+          font-size: clamp(0.66rem, 3.05vw, 0.82rem);
           font-weight: 800;
           line-height: 1.25;
         }
 
         .testlp-form-cta__title {
           margin: 0;
-          font-size: clamp(0.92rem, 4.25vw, 1.08rem);
+          font-size: clamp(1.08rem, 5.35vw, 1.3rem);
           font-weight: 900;
           line-height: 1.18;
           white-space: nowrap;
@@ -982,6 +1013,14 @@ export default function Introduction() {
         }
 
         @media (min-width: 768px) {
+          .testlp-hero__features {
+            display: none;
+          }
+
+          .testlp-phone-cta__main {
+            display: flex;
+          }
+
           .testlp-hero__image {
             top: 0;
             bottom: 0;
@@ -1049,11 +1088,33 @@ export default function Introduction() {
           .testlp-hero__lead {
             max-width: 700px;
             margin-top: 40px;
+            color: #181818;
             font-size: 1.45rem;
+            font-weight: 600;
             line-height: 1.75;
           }
 
+          .testlp-hero__features {
+            gap: 12px;
+            margin-top: 40px;
+          }
+
+          .testlp-hero__feature {
+            gap: 12px;
+            padding: 12px 20px 12px 16px;
+            font-size: 1.15rem;
+          }
+
+          .testlp-hero__feature-icon {
+            width: 28px;
+            height: 28px;
+          }
+
           .testlp-hero__mobile-ctas {
+            display: none;
+          }
+
+          .testlp-phone-cta__tap {
             display: none;
           }
 
@@ -1063,28 +1124,50 @@ export default function Introduction() {
             bottom: 80px;
             width: 440px;
             margin-top: 0;
+            text-align: center;
           }
 
           .testlp-trust__label {
-            margin-bottom: 6px;
+            margin: 0 0 6px;
+            color: #111827;
             font-size: 1.125rem;
+            font-weight: 800;
+            line-height: 1.35;
           }
 
           .testlp-trust__line {
+            display: flex;
+            align-items: center;
+            justify-content: center;
             gap: 18px;
           }
 
           .testlp-trust__chevron {
+            color: #1a50a8;
             font-size: 2.5rem;
+            font-weight: 900;
+            line-height: 1;
           }
 
           .testlp-trust__count {
+            margin: 0;
+            color: #050505;
             font-size: 2rem;
+            font-weight: 900;
+            line-height: 1;
+            white-space: nowrap;
+          }
+
+          .testlp-trust__count span {
+            color: #1a50a8;
           }
 
           .testlp-trust__note {
-            margin-top: 6px;
+            margin: 6px 0 0;
+            color: #8a8a8a;
             font-size: 0.875rem;
+            font-weight: 400;
+            line-height: 1.3;
           }
 
           .testlp-pc-contact {
