@@ -8,6 +8,11 @@ const nextConfig = {
         destination: 'https://orb-inc.co.jp/privacy-policy',
         permanent: true,
       },
+      {
+        source: '/introduction-thanks',
+        destination: '/introduction/thanks',
+        permanent: true,
+      },
     ];
   },
 };
