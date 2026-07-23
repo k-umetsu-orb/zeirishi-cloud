@@ -233,6 +233,7 @@ function IntroductionForm() {
         }),
       });
       if (!res.ok) throw new Error();
+      window.oaiq?.("measure", "lead_created", { type: "customer_action" });
       router.push("/introduction/thanks");
     } catch {
       setSubmitError("送信に失敗しました。時間をおいて再度お試しください。");

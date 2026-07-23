@@ -3,16 +3,20 @@
  */
 import { useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { CheckCircle, ArrowRight } from "lucide-react";
 import GlobalHeader from "@/components/GlobalHeader";
 import GlobalFooter from "@/components/GlobalFooter";
 
 export default function IntroductionThanks() {
+  const router = useRouter();
+
   useEffect(() => {
+    if (router.pathname !== "/introduction/thanks") return;
     window.gtag?.("event", "conversion", {
       send_to: "AW-18309633981/Wyg-CMCst80cEL2v25pE",
     });
-  }, []);
+  }, [router.pathname]);
 
   return (
     <div className="min-h-screen flex flex-col">

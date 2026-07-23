@@ -21,4 +21,5 @@ declare module "*.svg" {
 interface Window {
   gtag?: (...args: unknown[]) => void;
   dataLayer?: unknown[];
+  oaiq?: (...args: unknown[]) => void;
 }
