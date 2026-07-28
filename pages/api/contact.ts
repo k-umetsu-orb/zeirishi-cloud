@@ -127,7 +127,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         "※本メールは自動送信です。",
         "",
         "□■━━━━━━━━━━━━━━━━━━━━━━━",
-        "税理士クラウド（運営: 株式会社orb）",
+        "税理士クラウド（運営: orb株式会社）",
         "https://zeirishi-cloud.jp/",
         "□■━━━━━━━━━━━━━━━━━━━━━━━",
       ].join("\n"),
