@@ -142,10 +142,7 @@ export default function IntroductionQuestionnaire() {
           name,
           email,
           phone,
-          requestDetail: [
-            requestDetail.trim() || "ご希望内容は担当者からのヒアリングを希望",
-            `希望エリア：${region || "未選択"}`,
-          ].join("\n"),
+          requestDetail: requestDetail.trim() || "ご希望内容は担当者からのヒアリングを希望",
         }),
       });
 
