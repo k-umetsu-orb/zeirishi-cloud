@@ -38,6 +38,10 @@
 /pages/introduction-test/
 /page-components/IntroductionTest.tsx
 
+# introduction backup (2026-07-29, not for push)
+/pages/introduction_bk_260729/
+/page-components/IntroductionBk260729.tsx
+
 # ad LP pages (temporarily unpublished; kept locally, excluded from deploy)
 /pages/lp/company-establishment/
 /pages/lp/comparison/
