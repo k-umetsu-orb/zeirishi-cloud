@@ -14,8 +14,15 @@ import Breadcrumb from "@/components/Breadcrumb";
 import { getAllPrefectures, getCitiesByPrefecture } from "@/lib/data";
 import heroWomanImage from "@/images/女性1_crop.png";
 import japanMapImage from "@/images/japan map_ver2.png";
+import accountantPhoto1 from "@/images/男性1.png";
+import accountantPhoto2 from "@/images/男性2.png";
+import accountantPhoto3 from "@/images/男性3.png";
+import accountantPhoto4 from "@/images/男性4.png";
+import accountantPhoto5 from "@/images/女性7.png";
 
 const PHONE_NUMBER = "03-6403-3202";
+const ACCOUNTANT_PHOTOS = [accountantPhoto1, accountantPhoto2, accountantPhoto3, accountantPhoto4, accountantPhoto5];
+const MARQUEE_PHOTOS = Array.from({ length: 6 }, () => ACCOUNTANT_PHOTOS).flat();
 
 function reportPhoneConversion() {
   window.gtag?.("event", "conversion", {
@@ -61,7 +68,8 @@ function HeroPhoneCta() {
         </div>
         <div className="testlp-phone-cta__body">
           <p className="testlp-phone-cta__label">
-            お電話でのご相談はこちら（通話無料）
+            <span>お電話でのご相談はこちら </span>
+            <span>（通話無料）</span>
           </p>
           <p className="testlp-phone-cta__number">
             {PHONE_NUMBER}
@@ -82,7 +90,7 @@ function HeroPhoneCta() {
   );
 }
 
-function HeroFormCta({ title = "今すぐ無料で相談" }: { title?: string }) {
+function HeroFormCta({ title = "税理士を比較してみる" }: { title?: string }) {
   return (
     <a
       href="#form"
@@ -92,18 +100,15 @@ function HeroFormCta({ title = "今すぐ無料で相談" }: { title?: string })
       <div className="testlp-form-cta__main">
         <div className="testlp-form-cta__free"><Mail /></div>
         <div className="testlp-form-cta__body">
-          <p className="testlp-form-cta__label">＼ カンタン30秒 ／</p>
+          <p className="testlp-form-cta__label">あなたに合う</p>
           <p className="testlp-form-cta__title">
             {title}
           </p>
+          <p className="testlp-form-cta__note">【最短1週間で完了！】</p>
         </div>
         <div className="testlp-form-cta__arrow">
           <ArrowRight className="testlp-form-cta__arrow-svg" />
         </div>
-      </div>
-      <div className="testlp-form-cta__sub">
-        <Mail className="testlp-form-cta__monitor" />
-        <span>フォームからお気軽にご相談ください</span>
       </div>
     </a>
   );
@@ -230,7 +235,7 @@ function ConcernsSection() {
           </div>
         </div>
         <div className="intro-concerns__cta">
-          <HeroFormCta title="最短1週間で3社比較してみる" />
+          <HeroFormCta />
           <HeroPhoneCta />
         </div>
       </div>
@@ -248,6 +253,38 @@ function ReassuranceBand() {
         <li><CircleCheck /><span><strong>契約はご自身の意思で</strong><small>無理な営業はありません。</small></span></li>
       </ul>
     </div>
+  );
+}
+
+function AccountantMarquee() {
+  return (
+    <section className="intro-accountant-marquee" aria-label="登録税理士・会計事務所">
+      <h2>全国の税理士・会計事務所が多数登録中</h2>
+      <div className="intro-accountant-marquee__viewport">
+        <div className="intro-accountant-marquee__fade intro-accountant-marquee__fade--left" />
+        <div className="intro-accountant-marquee__fade intro-accountant-marquee__fade--right" />
+        <div className="intro-accountant-marquee__track animate-scroll-x">
+          {[...MARQUEE_PHOTOS, ...MARQUEE_PHOTOS].map((photo, index) => (
+            <div key={index} className="intro-accountant-marquee__item">
+              <div className="intro-accountant-marquee__photo">
+                <Image src={photo} alt="登録税理士・会計事務所" fill sizes="(max-width: 767px) 88px, 128px" className="object-cover" />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function IntroductionStickyCta() {
+  return (
+    <aside className="intro-sticky-cta" aria-label="無料相談・電話相談">
+      <div className="intro-sticky-cta__inner intro-concerns__cta">
+        <HeroFormCta />
+        <HeroPhoneCta />
+      </div>
+    </aside>
   );
 }
 
@@ -538,7 +575,7 @@ export default function Introduction() {
     <div className="min-h-screen flex flex-col">
       <GlobalHeader />
 
-      <main className="flex-1">
+      <main className="flex-1 introduction-main">
 
         {/* ── Hero ── */}
       <section className="testlp-hero">
@@ -572,7 +609,7 @@ export default function Introduction() {
                   <span className="testlp-hero__highlight">
                     <span>無料相談会</span>
                   </span>
-                  を複数設定します
+                  を設定します
                 </span>
               </h1>
 
@@ -588,6 +625,8 @@ export default function Introduction() {
             </div>
           </div>
         </section>
+
+        <AccountantMarquee />
 
         <ConcernsSection />
 
@@ -638,7 +677,7 @@ export default function Introduction() {
               </div>
             </div>
             <div className="intro-flow__cta intro-concerns__cta">
-              <HeroFormCta title="最短1週間で3社比較してみる" />
+              <HeroFormCta />
               <HeroPhoneCta />
             </div>
           </div>
@@ -677,20 +716,16 @@ export default function Introduction() {
             <p className="text-white/70 text-sm mb-8 max-w-md mx-auto leading-relaxed">
               ご相談・紹介は完全無料です。お気軽にお申し込みください。
             </p>
-            <a
-              href="#form"
-              className="intro-final-cta inline-flex items-center gap-2 px-8 py-4 rounded-xl font-bold text-base text-white transition-opacity hover:opacity-90"
-              style={{ background: "linear-gradient(90deg,#f97316,#ef4444)" }}
-            >
-              最短1週間で3社比較してみる
-              <ArrowRight className="w-5 h-5" />
-            </a>
+            <div className="intro-final-cta">
+              <HeroFormCta />
+            </div>
           </div>
         </section>
 
       </main>
 
       <GlobalFooter />
+      <IntroductionStickyCta />
       <style jsx global>{`
         .testlp-hero {
           position: relative;
@@ -1026,6 +1061,14 @@ export default function Introduction() {
           font-size: clamp(1.08rem, 5.35vw, 1.3rem);
           font-weight: 900;
           line-height: 1.18;
+          white-space: nowrap;
+        }
+
+        .testlp-form-cta__note {
+          margin: 0.5vw 0 0;
+          font-size: clamp(0.5rem, 2.1vw, 0.66rem);
+          font-weight: 800;
+          line-height: 1.2;
           white-space: nowrap;
         }
 
@@ -2478,13 +2521,18 @@ export default function Introduction() {
         .introduction-start-form__choice {
           gap: 11px;
           border: 1.5px solid #72a3e2;
-          background: #fff;
+          background: linear-gradient(135deg, #fbfdff 0%, #eff7ff 100%);
           padding: 0 13px;
           color: #1353ad;
           text-align: left;
+          box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.82), 0 2px 5px rgba(24, 83, 157, 0.07);
         }
         .introduction-start-form__choice:hover,
-        .introduction-start-form__choice.is-selected { border-color: #1a75cc; background: #eaf5ff; }
+        .introduction-start-form__choice.is-selected {
+          border-color: #0767c5;
+          background: linear-gradient(135deg, #dff2ff 0%, #cce8ff 100%);
+          box-shadow: 0 4px 10px rgba(17, 102, 194, 0.17);
+        }
         .introduction-start-form__choice > svg:first-child { width: 21px; height: 21px; flex: 0 0 auto; }
         .introduction-start-form__choice span { min-width: 0; flex: 1; }
         .introduction-start-form__choice-arrow { width: 16px; height: 16px; transform: rotate(-90deg); }
@@ -2703,6 +2751,226 @@ export default function Introduction() {
           .intro-concerns__cta .testlp-phone-cta__icon-svg { width: 29px; height: 29px; }
           .intro-concerns__cta .testlp-phone-cta__label { font-size: clamp(0.68rem, 3vw, 0.85rem); }
           .intro-concerns__cta .testlp-phone-cta__number { font-size: clamp(1.38rem, 6.4vw, 2rem); }
+        }
+
+        .introduction-main { padding-bottom: 142px; }
+
+        .intro-accountant-marquee {
+          overflow: hidden;
+          border-bottom: 1px solid #dce8f6;
+          background: #f4f7fb;
+          padding: 42px 0 36px;
+        }
+
+        .intro-accountant-marquee h2 {
+          margin: 0 0 26px;
+          color: #082d70;
+          font-family: "Noto Serif JP", serif;
+          font-size: clamp(1.3rem, 2.2vw, 2rem);
+          font-weight: 800;
+          text-align: center;
+        }
+
+        .intro-accountant-marquee__viewport { position: relative; }
+        .intro-accountant-marquee__track { display: flex; width: max-content; }
+        .intro-accountant-marquee__item { flex: 0 0 auto; margin: 0 18px; }
+        .intro-accountant-marquee__photo {
+          position: relative;
+          width: 128px;
+          height: 128px;
+          overflow: hidden;
+          border: 4px solid #fff;
+          border-radius: 9999px;
+          background: #fff;
+          box-shadow: 0 6px 16px rgba(32, 72, 126, 0.16);
+        }
+
+        .intro-accountant-marquee__fade {
+          position: absolute;
+          top: 0;
+          bottom: 0;
+          z-index: 1;
+          width: clamp(36px, 8vw, 120px);
+          pointer-events: none;
+        }
+        .intro-accountant-marquee__fade--left { left: 0; background: linear-gradient(90deg, #f4f7fb, transparent); }
+        .intro-accountant-marquee__fade--right { right: 0; background: linear-gradient(270deg, #f4f7fb, transparent); }
+
+        .intro-sticky-cta {
+          position: fixed;
+          right: 0;
+          bottom: 0;
+          left: 0;
+          z-index: 60;
+          border-top: 1px solid #d8e5f5;
+          background: rgba(255, 255, 255, 0.96);
+          padding: 12px 0 calc(12px + env(safe-area-inset-bottom));
+          box-shadow: 0 -8px 28px rgba(15, 59, 124, 0.12);
+          backdrop-filter: blur(12px);
+        }
+
+        .intro-sticky-cta__inner {
+          width: min(calc(100% - 64px), 1280px);
+          max-width: none;
+          margin: 0 auto;
+        }
+
+        .intro-sticky-cta__inner .testlp-phone-cta,
+        .intro-sticky-cta__inner .testlp-form-cta { min-height: 104px; }
+
+        .intro-concerns__cta .testlp-form-cta__body { text-align: center; }
+        .intro-concerns__cta .testlp-form-cta__label {
+          display: block;
+          margin: 0 0 3px;
+          font-size: clamp(0.72rem, 1vw, 0.9rem);
+          letter-spacing: 0.04em;
+        }
+        .intro-concerns__cta .testlp-form-cta__title {
+          font-size: clamp(1.1rem, 2vw, 1.72rem);
+          letter-spacing: -0.025em;
+        }
+        .intro-concerns__cta .testlp-form-cta__note {
+          margin-top: 4px;
+          font-size: clamp(0.66rem, 0.92vw, 0.84rem);
+        }
+
+        .intro-concerns__cta:not(.intro-sticky-cta__inner) .testlp-form-cta__title {
+          font-size: clamp(1rem, 1.72vw, 1.5rem);
+        }
+
+        .intro-final-cta {
+          width: min(100%, 620px);
+          margin: 0 auto;
+        }
+
+        .intro-final-cta .testlp-form-cta {
+          min-height: 108px;
+          border-radius: 20px;
+          padding: 14px 26px;
+        }
+
+        .intro-final-cta .testlp-form-cta__main {
+          grid-template-columns: 62px minmax(0, 1fr) 42px;
+          gap: 14px;
+        }
+
+        .intro-final-cta .testlp-form-cta__free { width: 62px; height: 62px; border-width: 0; }
+        .intro-final-cta .testlp-form-cta__free svg { width: 33px; height: 33px; }
+        .intro-final-cta .testlp-form-cta__label { margin-bottom: 3px; font-size: 0.9rem; }
+        .intro-final-cta .testlp-form-cta__title { font-size: clamp(1.15rem, 2vw, 1.55rem); }
+        .intro-final-cta .testlp-form-cta__note { margin-top: 4px; font-size: 0.84rem; }
+        .intro-final-cta .testlp-form-cta__arrow { width: 42px; height: 42px; }
+        .intro-final-cta .testlp-form-cta__arrow-svg { width: 22px; height: 22px; }
+
+        @media (min-width: 768px) {
+          .intro-sticky-cta__inner { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+          .intro-sticky-cta__inner .testlp-phone-cta__icon { width: 64px; height: 64px; }
+          .intro-sticky-cta__inner .testlp-phone-cta__icon-svg { width: 33px; height: 33px; }
+          .intro-sticky-cta__inner .testlp-phone-cta__label { font-size: clamp(0.82rem, 1.1vw, 1rem); }
+          .intro-sticky-cta__inner .testlp-phone-cta__number { font-size: clamp(1.7rem, 3.1vw, 2.65rem); }
+          .intro-sticky-cta__inner .testlp-form-cta__label { font-size: clamp(0.72rem, 1vw, 0.9rem); }
+          .intro-sticky-cta__inner .testlp-form-cta__title { font-size: clamp(1rem, 1.72vw, 1.5rem); }
+          .intro-sticky-cta__inner .testlp-form-cta__note { font-size: clamp(0.66rem, 0.92vw, 0.84rem); }
+        }
+
+        @media (max-width: 767px) {
+          .introduction-main { padding-bottom: 102px; }
+          .intro-accountant-marquee { padding: 30px 0 26px; }
+          .intro-accountant-marquee h2 { margin-bottom: 20px; font-size: 1.2rem; }
+          .intro-accountant-marquee__item { margin: 0 10px; }
+          .intro-accountant-marquee__photo { width: 88px; height: 88px; border-width: 3px; }
+
+          .intro-sticky-cta { padding: 5px 0 calc(5px + env(safe-area-inset-bottom)); }
+          .intro-sticky-cta__inner {
+            display: grid;
+            grid-template-columns: minmax(0, 1.07fr) minmax(0, 0.93fr);
+            width: calc(100% - 24px);
+            margin-top: 0;
+          }
+          .intro-sticky-cta__inner .testlp-form-cta,
+          .intro-sticky-cta__inner .testlp-phone-cta {
+            min-height: 80px;
+            padding: 7px 8px;
+          }
+          .intro-sticky-cta__inner .testlp-form-cta {
+            border-right: 1px solid #dbe7f5;
+            border-bottom: 0;
+          }
+          .intro-sticky-cta__inner .testlp-form-cta__main {
+            display: grid;
+            grid-template-columns: 28px minmax(0, 1fr) 22px;
+            gap: 4px;
+          }
+          .intro-sticky-cta__inner .testlp-form-cta__free { width: 28px; height: 28px; }
+          .intro-sticky-cta__inner .testlp-form-cta__free svg { width: 16px; height: 16px; }
+          .intro-sticky-cta__inner .testlp-form-cta__label {
+            display: block;
+            margin-bottom: 1px;
+            font-size: clamp(0.56rem, 2.6vw, 0.64rem);
+            line-height: 1;
+          }
+          .intro-sticky-cta__inner .testlp-form-cta__title {
+            font-size: clamp(0.56rem, 2.8vw, 0.72rem);
+            letter-spacing: -0.075em;
+            line-height: 1;
+            white-space: nowrap;
+          }
+          .intro-sticky-cta__inner .testlp-form-cta__note {
+            display: block;
+            margin-top: 1px;
+            font-size: clamp(0.48rem, 2.3vw, 0.56rem);
+            letter-spacing: -0.06em;
+            line-height: 1;
+            white-space: nowrap;
+          }
+          .intro-sticky-cta__inner .testlp-form-cta__arrow { width: 22px; height: 22px; }
+          .intro-sticky-cta__inner .testlp-form-cta__arrow-svg { width: 13px; height: 13px; }
+          .intro-sticky-cta__inner .testlp-phone-cta__hours { display: none; }
+          .intro-sticky-cta__inner .testlp-phone-cta__main {
+            grid-template-columns: 28px minmax(0, 1fr);
+            align-items: center;
+            gap: 5px;
+          }
+          .intro-sticky-cta__inner .testlp-phone-cta__icon { width: 28px; height: 28px; }
+          .intro-sticky-cta__inner .testlp-phone-cta__icon-svg { width: 16px; height: 16px; }
+          .intro-sticky-cta__inner .testlp-phone-cta__tap { display: none; }
+          .intro-sticky-cta__inner .testlp-phone-cta__label {
+            display: block;
+            margin-bottom: 2px;
+            font-size: clamp(0.48rem, 2.3vw, 0.56rem);
+            letter-spacing: -0.06em;
+            line-height: 1.12;
+            white-space: normal;
+          }
+          .intro-sticky-cta__inner .testlp-phone-cta__label span { display: block; }
+          .intro-sticky-cta__inner .testlp-phone-cta__body { text-align: center; }
+          .intro-sticky-cta__inner .testlp-phone-cta__number {
+            font-size: clamp(0.68rem, 3.3vw, 0.8rem);
+            letter-spacing: -0.055em;
+            line-height: 1;
+          }
+          .intro-concerns__cta .testlp-form-cta__label { display: block; margin-bottom: 2px; font-size: 0.66rem; }
+          .intro-concerns__cta:not(.intro-sticky-cta__inner) .testlp-form-cta__label { font-size: 0.76rem; }
+          .intro-concerns__cta:not(.intro-sticky-cta__inner) .testlp-form-cta__title { font-size: clamp(1.08rem, 4.7vw, 1.3rem); }
+          .intro-concerns__cta:not(.intro-sticky-cta__inner) .testlp-form-cta__note { margin-top: 4px; font-size: 0.68rem; }
+
+          .intro-final-cta { width: min(calc(100% - 32px), 520px); }
+          .intro-final-cta .testlp-form-cta { min-height: 118px; padding: 14px 18px; }
+          .intro-final-cta .testlp-form-cta__main { grid-template-columns: 56px minmax(0, 1fr) 38px; gap: 10px; }
+          .intro-final-cta .testlp-form-cta__free { width: 56px; height: 56px; }
+          .intro-final-cta .testlp-form-cta__free svg { width: 30px; height: 30px; }
+          .intro-final-cta .testlp-form-cta__label { font-size: 0.76rem; }
+          .intro-final-cta .testlp-form-cta__title { font-size: clamp(1.14rem, 5vw, 1.34rem); }
+          .intro-final-cta .testlp-form-cta__note { font-size: 0.68rem; }
+          .intro-final-cta .testlp-form-cta__arrow { width: 38px; height: 38px; }
+          .intro-final-cta .testlp-form-cta__arrow-svg { width: 20px; height: 20px; }
+
+          .intro-concern h3 { font-size: 1.2rem; }
+          .intro-concern p { font-size: 0.86rem; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .intro-accountant-marquee__track { animation: none; }
         }
       `}</style>
     </div>
