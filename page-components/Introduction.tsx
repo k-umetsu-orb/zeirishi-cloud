@@ -672,8 +672,8 @@ export default function Introduction() {
             <div className="intro-flow-highlight">
               <ClipboardCheck />
               <div>
-                <h3><span className="intro-flow-highlight__marker">比較しながら</span>、納得できる相談先を</h3>
-                <p>複数の税理士・会計事務所を比較できるから、自分に合った相談先を安心して選べます。</p>
+                <h3><span className="intro-flow-highlight__marker">比較しながら</span>、<br className="intro-flow-highlight__sp-break" />納得できる相談先を</h3>
+                <p>複数の税理士・会計事務所を比較し、自分に合った相談先を選べます。</p>
               </div>
             </div>
             <div className="intro-flow__cta intro-concerns__cta">
@@ -1989,6 +1989,7 @@ export default function Introduction() {
         .intro-flow-highlight > svg { width: 108px; height: 108px; flex: 0 0 auto; color: #0c54c7; }
         .intro-flow-highlight h3 { margin: 0; color: #0648b2; font-size: clamp(1.25rem, 2.3vw, 2rem); font-weight: 900; line-height: 1.4; }
         .intro-flow-highlight__marker { background: none; }
+        .intro-flow-highlight__sp-break { display: none; }
         .intro-flow-highlight h3::first-letter { text-decoration: underline 0.32em #ffde31; text-underline-offset: -0.14em; }
         .intro-flow-highlight p { margin: 12px 0 0; color: #1f3358; font-size: clamp(0.84rem, 1.25vw, 1.05rem); font-weight: 600; line-height: 1.65; }
         .intro-flow__cta { max-width: none; margin-top: 28px; }
@@ -2480,6 +2481,7 @@ export default function Introduction() {
           .intro-merit__sp-break { display: initial; }
 
           .intro-flow-highlight__marker { background: linear-gradient(transparent 68%, #ffde31 68%); }
+          .intro-flow-highlight__sp-break { display: block; }
           .intro-flow-highlight h3::first-letter { text-decoration: none; }
 
           .intro-flow-highlight {
@@ -2883,7 +2885,7 @@ export default function Introduction() {
           .intro-sticky-cta { padding: 5px 0 calc(5px + env(safe-area-inset-bottom)); }
           .intro-sticky-cta__inner {
             display: grid;
-            grid-template-columns: minmax(0, 1.07fr) minmax(0, 0.93fr);
+            grid-template-columns: repeat(2, minmax(0, 1fr));
             width: calc(100% - 24px);
             margin-top: 0;
           }
@@ -2906,11 +2908,11 @@ export default function Introduction() {
           .intro-sticky-cta__inner .testlp-form-cta__label {
             display: block;
             margin-bottom: 1px;
-            font-size: clamp(0.56rem, 2.6vw, 0.64rem);
+            font-size: clamp(0.42rem, 2.1vw, 0.5rem);
             line-height: 1;
           }
           .intro-sticky-cta__inner .testlp-form-cta__title {
-            font-size: clamp(0.56rem, 2.8vw, 0.72rem);
+            font-size: clamp(0.48rem, 2.8vw, 0.66rem);
             letter-spacing: -0.075em;
             line-height: 1;
             white-space: nowrap;
@@ -2918,7 +2920,7 @@ export default function Introduction() {
           .intro-sticky-cta__inner .testlp-form-cta__note {
             display: block;
             margin-top: 1px;
-            font-size: clamp(0.48rem, 2.3vw, 0.56rem);
+            font-size: clamp(0.38rem, 1.9vw, 0.46rem);
             letter-spacing: -0.06em;
             line-height: 1;
             white-space: nowrap;
@@ -2960,13 +2962,19 @@ export default function Introduction() {
           .intro-final-cta .testlp-form-cta__free { width: 56px; height: 56px; }
           .intro-final-cta .testlp-form-cta__free svg { width: 30px; height: 30px; }
           .intro-final-cta .testlp-form-cta__label { font-size: 0.76rem; }
-          .intro-final-cta .testlp-form-cta__title { font-size: clamp(1.14rem, 5vw, 1.34rem); }
+          .intro-final-cta .testlp-form-cta__title {
+            font-size: clamp(0.98rem, 4.25vw, 1.1rem);
+            line-height: 1.16;
+            white-space: normal;
+          }
           .intro-final-cta .testlp-form-cta__note { font-size: 0.68rem; }
           .intro-final-cta .testlp-form-cta__arrow { width: 38px; height: 38px; }
           .intro-final-cta .testlp-form-cta__arrow-svg { width: 20px; height: 20px; }
 
           .intro-concern h3 { font-size: 1.2rem; }
           .intro-concern p { font-size: 0.86rem; }
+          .intro-flow-highlight { justify-content: center; }
+          .intro-flow-highlight > div { text-align: center; }
         }
 
         @media (prefers-reduced-motion: reduce) {
