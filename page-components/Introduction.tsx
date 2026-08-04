@@ -19,9 +19,24 @@ import accountantPhoto2 from "@/images/男性2.png";
 import accountantPhoto3 from "@/images/男性3.png";
 import accountantPhoto4 from "@/images/男性4.png";
 import accountantPhoto5 from "@/images/女性7.png";
+import accountantPhoto6 from "@/images/男性6.png";
+import accountantPhoto7 from "@/images/男性7.png";
+import accountantPhoto8 from "@/images/男性8.png";
+import accountantPhoto9 from "@/images/男性9.png";
 
 const PHONE_NUMBER = "03-6403-3202";
-const ACCOUNTANT_PHOTOS = [accountantPhoto1, accountantPhoto2, accountantPhoto3, accountantPhoto4, accountantPhoto5];
+const ACCOUNTANT_PHOTOS = [
+  { src: accountantPhoto1, crop: "native" },
+  { src: accountantPhoto2, crop: "native" },
+  { src: accountantPhoto3, crop: "native" },
+  { src: accountantPhoto4, crop: "native" },
+  { src: accountantPhoto5, crop: "native" },
+  // 男性6〜9は元画像に白い上下余白があるため、表示時のみ拡大してトリミングする。
+  { src: accountantPhoto6, crop: "zoomed" },
+  { src: accountantPhoto7, crop: "framed" },
+  { src: accountantPhoto8, crop: "framed" },
+  { src: accountantPhoto9, crop: "framed" },
+];
 const MARQUEE_PHOTOS = Array.from({ length: 6 }, () => ACCOUNTANT_PHOTOS).flat();
 
 function reportPhoneConversion() {
@@ -267,7 +282,15 @@ function AccountantMarquee() {
           {[...MARQUEE_PHOTOS, ...MARQUEE_PHOTOS].map((photo, index) => (
             <div key={index} className="intro-accountant-marquee__item">
               <div className="intro-accountant-marquee__photo">
-                <Image src={photo} alt="登録税理士・会計事務所" fill sizes="(max-width: 767px) 88px, 128px" className="object-cover" />
+                <Image
+                  src={photo.src}
+                  alt="登録税理士・会計事務所"
+                  fill
+                  // 白余白をトリミングする画像は拡大表示するため、実表示サイズに合わせて高解像度を取得する。
+                  sizes={photo.crop === "zoomed" ? "(max-width: 767px) 170px, 240px" : photo.crop === "framed" ? "(max-width: 767px) 120px, 180px" : "(max-width: 767px) 88px, 128px"}
+                  quality={90}
+                  className={`object-cover ${photo.crop === "zoomed" ? "intro-accountant-marquee__image--zoomed" : photo.crop === "framed" ? "intro-accountant-marquee__image--framed" : ""}`}
+                />
               </div>
             </div>
           ))}
@@ -2774,7 +2797,12 @@ export default function Introduction() {
         }
 
         .intro-accountant-marquee__viewport { position: relative; }
-        .intro-accountant-marquee__track { display: flex; width: max-content; }
+        .intro-accountant-marquee__track {
+          display: flex;
+          width: max-content;
+          /* 5枚→9枚への追加後も、以前と同じ移動速度を保つ。 */
+          animation-duration: 153s;
+        }
         .intro-accountant-marquee__item { flex: 0 0 auto; margin: 0 18px; }
         .intro-accountant-marquee__photo {
           position: relative;
@@ -2785,6 +2813,16 @@ export default function Introduction() {
           border-radius: 9999px;
           background: #fff;
           box-shadow: 0 6px 16px rgba(32, 72, 126, 0.16);
+        }
+
+        .intro-accountant-marquee__image--framed {
+          /* 16:9の白い外枠を丸枠の外へ逃がし、他の人物画像と同じ見え方に揃える。 */
+          transform: scale(1.3);
+        }
+
+        .intro-accountant-marquee__image--zoomed {
+          /* 男性6は被写体が遠いため、顔と上半身が見える倍率へ個別に調整する。 */
+          transform: scale(2.2);
         }
 
         .intro-accountant-marquee__fade {
