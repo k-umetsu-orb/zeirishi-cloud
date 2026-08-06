@@ -192,7 +192,7 @@ export default function IntroductionQuestionnaire() {
             <QuestionMessage showAvatar={false}>まずはご相談者様について教えてください</QuestionMessage>
             <div className="intro-questionnaire__card">
               <div className="intro-questionnaire__options intro-questionnaire__options--stack">
-                {STARTERS.map(({ label, icon }) => <ChoiceCard key={label} label={label} icon={icon} selected={clientType === label} disabled={step > 0} onClick={() => { setClientType(label); setStep(1); }} />)}
+                {STARTERS.map(({ label, icon }) => <ChoiceCard key={label} label={label} icon={icon} selected={clientType === label} onClick={() => { setClientType(label); setStep(1); }} />)}
               </div>
             </div>
           </section>}
@@ -201,7 +201,7 @@ export default function IntroductionQuestionnaire() {
             <QuestionMessage>お探しの地域を教えてください</QuestionMessage>
             <div className="intro-questionnaire__card">
               <div className="intro-questionnaire__options intro-questionnaire__options--two">
-                {REGION_GROUPS.map(({ label }) => <ChoiceCard key={label} label={label} selected={region === label} disabled={step > 1} onClick={() => { setRegion(label); setPrefecture(""); setCity(""); setStep(2); }} />)}
+                {REGION_GROUPS.map(({ label }) => <ChoiceCard key={label} label={label} selected={region === label} onClick={() => { setRegion(label); setPrefecture(""); setCity(""); setStep(2); }} />)}
               </div>
             </div>
           </section>}
@@ -210,7 +210,7 @@ export default function IntroductionQuestionnaire() {
             <QuestionMessage>都道府県を教えてください</QuestionMessage>
             <div className="intro-questionnaire__card">
               <div className="intro-questionnaire__options intro-questionnaire__options--two">
-                {region === "国外" ? <ChoiceCard label="海外" selected={prefecture === "overseas"} disabled={step > 2} onClick={() => { setPrefecture("overseas"); setCity(""); setStep(3); }} /> : visiblePrefectures.map((item) => <ChoiceCard key={item.slug} label={item.name} selected={prefecture === item.slug} disabled={step > 2} onClick={() => { setPrefecture(item.slug); setCity(""); setStep(3); }} />)}
+                {region === "国外" ? <ChoiceCard label="海外" selected={prefecture === "overseas"} onClick={() => { setPrefecture("overseas"); setCity(""); setStep(3); }} /> : visiblePrefectures.map((item) => <ChoiceCard key={item.slug} label={item.name} selected={prefecture === item.slug} onClick={() => { setPrefecture(item.slug); setCity(""); setStep(3); }} />)}
               </div>
             </div>
           </section>}
@@ -220,7 +220,7 @@ export default function IntroductionQuestionnaire() {
             <div className="intro-questionnaire__card">
               <div className="intro-questionnaire__select-wrap">
                 <label htmlFor="city">市区町村（任意）</label>
-                <select id="city" value={city} onChange={(event) => setCity(event.target.value)} disabled={step > 3 || !prefecture}>
+                <select id="city" value={city} onChange={(event) => setCity(event.target.value)} disabled={!prefecture}>
                   <option value="">選択してください</option>
                   {cities.map((item) => <option key={item.slug} value={item.slug}>{item.name}</option>)}
                 </select>
@@ -234,7 +234,7 @@ export default function IntroductionQuestionnaire() {
             <div className="intro-questionnaire__card">
               <div className="intro-questionnaire__textarea-wrap">
                 <label htmlFor="requestDetail">依頼したい内容（任意）</label>
-                <textarea id="requestDetail" value={requestDetail} onChange={(event) => setRequestDetail(event.target.value)} disabled={step > 4} rows={6} placeholder={"例\n・法人化とその後の顧問契約\n・初年度決算申告（IT関連業）\n・新規法人設立"} />
+                <textarea id="requestDetail" value={requestDetail} onChange={(event) => setRequestDetail(event.target.value)} rows={6} placeholder={"例\n・法人化とその後の顧問契約\n・初年度決算申告（IT関連業）\n・新規法人設立"} />
               </div>
               {step === 4 && <div className="intro-questionnaire__actions"><button type="button" onClick={() => setStep(5)} className={`intro-questionnaire__back ${hasRequestDetail ? "" : "is-primary"}`}>スキップ</button><button type="button" disabled={!hasRequestDetail} onClick={next} className={`intro-questionnaire__next ${hasRequestDetail ? "" : "is-muted"}`}>次へ<ArrowRight /></button></div>}
             </div>

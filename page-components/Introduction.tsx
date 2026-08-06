@@ -2568,7 +2568,11 @@ export default function Introduction() {
           background: linear-gradient(90deg, #8acbee, #6baeda);
           color: #fff;
         }
-        .introduction-start-form__next:not(:disabled):hover { background: linear-gradient(90deg, #65b7e4, #4e9ad0); }
+        .introduction-start-form__next:not(:disabled) {
+          background: linear-gradient(90deg, #176fd2, #0758bb);
+          box-shadow: 0 4px 10px rgba(7, 88, 187, 0.22);
+        }
+        .introduction-start-form__next:not(:disabled):hover { background: linear-gradient(90deg, #0f64c4, #064da7); }
         .introduction-start-form__next:disabled { cursor: not-allowed; opacity: 0.58; }
         .introduction-start-form__next svg { width: 18px; height: 18px; }
         .introduction-start-form__privacy { display: flex; align-items: center; justify-content: center; gap: 5px; margin: 15px 0 0; color: #2c4f7e; font-size: 0.7rem; font-weight: 700; }
