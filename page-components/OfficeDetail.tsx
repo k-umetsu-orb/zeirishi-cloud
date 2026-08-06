@@ -5,10 +5,11 @@
 import { useEffect } from "react";
 import Link from "next/link";
 import { usePageTitle } from "@/lib/usePageTitle";
-import { ArrowRight, ChevronRight, ExternalLink, Phone, Printer, MapPin } from "lucide-react";
+import { ArrowRight, ExternalLink, Phone, Printer, MapPin } from "lucide-react";
 import GlobalHeader from "@/components/GlobalHeader";
 import GlobalFooter from "@/components/GlobalFooter";
 import Breadcrumb, { type BreadcrumbItem } from "@/components/Breadcrumb";
+import { ConcernsCta, StickyCta } from "@/components/StickyCta";
 import type { Prefecture, City, Ward, Station, Office } from "@/lib/data";
 import { toDisplayName } from "@/lib/categorySlugMap";
 import { CONTENT_COMING_SOON } from "@/lib/contentVisibility";
@@ -351,7 +352,7 @@ export default function OfficeDetail({
               </div>
 
               {/* 本体 */}
-              <div className="px-6 py-8" style={{ background: "linear-gradient(160deg, #e8f3fc 0%, #f0f7ff 100%)" }}>
+              <div className="px-6 py-8 text-center" style={{ background: "linear-gradient(160deg, #e8f3fc 0%, #f0f7ff 100%)" }}>
                 <p className="font-bold text-xl md:text-2xl text-gray-800 leading-snug mb-3">
                   希望の条件を伝えるだけで、<br className="sm:hidden" />
                   <span style={{ color: "#0067C0" }}>ぴったりの税理士</span>をご紹介します
@@ -361,20 +362,7 @@ export default function OfficeDetail({
                 </p>
 
                 {/* CTA ボタン */}
-                <Link
-                  href="/introduction"
-                  className="inline-flex items-center gap-3 rounded-lg px-5 py-4 text-base font-bold shadow-sm hover:opacity-90 transition-opacity w-full"
-                  style={{ background: "#fff", border: "1.5px solid #0067C0", color: "#0067C0" }}
-                >
-                  <span
-                    className="shrink-0 rounded px-2 py-0.5 text-sm font-extrabold text-white"
-                    style={{ background: "#f5a623" }}
-                  >
-                    無料
-                  </span>
-                  税理士紹介サービスを利用する
-                  <ChevronRight className="w-5 h-5 ml-auto shrink-0" />
-                </Link>
+                <ConcernsCta />
               </div>
             </div>
           </section>
@@ -471,21 +459,7 @@ export default function OfficeDetail({
       </div>
 
       {/* ─── Sticky bottom CTA ────────────────────────────── */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 pb-safe">
-        <div
-          className="px-4 py-3 shadow-[0_-2px_12px_rgba(0,0,0,0.08)]"
-          style={{ background: "rgba(255,255,255,0.7)" }}
-        >
-          <Link
-            href="/introduction"
-            className="flex items-center justify-center gap-3 w-full max-w-lg mx-auto rounded-xl py-3.5 text-sm font-bold text-white transition-opacity hover:opacity-90"
-            style={{ background: "linear-gradient(90deg, #e8622a 0%, #f5a023 100%)" }}
-          >
-            無料で相談する
-            <ArrowRight className="w-4 h-4" />
-          </Link>
-        </div>
-      </div>
+      <StickyCta />
     </div>
   );
 }
