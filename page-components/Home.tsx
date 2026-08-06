@@ -5,7 +5,7 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { Search, ArrowRight, Users, Shield, Building2, MapPin, ChevronRight, ChevronDown, Mail, FileText, RefreshCw, BookOpen } from "lucide-react";
+import { Search, ArrowRight, Users, Shield, Building2, MapPin, ChevronRight, ChevronDown, Mail, FileText, RefreshCw, BookOpen, Phone } from "lucide-react";
 import { useState } from "react";
 import { usePageTitle } from "@/lib/usePageTitle";
 import GlobalHeader from "@/components/GlobalHeader";
@@ -26,6 +26,10 @@ import accountantPhoto2 from "@/images/男性2.png";
 import accountantPhoto3 from "@/images/男性3.png";
 import accountantPhoto4 from "@/images/男性4.png";
 import accountantPhoto5 from "@/images/女性7.png";
+import accountantPhoto6 from "@/images/男性6.png";
+import accountantPhoto7 from "@/images/男性7.png";
+import accountantPhoto8 from "@/images/男性8.png";
+import accountantPhoto9 from "@/images/男性9.png";
 import { OPTION_NAME_TO_SLUG } from "@/lib/categorySlugMap";
 
 // ─── Japan region map data ─────────────────────────
@@ -294,13 +298,28 @@ const steps = [
   },
 ];
 
+const PHONE_NUMBER = "03-6403-3202";
+
+function reportPhoneConversion() {
+  window.gtag?.("event", "conversion", {
+    send_to: "AW-18309633981/l7z9CMu21c0cEL2v25pE",
+    value: 50000.0,
+    currency: "JPY",
+  });
+}
+
 const ACCOUNTANT_PHOTOS = [
-  accountantPhoto1,
-  accountantPhoto2,
-  accountantPhoto3,
-  accountantPhoto4,
-  accountantPhoto5,
-];
+  { src: accountantPhoto1, crop: "native" },
+  { src: accountantPhoto2, crop: "native" },
+  { src: accountantPhoto3, crop: "native" },
+  { src: accountantPhoto4, crop: "native" },
+  { src: accountantPhoto5, crop: "native" },
+  // 男性6〜9は元画像に白い上下余白があるため、表示時のみ拡大してトリミングする（/introductionと同一処理）。
+  { src: accountantPhoto6, crop: "zoomed" },
+  { src: accountantPhoto7, crop: "framed" },
+  { src: accountantPhoto8, crop: "framed" },
+  { src: accountantPhoto9, crop: "framed" },
+] as const;
 
 // 横幅の広いディスプレイでも途中で画像が切れないよう、十分な長さになるまで複製する
 const MARQUEE_PHOTOS = Array.from({ length: 6 }, () => ACCOUNTANT_PHOTOS).flat();
@@ -684,7 +703,7 @@ export default function Home({ officeCount, interviewUrls }: { officeCount: numb
                 href="/introduction"
                 className="inline-flex h-14 items-center justify-center gap-4 rounded-lg bg-[#1a50a8] px-6 text-base font-bold text-white shadow-[0_14px_32px_rgba(26,80,168,0.24)] transition-colors hover:bg-[#0c3282]"
               >
-                無料で紹介してもらう
+                税理士を比較してみる
                 <ChevronRight className="h-5 w-5" />
               </Link>
               <Link
@@ -743,7 +762,7 @@ export default function Home({ officeCount, interviewUrls }: { officeCount: numb
                     href="/introduction"
                     className="inline-flex h-14 items-center justify-center gap-3 rounded-lg bg-[#1a50a8] px-8 text-base font-bold text-white shadow-[0_14px_32px_rgba(26,80,168,0.24)] transition-colors hover:bg-[#0c3282]"
                   >
-                    無料で紹介してもらう
+                    税理士を比較してみる
                     <ChevronRight className="w-4 h-4" />
                   </Link>
                   <Link
@@ -834,16 +853,19 @@ export default function Home({ officeCount, interviewUrls }: { officeCount: numb
             <div className="pointer-events-none absolute inset-y-0 left-0 w-12 md:w-24 bg-gradient-to-r from-[#f4f7fb] to-transparent z-10" />
             <div className="pointer-events-none absolute inset-y-0 right-0 w-12 md:w-24 bg-gradient-to-l from-[#f4f7fb] to-transparent z-10" />
 
-            <div className="flex w-max animate-scroll-x">
+            {/* 5枚→9枚への増加後も、以前と同じ移動速度を保つため再生時間を比例して延長する */}
+            <div className="flex w-max animate-scroll-x" style={{ animationDuration: "153s" }}>
               {[...MARQUEE_PHOTOS, ...MARQUEE_PHOTOS].map((photo, i) => (
                 <div key={i} className="shrink-0 mx-4 md:mx-7">
                   <div className="relative w-28 h-28 md:w-40 md:h-40 rounded-full overflow-hidden shadow-md border-4 border-white">
                     <Image
-                      src={photo}
+                      src={photo.src}
                       alt="登録税理士・会計事務所"
                       fill
-                      sizes="160px"
-                      className="object-cover"
+                      // 白余白をトリミングする画像は拡大表示するため、実表示サイズに合わせて高解像度を取得する（/introductionと同一処理）。
+                      sizes={photo.crop === "zoomed" ? "(max-width: 767px) 190px, 270px" : photo.crop === "framed" ? "(max-width: 767px) 135px, 195px" : "(max-width: 767px) 112px, 160px"}
+                      quality={90}
+                      className={`object-cover ${photo.crop === "zoomed" ? "scale-[2.2]" : photo.crop === "framed" ? "scale-[1.3]" : ""}`}
                     />
                   </div>
                 </div>
@@ -1356,7 +1378,7 @@ export default function Home({ officeCount, interviewUrls }: { officeCount: numb
             background: "linear-gradient(135deg, #1a50a8 0%, #0c3282 100%)",
           }}
         >
-          <div className="container max-w-3xl text-center">
+          <div className="container max-w-4xl text-center">
             <p className="text-xs font-bold text-white/50 uppercase tracking-[0.2em] mb-4">
               Free Introduction Service
             </p>
@@ -1367,21 +1389,41 @@ export default function Home({ officeCount, interviewUrls }: { officeCount: numb
               ご要望に合った税理士を、専門のコーディネーターが無料でご紹介いたします。
               お気軽にご相談ください。
             </p>
-            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <div className="mx-auto flex w-full max-w-3xl flex-col divide-y divide-border overflow-hidden rounded-2xl bg-white shadow-xl sm:flex-row sm:divide-x sm:divide-y-0">
               <Link
                 href="/introduction"
-                className="inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-white text-primary rounded-lg text-sm font-bold hover:bg-white/90 transition-colors shadow-lg w-full sm:w-[250px]"
+                className="group flex flex-1 items-center justify-center gap-4 px-8 py-7 text-center transition-colors hover:bg-primary/5"
               >
-                税理士を紹介してもらう
-                <ArrowRight className="w-4 h-4" />
+                <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+                  <Mail className="h-7 w-7" />
+                </span>
+                <span>
+                  <span className="block text-xs font-semibold text-muted-foreground">あなたに合う</span>
+                  <span className="flex items-center justify-center gap-2 whitespace-nowrap text-xl font-extrabold leading-snug text-foreground">
+                    税理士を比較してみる
+                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-white transition-transform group-hover:translate-x-0.5">
+                      <ArrowRight className="h-4 w-4" />
+                    </span>
+                  </span>
+                  <span className="block text-xs font-bold text-primary">【最短1週間で完了！】</span>
+                </span>
               </Link>
-              <Link
-                href="/search"
-                className="inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-transparent text-white rounded-lg text-sm font-bold border border-white/40 hover:bg-white/10 transition-colors w-full sm:w-[250px]"
+              <a
+                href={`tel:${PHONE_NUMBER}`}
+                onClick={reportPhoneConversion}
+                aria-label={`電話で相談する ${PHONE_NUMBER}`}
+                className="flex flex-1 items-center justify-center gap-4 px-8 py-7 text-center transition-colors hover:bg-primary/5"
               >
-                エリアから探す
-                <MapPin className="w-4 h-4" />
-              </Link>
+                <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-primary text-white">
+                  <Phone className="h-6 w-6" />
+                </span>
+                <span>
+                  <span className="block text-xs font-semibold text-muted-foreground">
+                    お電話でのご相談はこちら（通話無料）
+                  </span>
+                  <span className="block text-2xl font-extrabold text-primary">{PHONE_NUMBER}</span>
+                </span>
+              </a>
             </div>
           </div>
         </section>
