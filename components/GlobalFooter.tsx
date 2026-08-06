@@ -5,7 +5,21 @@ import textLogo from "@/images/ロゴテキスト.png";
 
 export default function GlobalFooter() {
   return (
-    <footer className="bg-foreground/[0.03] border-t border-border mt-16">
+    <footer className="bg-foreground/[0.03] border-t border-border mt-8">
+      <div className="bg-foreground/[0.06] border-b border-border py-3">
+        <p className="container text-center text-xs md:text-sm text-muted-foreground">
+          税理士クラウドではパートナー税理士を募集中です！掲載をご希望の方は
+          <a
+            href="https://orb-inc.co.jp/contact"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-primary underline hover:no-underline"
+          >
+            こちら
+          </a>
+          から問い合わせください。
+        </p>
+      </div>
       <div className="container py-12">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           {/* Brand — SP: 左列（全幅）, PC: 1列目 */}
