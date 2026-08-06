@@ -2,11 +2,37 @@ import "@/styles/globals.css";
 import type { AppProps } from "next/app";
 import Head from "next/head";
 import Script from "next/script";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
 
 const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
 const GOOGLE_ADS_ID = "AW-18309633981";
 
+declare global {
+  interface Window {
+    gtag?: (...args: unknown[]) => void;
+  }
+}
+
 export default function App({ Component, pageProps }: AppProps) {
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!GA_ID) return;
+
+    const handleRouteChangeComplete = (url: string) => {
+      window.gtag?.("event", "page_view", {
+        page_location: window.location.origin + url,
+        page_path: url,
+      });
+    };
+
+    router.events.on("routeChangeComplete", handleRouteChangeComplete);
+    return () => {
+      router.events.off("routeChangeComplete", handleRouteChangeComplete);
+    };
+  }, [router.events]);
+
   return (
     <>
       <Head>
