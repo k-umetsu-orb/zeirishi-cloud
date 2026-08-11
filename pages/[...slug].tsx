@@ -21,7 +21,7 @@
  *   /{pref}/{city}/{articleSlug}                      → ArticlePage (recommendation+city)
  */
 
-import type { GetStaticPaths, GetStaticProps } from "next";
+import type { GetStaticPaths, GetStaticProps, GetStaticPropsResult } from "next";
 import Head from "next/head";
 import { PageMeta } from "@/lib/usePageMeta";
 import type {
@@ -59,7 +59,7 @@ import { CATEGORIES, getCategoryBySlug, type CategoryInfo } from "@/lib/category
 import { CONTENT_COMING_SOON } from "@/lib/contentVisibility";
 import { SITE_URL } from "@/lib/sitemap";
 import { useWouterSearch } from "@/lib/useWouterSearch";
-import { getPageFromSearch, ITEMS_PER_PAGE } from "@/lib/pagination";
+import { ITEMS_PER_PAGE } from "@/lib/pagination";
 import dynamic from "next/dynamic";
 const OfficeList = dynamic(() => import("@/page-components/OfficeList"));
 const OfficeDetail = dynamic(() => import("@/page-components/OfficeDetail"));
@@ -83,7 +83,7 @@ export type PageType =
 
 // ─── Props ───────────────────────────────────────────────────────────────────
 
-type PageMeta = { title: string; description: string; noindex?: boolean; canonical?: string; officeCount?: number };
+type PageMeta = { title: string; description: string; noindex?: boolean; canonical?: string; officeCount?: number; page?: number };
 
 type AreaListData = {
   cities: City[];
@@ -199,14 +199,57 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
 // ─── getStaticProps ──────────────────────────────────────────────────────────
 
+const PAGE_SEGMENT_RE = /^page=([1-9]\d*)$/;
+
 export const getStaticProps: GetStaticProps<SlugPageProps> = async ({ params }) => {
   const rawSlug = params?.slug;
   if (!rawSlug || !Array.isArray(rawSlug) || rawSlug.length === 0) {
     return { notFound: true };
   }
 
-  const slug = rawSlug as string[];
+  let slug = rawSlug as string[];
 
+  // Listing pages (area/category/prefCategory) encode their page number as a
+  // trailing path segment (/tokyo/page=2) so it can be self-canonicalized at
+  // build/request time — see resolveSlugProps' officeCount-based branches.
+  let pageNum: number | undefined;
+  const lastSeg = slug[slug.length - 1];
+  const pageMatch = lastSeg ? PAGE_SEGMENT_RE.exec(lastSeg) : null;
+  if (pageMatch) {
+    pageNum = parseInt(pageMatch[1], 10);
+    slug = slug.slice(0, -1);
+    if (slug.length === 0) return { notFound: true };
+    // Safety net — middleware.ts already folds /page=1 into the base URL.
+    if (pageNum === 1) {
+      return { redirect: { destination: `/${slug.join("/")}`, permanent: true } };
+    }
+  }
+
+  const result = resolveSlugProps(slug);
+
+  if (pageNum === undefined) return result;
+
+  // A page segment only applies to listing pages (they carry officeCount).
+  if (!("props" in result) || result.props.officeCount === undefined) {
+    return { notFound: true };
+  }
+
+  // Safety net — middleware.ts already 404s out-of-range /page=N requests.
+  const totalPages = Math.max(1, Math.ceil(result.props.officeCount / ITEMS_PER_PAGE));
+  if (pageNum > totalPages) {
+    return { notFound: true };
+  }
+
+  return {
+    props: {
+      ...result.props,
+      page: pageNum,
+      canonical: result.props.canonical ? `${result.props.canonical}/page=${pageNum}` : result.props.canonical,
+    },
+  };
+};
+
+function resolveSlugProps(slug: string[]): GetStaticPropsResult<SlugPageProps> {
   // ── 1 segment ────────────────────────────────────────────────────────────
 
   if (slug.length === 1) {
@@ -741,7 +784,7 @@ export const getStaticProps: GetStaticProps<SlugPageProps> = async ({ params }) 
   }
 
   return { notFound: true };
-};
+}
 
 // ─── Page component ──────────────────────────────────────────────────────────
 
@@ -749,22 +792,18 @@ export default function SlugPage(props: SlugPageProps) {
   const search = useWouterSearch();
 
   // List-type pages (prefecture/city/ward/station/category/prefCategory) carry
-  // officeCount, letting us fold pagination/filter query params into the same
-  // noindex+canonical decision the server already made from the office count —
-  // without needing any client-side DOM patch that would fight this <Head>.
+  // officeCount. The page number itself is already baked into props.canonical
+  // server-side (see getStaticProps) since it comes from the URL path now —
+  // only the industry/service filters (query-only, invisible server-side)
+  // still need a client-side noindex patch.
   let noindex = props.noindex;
   let canonical = props.canonical;
   if (props.officeCount !== undefined) {
-    const currentPage = getPageFromSearch(search);
     const params = new URLSearchParams(search);
     const isFiltered = params.has("industry") || params.has("service");
-    const totalPages = Math.max(1, Math.ceil(props.officeCount / ITEMS_PER_PAGE));
-
-    if (isFiltered || currentPage > totalPages) {
+    if (isFiltered) {
       noindex = true;
       canonical = undefined;
-    } else if (currentPage > 1 && canonical) {
-      canonical = `${canonical}?page=${currentPage}`;
     }
   }
 
@@ -779,10 +818,10 @@ export default function SlugPage(props: SlugPageProps) {
 
   switch (props.pageType) {
     case "prefecture":
-      return <>{meta}<OfficeList prefecture={props.prefecture} cities={props.cities} stations={props.stations} relatedArticles={props.relatedArticles} availableCategorySlugs={props.availableCategorySlugs} /></>;
+      return <>{meta}<OfficeList prefecture={props.prefecture} cities={props.cities} stations={props.stations} relatedArticles={props.relatedArticles} availableCategorySlugs={props.availableCategorySlugs} page={props.page ?? 1} /></>;
 
     case "city":
-      return <>{meta}<OfficeList prefecture={props.prefecture} city={props.city} cities={props.cities} stations={props.stations} relatedArticles={props.relatedArticles} availableCategorySlugs={props.availableCategorySlugs} /></>;
+      return <>{meta}<OfficeList prefecture={props.prefecture} city={props.city} cities={props.cities} stations={props.stations} relatedArticles={props.relatedArticles} availableCategorySlugs={props.availableCategorySlugs} page={props.page ?? 1} /></>;
 
     case "ward":
       return (
@@ -794,6 +833,7 @@ export default function SlugPage(props: SlugPageProps) {
           stations={props.stations}
           relatedArticles={props.relatedArticles}
           availableCategorySlugs={props.availableCategorySlugs}
+          page={props.page ?? 1}
         /></>
       );
 
@@ -808,6 +848,7 @@ export default function SlugPage(props: SlugPageProps) {
           stations={props.stations}
           relatedArticles={props.relatedArticles}
           availableCategorySlugs={props.availableCategorySlugs}
+          page={props.page ?? 1}
         /></>
       );
 
@@ -845,7 +886,7 @@ export default function SlugPage(props: SlugPageProps) {
       );
 
     case "category":
-      return <>{meta}<CategoryList category={props.category} offices={props.offices} availableCategorySlugs={props.availableCategorySlugs} /></>;
+      return <>{meta}<CategoryList category={props.category} offices={props.offices} availableCategorySlugs={props.availableCategorySlugs} page={props.page ?? 1} /></>;
 
     case "prefCategory":
       return (
@@ -860,6 +901,7 @@ export default function SlugPage(props: SlugPageProps) {
           stations={props.stations}
           relatedArticles={props.relatedArticles}
           availableAreaSlugs={props.availableAreaSlugs}
+          page={props.page ?? 1}
         /></>
       );
 

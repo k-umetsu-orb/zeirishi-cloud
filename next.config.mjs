@@ -22,6 +22,26 @@ const nextConfig = {
       },
     ];
   },
+  async headers() {
+    return [
+      // Area/category listing pages are SSG, so the static HTML is identical
+      // regardless of query string and always renders as the unfiltered
+      // listing. A client-side-only <meta noindex> patch only takes effect
+      // after JS hydration, which crawlers can't rely on — this header makes
+      // noindex visible on the very first HTTP response, and (unlike setting
+      // it in middleware) survives Next's static page cache.
+      {
+        source: '/:path*',
+        has: [{ type: 'query', key: 'industry' }],
+        headers: [{ key: 'X-Robots-Tag', value: 'noindex' }],
+      },
+      {
+        source: '/:path*',
+        has: [{ type: 'query', key: 'service' }],
+        headers: [{ key: 'X-Robots-Tag', value: 'noindex' }],
+      },
+    ];
+  },
 };
 
 export default nextConfig;

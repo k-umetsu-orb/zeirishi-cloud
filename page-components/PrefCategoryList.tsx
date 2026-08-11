@@ -17,10 +17,12 @@ import Breadcrumb, { type BreadcrumbItem } from "@/components/Breadcrumb";
 import OfficeCard from "@/components/OfficeCard";
 import Pagination from "@/components/Pagination";
 import ArticleCard from "@/components/ArticleCard";
-import type { Prefecture, City, Ward, Station, Office, Article } from "@/lib/data";
+import JsonLd from "@/components/JsonLd";
+import { buildItemListSchema } from "@/lib/structuredData";
+import { buildOfficeUrl, type Prefecture, type City, type Ward, type Station, type Office, type Article } from "@/lib/data";
 import { type CategoryInfo, getCategoriesByType } from "@/lib/categorySlugMap";
 import { useWouterSearch } from "@/lib/useWouterSearch";
-import { ITEMS_PER_PAGE, getPageFromSearch, buildPageHref, hasExplicitFirstPage } from "@/lib/pagination";
+import { ITEMS_PER_PAGE, buildPageHref, buildAreaPageHref, hasExplicitFirstPage } from "@/lib/pagination";
 import { useCanonicalLink } from "@/lib/useCanonicalLink";
 
 function buildSearchUrl(prefSlug: string, citySlug?: string, wardSlug?: string, stationSlug?: string): string {
@@ -44,6 +46,7 @@ interface PrefCategoryListProps {
   stations: Station[];
   relatedArticles: Article[];
   availableAreaSlugs: string[];
+  page?: number;
 }
 
 export default function PrefCategoryList({
@@ -57,12 +60,13 @@ export default function PrefCategoryList({
   stations: rawStations,
   relatedArticles,
   availableAreaSlugs,
+  page,
 }: PrefCategoryListProps) {
   const [showAllCities, setShowAllCities] = useState(false);
   const [showFull, setShowFull] = useState(false);
   const router = useRouter();
   const search = useWouterSearch();
-  const currentPage = getPageFromSearch(search);
+  const currentPage = page ?? 1;
 
   const isIndustry = category.type === "industry";
 
@@ -147,6 +151,9 @@ export default function PrefCategoryList({
     (currentPage - 1) * ITEMS_PER_PAGE,
     currentPage * ITEMS_PER_PAGE
   );
+  const itemListSchema = buildItemListSchema(
+    paginatedOffices.map((office) => ({ name: office.name, url: buildOfficeUrl(office, station?.slug) }))
+  );
 
   usePageTitle(documentTitle, documentDescription, filteredOffices.length === 0 || currentPage > totalPages);
 
@@ -198,6 +205,7 @@ export default function PrefCategoryList({
 
   return (
     <div className="min-h-screen flex flex-col bg-muted/30">
+      <JsonLd data={itemListSchema} />
       <GlobalHeader />
 
       <main className="flex-1">
@@ -440,7 +448,7 @@ export default function PrefCategoryList({
               <Pagination
                 currentPage={currentPage}
                 totalPages={totalPages}
-                buildHref={(page) => buildPageHref(basePath, search, page)}
+                buildHref={(page) => buildAreaPageHref(basePath, search, page)}
                 onNavigate={() => window.scrollTo({ top: 0, behavior: "smooth" })}
               />
 

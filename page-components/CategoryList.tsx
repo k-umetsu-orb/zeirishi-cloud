@@ -11,21 +11,24 @@ import GlobalFooter from "@/components/GlobalFooter";
 import Breadcrumb, { type BreadcrumbItem } from "@/components/Breadcrumb";
 import OfficeCard from "@/components/OfficeCard";
 import Pagination from "@/components/Pagination";
-import type { Office } from "@/lib/data";
+import JsonLd from "@/components/JsonLd";
+import { buildItemListSchema } from "@/lib/structuredData";
+import { buildOfficeUrl, type Office } from "@/lib/data";
 import { type CategoryInfo, getCategoriesByType } from "@/lib/categorySlugMap";
 import { useWouterSearch } from "@/lib/useWouterSearch";
-import { ITEMS_PER_PAGE, getPageFromSearch, buildPageHref, hasExplicitFirstPage } from "@/lib/pagination";
+import { ITEMS_PER_PAGE, buildPageHref, buildAreaPageHref, hasExplicitFirstPage } from "@/lib/pagination";
 import { useCanonicalLink } from "@/lib/useCanonicalLink";
 
 interface CategoryListProps {
   category: CategoryInfo;
   offices: Office[];
   availableCategorySlugs: string[];
+  page?: number;
 }
 
-export default function CategoryList({ category, offices: filteredOffices, availableCategorySlugs }: CategoryListProps) {
+export default function CategoryList({ category, offices: filteredOffices, availableCategorySlugs, page }: CategoryListProps) {
   const search = useWouterSearch();
-  const currentPage = getPageFromSearch(search);
+  const currentPage = page ?? 1;
   const basePath = `/${category.slug}`;
   useCanonicalLink(hasExplicitFirstPage(search) ? buildPageHref(basePath, search, 1) : null);
   const [showAllChips, setShowAllChips] = useState(false);
@@ -42,6 +45,9 @@ export default function CategoryList({ category, offices: filteredOffices, avail
   const paginatedOffices = filteredOffices.slice(
     (currentPage - 1) * ITEMS_PER_PAGE,
     currentPage * ITEMS_PER_PAGE
+  );
+  const itemListSchema = buildItemListSchema(
+    paginatedOffices.map((office) => ({ name: office.name, url: buildOfficeUrl(office) }))
   );
 
   // Related categories (same type)
@@ -72,6 +78,7 @@ export default function CategoryList({ category, offices: filteredOffices, avail
 
   return (
     <div className="min-h-screen flex flex-col bg-muted/30">
+      <JsonLd data={itemListSchema} />
       <GlobalHeader />
 
       <main className="flex-1">
@@ -160,7 +167,7 @@ export default function CategoryList({ category, offices: filteredOffices, avail
             <Pagination
               currentPage={currentPage}
               totalPages={totalPages}
-              buildHref={(page) => buildPageHref(basePath, search, page)}
+              buildHref={(page) => buildAreaPageHref(basePath, search, page)}
               onNavigate={() => window.scrollTo({ top: 0, behavior: "smooth" })}
             />
           </section>

@@ -15,7 +15,7 @@ import ArticleCard from "@/components/ArticleCard";
 import type { Prefecture, City, Ward, Station, Office, Article } from "@/lib/data";
 import { getCategoriesByType } from "@/lib/categorySlugMap";
 import { useWouterSearch } from "@/lib/useWouterSearch";
-import { ITEMS_PER_PAGE, getPageFromSearch, buildPageHref, hasExplicitFirstPage } from "@/lib/pagination";
+import { ITEMS_PER_PAGE, buildPageHref, buildAreaPageHref, hasExplicitFirstPage } from "@/lib/pagination";
 import { useCanonicalLink } from "@/lib/useCanonicalLink";
 import areaContentsData from "@/data/areaContents.json";
 
@@ -37,9 +37,10 @@ interface OfficeListProps {
   stations: Station[];
   relatedArticles: Article[];
   availableCategorySlugs: string[];
+  page?: number;
 }
 
-export default function OfficeList({ prefecture, city, ward, station, cities, stations, relatedArticles, availableCategorySlugs }: OfficeListProps) {
+export default function OfficeList({ prefecture, city, ward, station, cities, stations, relatedArticles, availableCategorySlugs, page }: OfficeListProps) {
   const [offices, setOffices] = useState<Office[]>([]);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -52,7 +53,7 @@ export default function OfficeList({ prefecture, city, ward, station, cities, st
 
   const search = useWouterSearch();
   const router = useRouter();
-  const currentPage = getPageFromSearch(search);
+  const currentPage = page ?? 1;
 
   // Area-navigation links (city/ward/station chips) should carry filters but not the current page
   const filterSearch = useMemo(() => {
@@ -513,7 +514,7 @@ export default function OfficeList({ prefecture, city, ward, station, cities, st
               <Pagination
                 currentPage={currentPage}
                 totalPages={totalPages}
-                buildHref={(page) => buildPageHref(basePath, search, page)}
+                buildHref={(page) => buildAreaPageHref(basePath, search, page)}
                 onNavigate={() => window.scrollTo({ top: 0, behavior: "smooth" })}
               />
 
