@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { ChevronRight, Home } from "lucide-react";
+import JsonLd from "@/components/JsonLd";
+import { buildBreadcrumbListSchema } from "@/lib/structuredData";
 
 export interface BreadcrumbItem {
   label: string;
@@ -14,8 +16,13 @@ interface BreadcrumbProps {
 
 export default function Breadcrumb({ items, variant = "default", className = "py-3" }: BreadcrumbProps) {
   const isLight = variant === "light";
+  const schemaItems = [
+    { name: "税理士・会計事務所検索なら「税理士クラウド」", url: "/" },
+    ...items.map((item) => ({ name: item.label, url: item.href })),
+  ];
   return (
     <nav aria-label="パンくずリスト" className={`${className} overflow-x-auto scrollbar-none`}>
+      <JsonLd data={buildBreadcrumbListSchema(schemaItems)} />
       <ol className="flex items-center flex-nowrap md:flex-wrap gap-1 text-sm whitespace-nowrap">
         <li className="flex items-center shrink-0">
           <Link

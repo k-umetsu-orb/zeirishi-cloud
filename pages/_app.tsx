@@ -4,6 +4,8 @@ import Head from "next/head";
 import Script from "next/script";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
+import JsonLd from "@/components/JsonLd";
+import { buildOrganizationSchema, buildWebSiteSchema } from "@/lib/structuredData";
 
 const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
 const GOOGLE_ADS_ID = "AW-18309633981";
@@ -47,6 +49,7 @@ export default function App({ Component, pageProps }: AppProps) {
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&family=Noto+Serif+JP:wght@400;500;600;700&display=swap" rel="stylesheet" />
       </Head>
+      <JsonLd data={[buildOrganizationSchema(), buildWebSiteSchema()]} />
       {GA_ID && (
         <>
           <Script src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`} strategy="afterInteractive" />

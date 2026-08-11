@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import JsonLd from "@/components/JsonLd";
+import { buildFAQPageSchema } from "@/lib/structuredData";
 
 interface FAQItem {
   question: string;
@@ -13,6 +15,7 @@ export default function FAQ({ items }: FAQProps) {
   const [open, setOpen] = useState<number | null>(null);
   return (
     <div className="space-y-2">
+      <JsonLd data={buildFAQPageSchema(items)} />
       {items.map((item, i) => (
         <div key={i} className="border border-border rounded-lg overflow-hidden">
           <button

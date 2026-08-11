@@ -10,6 +10,8 @@ import GlobalHeader from "@/components/GlobalHeader";
 import GlobalFooter from "@/components/GlobalFooter";
 import Breadcrumb, { type BreadcrumbItem } from "@/components/Breadcrumb";
 import { ConcernsCta, StickyCta } from "@/components/StickyCta";
+import JsonLd from "@/components/JsonLd";
+import { buildAccountingServiceSchema } from "@/lib/structuredData";
 import type { Prefecture, City, Ward, Station, Office } from "@/lib/data";
 import { toDisplayName } from "@/lib/categorySlugMap";
 import { CONTENT_COMING_SOON } from "@/lib/contentVisibility";
@@ -250,6 +252,9 @@ export default function OfficeDetail({
   }
   breadcrumbItems.push({ label: office.name });
 
+  const officeUrl = buildOfficeUrl(office, station?.slug);
+  const accountingServiceSchema = buildAccountingServiceSchema(office, officeUrl);
+
   // Related data (sameAreaOffices passed as prop from getStaticProps)
 
   const nearbyCities = getCitiesByPrefecture(prefecture.slug)
@@ -291,6 +296,7 @@ export default function OfficeDetail({
 
   return (
     <div className="min-h-screen flex flex-col bg-[#f5f6f8]">
+      <JsonLd data={accountingServiceSchema} />
       <GlobalHeader />
 
       <main className="pb-4">
