@@ -92,10 +92,10 @@ type AreaListData = {
 };
 
 export type SlugPageProps =
-  | ({ pageType: "prefecture"; prefecture: Prefecture; availableCategorySlugs: string[] } & AreaListData & PageMeta)
-  | ({ pageType: "city"; prefecture: Prefecture; city: City; availableCategorySlugs: string[] } & AreaListData & PageMeta)
-  | ({ pageType: "ward"; prefecture: Prefecture; city: City; ward: Ward; availableCategorySlugs: string[] } & AreaListData & PageMeta)
-  | ({ pageType: "station"; prefecture: Prefecture; city: City; ward?: Ward; station: Station; availableCategorySlugs: string[] } & AreaListData & PageMeta)
+  | ({ pageType: "prefecture"; prefecture: Prefecture; offices: Office[]; availableCategorySlugs: string[] } & AreaListData & PageMeta)
+  | ({ pageType: "city"; prefecture: Prefecture; city: City; offices: Office[]; availableCategorySlugs: string[] } & AreaListData & PageMeta)
+  | ({ pageType: "ward"; prefecture: Prefecture; city: City; ward: Ward; offices: Office[]; availableCategorySlugs: string[] } & AreaListData & PageMeta)
+  | ({ pageType: "station"; prefecture: Prefecture; city: City; ward?: Ward; station: Station; offices: Office[]; availableCategorySlugs: string[] } & AreaListData & PageMeta)
   | ({ pageType: "office"; prefecture: Prefecture; city: City; ward?: Ward; station?: Station; office: Office; sameAreaOffices: Office[] } & PageMeta)
   | ({ pageType: "interview"; prefecture: Prefecture; city: City; ward?: Ward; station?: Station; office: Office; interview: Interview } & PageMeta)
   | ({ pageType: "article"; article: Article; prefecture?: Prefecture; city?: City } & PageMeta)
@@ -225,7 +225,7 @@ export const getStaticProps: GetStaticProps<SlugPageProps> = async ({ params }) 
     }
   }
 
-  const result = resolveSlugProps(slug);
+  const result = resolveSlugProps(slug, pageNum ?? 1);
 
   if (pageNum === undefined) return result;
 
@@ -249,7 +249,7 @@ export const getStaticProps: GetStaticProps<SlugPageProps> = async ({ params }) 
   };
 };
 
-function resolveSlugProps(slug: string[]): GetStaticPropsResult<SlugPageProps> {
+function resolveSlugProps(slug: string[], pageNum: number = 1): GetStaticPropsResult<SlugPageProps> {
   // ── 1 segment ────────────────────────────────────────────────────────────
 
   if (slug.length === 1) {
@@ -287,6 +287,7 @@ function resolveSlugProps(slug: string[]): GetStaticPropsResult<SlugPageProps> {
         props: {
           pageType: "prefecture" as const,
           prefecture: pref,
+          offices: prefOffices.slice((pageNum - 1) * ITEMS_PER_PAGE, pageNum * ITEMS_PER_PAGE),
           cities: getCitiesByPrefecture(pref.slug),
           stations: [],
           relatedArticles: getArticlesForPrefecture(pref.slug).slice(0, 4),
@@ -350,6 +351,7 @@ function resolveSlugProps(slug: string[]): GetStaticPropsResult<SlugPageProps> {
           pageType: "city" as const,
           prefecture: pref,
           city,
+          offices: cityOffices.slice((pageNum - 1) * ITEMS_PER_PAGE, pageNum * ITEMS_PER_PAGE),
           cities: getCitiesByPrefecture(pref.slug),
           stations: getStationsForCity(pref.slug, city.slug),
           relatedArticles: getArticlesForPrefecture(pref.slug).slice(0, 4),
@@ -440,6 +442,7 @@ function resolveSlugProps(slug: string[]): GetStaticPropsResult<SlugPageProps> {
           prefecture: pref,
           city,
           ward,
+          offices: wardOffices.slice((pageNum - 1) * ITEMS_PER_PAGE, pageNum * ITEMS_PER_PAGE),
           cities: getCitiesByPrefecture(pref.slug),
           stations: getStationsForCity(pref.slug, city.slug, ward.slug),
           relatedArticles: getArticlesForPrefecture(pref.slug).slice(0, 4),
@@ -463,6 +466,7 @@ function resolveSlugProps(slug: string[]): GetStaticPropsResult<SlugPageProps> {
           prefecture: pref,
           city,
           station,
+          offices: stationOffices.slice((pageNum - 1) * ITEMS_PER_PAGE, pageNum * ITEMS_PER_PAGE),
           cities: getCitiesByPrefecture(pref.slug),
           stations: getStationsForCity(pref.slug, city.slug),
           relatedArticles: getArticlesForPrefecture(pref.slug).slice(0, 4),
@@ -556,6 +560,7 @@ function resolveSlugProps(slug: string[]): GetStaticPropsResult<SlugPageProps> {
             city,
             ward,
             station: wStation,
+            offices: wardStationOffices.slice((pageNum - 1) * ITEMS_PER_PAGE, pageNum * ITEMS_PER_PAGE),
             cities: getCitiesByPrefecture(pref.slug),
             stations: getStationsForCity(pref.slug, city.slug, ward.slug),
             relatedArticles: getArticlesForPrefecture(pref.slug).slice(0, 4),
@@ -818,10 +823,10 @@ export default function SlugPage(props: SlugPageProps) {
 
   switch (props.pageType) {
     case "prefecture":
-      return <>{meta}<OfficeList prefecture={props.prefecture} cities={props.cities} stations={props.stations} relatedArticles={props.relatedArticles} availableCategorySlugs={props.availableCategorySlugs} page={props.page ?? 1} /></>;
+      return <>{meta}<OfficeList prefecture={props.prefecture} offices={props.offices} officeCount={props.officeCount ?? 0} cities={props.cities} stations={props.stations} relatedArticles={props.relatedArticles} availableCategorySlugs={props.availableCategorySlugs} page={props.page ?? 1} /></>;
 
     case "city":
-      return <>{meta}<OfficeList prefecture={props.prefecture} city={props.city} cities={props.cities} stations={props.stations} relatedArticles={props.relatedArticles} availableCategorySlugs={props.availableCategorySlugs} page={props.page ?? 1} /></>;
+      return <>{meta}<OfficeList prefecture={props.prefecture} city={props.city} offices={props.offices} officeCount={props.officeCount ?? 0} cities={props.cities} stations={props.stations} relatedArticles={props.relatedArticles} availableCategorySlugs={props.availableCategorySlugs} page={props.page ?? 1} /></>;
 
     case "ward":
       return (
@@ -829,6 +834,8 @@ export default function SlugPage(props: SlugPageProps) {
           prefecture={props.prefecture}
           city={props.city}
           ward={props.ward}
+          offices={props.offices}
+          officeCount={props.officeCount ?? 0}
           cities={props.cities}
           stations={props.stations}
           relatedArticles={props.relatedArticles}
@@ -844,6 +851,8 @@ export default function SlugPage(props: SlugPageProps) {
           city={props.city}
           ward={props.ward}
           station={props.station}
+          offices={props.offices}
+          officeCount={props.officeCount ?? 0}
           cities={props.cities}
           stations={props.stations}
           relatedArticles={props.relatedArticles}

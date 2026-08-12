@@ -12,7 +12,9 @@ import Breadcrumb, { type BreadcrumbItem } from "@/components/Breadcrumb";
 import OfficeCard from "@/components/OfficeCard";
 import Pagination from "@/components/Pagination";
 import ArticleCard from "@/components/ArticleCard";
-import type { Prefecture, City, Ward, Station, Office, Article } from "@/lib/data";
+import JsonLd from "@/components/JsonLd";
+import { buildItemListSchema } from "@/lib/structuredData";
+import { buildOfficeUrl, type Prefecture, type City, type Ward, type Station, type Office, type Article } from "@/lib/data";
 import { getCategoriesByType } from "@/lib/categorySlugMap";
 import { useWouterSearch } from "@/lib/useWouterSearch";
 import { ITEMS_PER_PAGE, buildPageHref, buildAreaPageHref, hasExplicitFirstPage } from "@/lib/pagination";
@@ -37,13 +39,19 @@ interface OfficeListProps {
   stations: Station[];
   relatedArticles: Article[];
   availableCategorySlugs: string[];
+  /** サーバー側（getStaticProps）で解決済みの、絞り込みなし・該当ページの事務所一覧。 */
+  offices: Office[];
+  /** サーバー側で解決済みの、絞り込みなしの総件数。 */
+  officeCount: number;
   page?: number;
 }
 
-export default function OfficeList({ prefecture, city, ward, station, cities, stations, relatedArticles, availableCategorySlugs, page }: OfficeListProps) {
-  const [offices, setOffices] = useState<Office[]>([]);
-  const [total, setTotal] = useState(0);
-  const [loading, setLoading] = useState(true);
+export default function OfficeList({ prefecture, city, ward, station, cities, stations, relatedArticles, availableCategorySlugs, offices: seedOffices, officeCount, page }: OfficeListProps) {
+  // 業種・依頼内容の絞り込みは、getStaticPropsが把握できないクエリパラメータのため
+  // サーバー側で解決できない。絞り込みなしの初期表示はseedOffices/officeCount（SSG/SSR済み）を
+  // そのまま使い、絞り込み時のみ従来通り/api/officesへCSR fetchする。
+  const [fetchedOffices, setFetchedOffices] = useState<Office[] | null>(null);
+  const [fetchedTotal, setFetchedTotal] = useState<number | null>(null);
   // Pending filters (what user has checked but not yet submitted)
   const [pendingIndustries, setPendingIndustries] = useState<string[]>([]);
   const [pendingServices, setPendingServices] = useState<string[]>([]);
@@ -107,9 +115,17 @@ export default function OfficeList({ prefecture, city, ward, station, cities, st
   if (ward) breadcrumbItems.push({ label: ward.name, href: `/${prefecture.slug}/${city!.slug}/${ward.slug}` });
   if (station) breadcrumbItems.push({ label: station.name });
 
-  // API fetch: エリア + フィルター + ページが変わるたびに再取得
+  const isFiltered = selectedIndustries.length > 0 || selectedServices.length > 0;
+
+  // 絞り込みなしの場合はサーバー解決済みのseedOffices/officeCountをそのまま使う
+  // （getStaticProps/getServerSidePropsの範囲外である業種・依頼内容の絞り込みが
+  // 入った時だけ/api/officesへCSR fetchする）
   useEffect(() => {
-    setLoading(true);
+    if (!isFiltered) {
+      setFetchedOffices(null);
+      setFetchedTotal(null);
+      return;
+    }
     const params = new URLSearchParams();
     params.set("prefecture", prefecture.slug);
     if (city) params.set("city", city.slug);
@@ -123,11 +139,18 @@ export default function OfficeList({ prefecture, city, ward, station, cities, st
     fetch(`/api/offices?${params.toString()}`)
       .then((r) => r.json())
       .then((data) => {
-        setOffices(data.offices ?? []);
-        setTotal(data.total ?? 0);
-      })
-      .finally(() => setLoading(false));
-  }, [prefecture.slug, city?.slug, ward?.slug, station?.slug, selectedIndustries.join(","), selectedServices.join(","), currentPage]);
+        setFetchedOffices(data.offices ?? []);
+        setFetchedTotal(data.total ?? 0);
+      });
+  }, [isFiltered, prefecture.slug, city?.slug, ward?.slug, station?.slug, selectedIndustries.join(","), selectedServices.join(","), currentPage]);
+
+  const offices = isFiltered ? fetchedOffices ?? [] : seedOffices;
+  const total = isFiltered ? fetchedTotal ?? 0 : officeCount;
+  const loading = isFiltered && fetchedOffices === null;
+
+  const itemListSchema = buildItemListSchema(
+    offices.map((office) => ({ name: office.name, url: buildOfficeUrl(office) }))
+  );
 
   const totalPages = Math.ceil(total / ITEMS_PER_PAGE);
 
@@ -197,6 +220,7 @@ export default function OfficeList({ prefecture, city, ward, station, cities, st
 
   return (
     <div className="min-h-screen flex flex-col bg-muted/30">
+      <JsonLd data={itemListSchema} />
       <GlobalHeader />
 
       <main className="flex-1">
