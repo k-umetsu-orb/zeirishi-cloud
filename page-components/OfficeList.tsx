@@ -600,8 +600,8 @@ export default function OfficeList({ prefecture, city, ward, station, cities, st
                 </div>
               </section>
 
-              {/* エリア特徴テキスト */}
-              {(() => {
+              {/* エリア特徴テキスト（駅ページは市区町村と同一文になり重複コンテンツになるため非表示） */}
+              {!station && (() => {
                 const contentKey = city ? `${prefecture.slug}/${city.slug}` : prefecture.slug;
                 const areaContent = (areaContentsData as Record<string, string>)[contentKey];
                 const areaLabel = city ? city.name : prefecture.name;
