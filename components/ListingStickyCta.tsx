@@ -19,7 +19,7 @@ export default function ListingStickyCta() {
               <Users className="h-4 w-4 md:h-7 md:w-7" strokeWidth={2.4} />
             </span>
             <span className="flex min-w-0 flex-col items-center text-center">
-              <span className="mb-1 inline-flex rounded-full bg-[#ffe16b] px-2 py-0.5 text-[0.5rem] font-bold leading-none text-[#0755b6] md:hidden">最短30秒で完了</span>
+              <span className="mb-1 inline-flex rounded-full bg-[#ffe16b] px-2 py-0.5 text-[0.5rem] font-bold leading-none text-[#0755b6] md:hidden">最短30秒で相談完了</span>
               <span className="text-[0.62rem] font-bold leading-[1.2] md:text-lg">税理士選びで<br />お悩みの方はこちら</span>
             </span>
             <ArrowRight className="h-5 w-5 md:h-6 md:w-6" strokeWidth={2.6} />
@@ -64,7 +64,7 @@ export default function ListingStickyCta() {
               <UserSearch className="h-7 w-7" strokeWidth={2.4} />
             </span>
             <span className="flex min-w-0 -translate-y-2 flex-col items-center text-center">
-              <span className="mb-1 inline-flex rounded-full bg-[#ffe16b] px-3 py-1 text-[0.62rem] font-bold text-[#0755b6]">最短30秒で完了</span>
+              <span className="mb-1 inline-flex rounded-full bg-[#ffe16b] px-3 py-1 text-[0.62rem] font-bold text-[#0755b6]">最短30秒で相談完了</span>
               <span className="block whitespace-nowrap text-[clamp(0.92rem,1.18vw,1.12rem)] font-bold leading-tight tracking-[-0.03em]">税理士選びでお悩みの方はこちら</span>
             </span>
             <ArrowRight className="absolute right-4 h-6 w-6 transition-transform group-hover:translate-x-1" strokeWidth={2.5} />
