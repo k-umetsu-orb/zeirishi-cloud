@@ -7,6 +7,7 @@ import Link from "next/link"
 import { ArrowRight } from "lucide-react";
 import GlobalHeader from "@/components/GlobalHeader";
 import GlobalFooter from "@/components/GlobalFooter";
+import ListingStickyCta from "@/components/ListingStickyCta";
 import Breadcrumb, { type BreadcrumbItem } from "@/components/Breadcrumb";
 import OfficeCard from "@/components/OfficeCard";
 import Pagination from "@/components/Pagination";
@@ -136,6 +137,7 @@ export default function SearchResults() {
       </main>
 
       <GlobalFooter />
+      <ListingStickyCta />
     </div>
   );
 }

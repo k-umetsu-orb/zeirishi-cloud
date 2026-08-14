@@ -9,7 +9,6 @@ import { ArrowRight, ExternalLink, Phone, Printer, MapPin } from "lucide-react";
 import GlobalHeader from "@/components/GlobalHeader";
 import GlobalFooter from "@/components/GlobalFooter";
 import Breadcrumb, { type BreadcrumbItem } from "@/components/Breadcrumb";
-import { ConcernsCta, StickyCta } from "@/components/StickyCta";
 import JsonLd from "@/components/JsonLd";
 import { buildAccountingServiceSchema } from "@/lib/structuredData";
 import type { Prefecture, City, Ward, Station, Office } from "@/lib/data";
@@ -368,7 +367,12 @@ export default function OfficeDetail({
                 </p>
 
                 {/* CTA ボタン */}
-                <ConcernsCta />
+                <Link
+                  href="/introduction"
+                  className="mx-auto flex w-[calc(100%_-_32px)] max-w-[540px] items-center justify-center rounded-xl bg-[#0067c0] px-6 py-5 text-center text-lg font-bold leading-snug text-white shadow-lg shadow-blue-900/15 transition-colors hover:bg-[#0055a3] md:w-full md:max-w-[840px] md:text-xl"
+                >
+                  無料で税理紹介サービスを利用する
+                </Link>
               </div>
             </div>
           </section>
@@ -463,9 +467,6 @@ export default function OfficeDetail({
       <div className="-mt-12">
         <GlobalFooter />
       </div>
-
-      {/* ─── Sticky bottom CTA ────────────────────────────── */}
-      <StickyCta />
     </div>
   );
 }

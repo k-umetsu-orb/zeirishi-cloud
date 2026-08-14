@@ -13,6 +13,7 @@ import { useRouter } from "next/router";
 import { ChevronDown, ChevronUp, BookOpen, Users, ArrowRight } from "lucide-react";
 import GlobalHeader from "@/components/GlobalHeader";
 import GlobalFooter from "@/components/GlobalFooter";
+import ListingStickyCta from "@/components/ListingStickyCta";
 import Breadcrumb, { type BreadcrumbItem } from "@/components/Breadcrumb";
 import OfficeCard from "@/components/OfficeCard";
 import Pagination from "@/components/Pagination";
@@ -495,6 +496,7 @@ export default function PrefCategoryList({
       </main>
 
       <GlobalFooter />
+      <ListingStickyCta />
     </div>
   );
 }

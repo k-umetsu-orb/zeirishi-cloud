@@ -8,6 +8,7 @@ import { usePageTitle } from "@/lib/usePageTitle";
 import { Tag, /* BarChart2, */ Users, ArrowRight } from "lucide-react"; // BarChart2: ランキング復活時に戻す
 import GlobalHeader from "@/components/GlobalHeader";
 import GlobalFooter from "@/components/GlobalFooter";
+import ListingStickyCta from "@/components/ListingStickyCta";
 import Breadcrumb, { type BreadcrumbItem } from "@/components/Breadcrumb";
 import OfficeCard from "@/components/OfficeCard";
 import Pagination from "@/components/Pagination";
@@ -217,6 +218,7 @@ export default function CategoryList({ category, offices: filteredOffices, avail
       </main>
 
       <GlobalFooter />
+      <ListingStickyCta />
     </div>
   );
 }
