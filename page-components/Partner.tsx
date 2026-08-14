@@ -362,6 +362,7 @@ export default function Partner() {
         .partner-hero h1 { font-size:clamp(30px,2.25vw,38px); line-height:1.47; letter-spacing:.035em; white-space:nowrap; }
         .partner-hero__copy > p:not(.partner-eyebrow) { font-size:15px; line-height:1.9; margin:17px 0 27px; }
         .partner-hero__actions { gap:12px; }.partner-button,.partner-outline-button { min-height:45px; padding:0 25px; border-radius:5px; font-size:13px; }.partner-button { background:linear-gradient(110deg,#096bd6,#0755bc); box-shadow:0 6px 14px rgba(2,84,189,.18); }.partner-outline-button { background:#fff; }
+        .partner-hero__actions .partner-button,.partner-hero__actions .partner-outline-button { min-height:58px; padding:0 34px; font-size:16px; border-radius:6px; }.partner-hero__actions .partner-button :global(svg),.partner-hero__actions .partner-outline-button :global(svg) { width:18px; height:18px; }
         .partner-hero__image { position:absolute; z-index:0; inset:auto -50px 0 auto; width:min(64vw, 980px); max-width:none; height:auto; object-fit:contain; object-position:right bottom; mix-blend-mode:normal; }
         .partner-hero::after { content:""; position:absolute; inset:0; z-index:1; background:linear-gradient(90deg,rgba(255,255,255,.92) 0%,rgba(255,255,255,.76) 40%,rgba(255,255,255,.08) 59%,rgba(255,255,255,0) 100%); pointer-events:none; }
         .partner-hero__copy { z-index:2; }
@@ -612,7 +613,7 @@ export default function Partner() {
         .partner-mobile-hero,.partner-mobile-menu { display:none; }
         @media (max-width:680px) {
           .partner-header { position:sticky; top:0; z-index:50; height:64px; box-shadow:none; }
-          .partner-header__inner { width:calc(100% - 40px); }.partner-brand { gap:8px; }.partner-brand :global(img:first-child) { width:32px; height:32px; }.partner-brand :global(img:last-child) { width:144px; max-width:calc(100vw - 112px); height:24px; }
+          .partner-header__inner { width:calc(100% - 32px); }.partner-brand { gap:8px; }.partner-brand :global(img:first-child) { width:32px; height:32px; }.partner-brand :global(img:last-child) { width:144px; max-width:calc(100vw - 112px); height:24px; }
           .partner-nav { display:none; }.partner-mobile-menu { display:grid; width:36px; height:36px; padding:8px; border:0; place-content:center; border-radius:6px; color:#17243a; background:transparent; }.partner-mobile-menu :global(svg) { width:20px; height:20px; stroke-width:2; }
           .partner-hero { display:none; }
           .partner-mobile-hero { position:relative; display:block; overflow:hidden; padding:43px 0 0; background:linear-gradient(180deg,#fff 0%,#fff 64%,#eef8ff 100%); color:#10233f; }
