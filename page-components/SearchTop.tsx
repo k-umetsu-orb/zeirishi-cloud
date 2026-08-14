@@ -482,7 +482,7 @@ export default function SearchTop() {
               {filterLoading ? (
                 <div className="text-center py-16 text-muted-foreground">読み込み中…</div>
               ) : filterResults.length > 0 ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 gap-5">
                   {filterResults.map((o) => (
                     <OfficeCard key={o.id} office={o} />
                   ))}

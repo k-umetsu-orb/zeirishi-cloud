@@ -524,7 +524,7 @@ export default function OfficeList({ prefecture, city, ward, station, cities, st
               {loading ? (
                 <div className="text-center py-16 text-muted-foreground">読み込み中…</div>
               ) : offices.length > 0 ? (
-                <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 gap-5">
                   {offices.map((office) => (
                     <OfficeCard key={office.id} office={office} />
                   ))}

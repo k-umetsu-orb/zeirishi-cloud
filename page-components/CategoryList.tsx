@@ -149,7 +149,7 @@ export default function CategoryList({ category, offices: filteredOffices, avail
             </div>
 
             {paginatedOffices.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 gap-5">
                 {paginatedOffices.map((office) => (
                   <OfficeCard key={office.id} office={office} />
                 ))}

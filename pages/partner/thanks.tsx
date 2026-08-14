@@ -1,0 +1,7 @@
+import Link from "next/link";
+import { CheckCircle2, ArrowRight } from "lucide-react";
+import { PageMeta } from "@/lib/usePageMeta";
+
+export default function PartnerThanksPage() {
+  return <><PageMeta title="お問い合わせありがとうございます | 税理士クラウド" noindex /><main className="partner-thanks"><div><CheckCircle2 /><p>お問い合わせありがとうございます</p><h1>掲載についてのお問い合わせを<br />受け付けました。</h1><span>内容を確認のうえ、担当者よりご連絡いたします。<br />自動返信メールもお送りしておりますのでご確認ください。</span><Link href="/partner">掲載ページへ戻る <ArrowRight /></Link></div><style jsx>{`.partner-thanks{min-height:100vh;display:grid;place-items:center;padding:30px;background:linear-gradient(140deg,#eff8ff,#fff);color:#14233b;font-family:"Noto Sans JP",sans-serif;text-align:center}.partner-thanks>div{max-width:620px}.partner-thanks :global(svg){width:64px;height:64px;color:#0865cb;margin-bottom:16px}.partner-thanks p{margin:0 0 12px;color:#0865cb;font-weight:700;letter-spacing:.08em}.partner-thanks h1{font-family:inherit;font-size:clamp(24px,4vw,34px);line-height:1.55;margin:0 0 20px}.partner-thanks span{display:block;color:#5c6c82;font-size:14px;line-height:1.9}.partner-thanks a{margin-top:32px;display:inline-flex;align-items:center;gap:12px;padding:14px 25px;border-radius:6px;background:#0964ca;color:#fff;text-decoration:none;font-size:14px;font-weight:700}.partner-thanks a :global(svg){width:16px;height:16px;color:#fff;margin:0}@media(max-width:640px){.partner-thanks h1{font-size:23px}.partner-thanks span{font-size:13px}}`}</style></main></>;
+}

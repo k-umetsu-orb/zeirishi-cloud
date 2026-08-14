@@ -434,7 +434,7 @@ export default function PrefCategoryList({
               </div>
 
               {paginatedOffices.length > 0 ? (
-                <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 gap-5">
                   {paginatedOffices.map((office) => (
                     <OfficeCard key={office.id} office={office} />
                   ))}
