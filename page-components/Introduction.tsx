@@ -56,7 +56,7 @@ function HeroFeatureChips({ className = "" }: { className?: string }) {
       </li>
       <li className="testlp-hero__feature">
         <Image src={japanMapImage} alt="" className="testlp-hero__feature-map" />
-        <span>全国対応<br /><span className="testlp-hero__feature-emphasis">オンライン相談可</span></span>
+        <span>全国対応<br /><span className="testlp-hero__feature-emphasis">オンライン相談</span></span>
       </li>
       <li className="testlp-hero__feature">
         <Users className="testlp-hero__feature-icon" />
@@ -83,7 +83,8 @@ function HeroPhoneCta() {
         </div>
         <div className="testlp-phone-cta__body">
           <p className="testlp-phone-cta__label">
-            <span>お電話でのお問い合わせはこちら </span>
+            <span className="testlp-phone-cta__label--sp">お電話での問い合わせ</span>
+            <span className="testlp-phone-cta__label--pc">お電話での問い合わせはこちら</span>
           </p>
           <p className="testlp-phone-cta__number">
             {PHONE_NUMBER}
@@ -3020,6 +3021,19 @@ export default function Introduction() {
 
         @media (prefers-reduced-motion: reduce) {
           .intro-accountant-marquee__track { animation: none; }
+        }
+
+        .testlp-phone-cta__label--pc { display: none !important; }
+        .testlp-phone-cta__label--sp { display: inline !important; font-size: 1.05rem !important; white-space: nowrap !important; }
+
+        @media (min-width: 768px) {
+          .testlp-phone-cta__label--sp { display: none !important; }
+          .testlp-phone-cta__label--pc { display: inline !important; }
+        }
+
+        .intro-sticky-cta__inner .testlp-phone-cta__label--sp {
+          font-size: 0.72rem !important;
+          letter-spacing: -0.02em !important;
         }
       `}</style>
     </div>

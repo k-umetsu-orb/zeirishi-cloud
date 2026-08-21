@@ -676,7 +676,7 @@ export default function Home({ officeCount, interviewUrls }: { officeCount: numb
                   <br />
                   税理士・会計事務所を
                   <br />
-                  相談無料でご紹介します。
+                  無料でご紹介します。
                 </p>
               </div>
             </div>
@@ -685,7 +685,7 @@ export default function Home({ officeCount, interviewUrls }: { officeCount: numb
               {[
                 { icon: Users, label: "掲載税理士事務所数", value: "3,000", suffix: "件以上" },
                 { icon: MapPin, label: "対応エリア", value: "全国", suffix: "対応" },
-                { icon: Shield, label: "相談・紹介", value: "無料", suffix: "対応" },
+                { icon: Shield, label: "税理士のご紹介", value: "無料", suffix: "対応" },
               ].map((s) => (
                 <div key={s.label} className="flex min-w-0 flex-col items-center px-2 text-center">
                   <span className="mb-3 flex h-11 w-11 items-center justify-center rounded-full border border-[#bdd3f5] bg-white">
@@ -754,7 +754,7 @@ export default function Home({ officeCount, interviewUrls }: { officeCount: numb
                 <p className="mb-9 max-w-2xl text-base font-semibold leading-[1.9] text-[#12325f] md:text-lg">
                   <span className="md:whitespace-nowrap">豊富な経験と実績のある厳選した税理士・会計事務所を</span>
                   <br />
-                  相談無料でご紹介します。
+                  無料でご紹介します。
                 </p>
 
                 <div className="mb-11 flex flex-col gap-3 sm:flex-row">
@@ -779,7 +779,7 @@ export default function Home({ officeCount, interviewUrls }: { officeCount: numb
                   {[
                     { icon: Users, label: "掲載税理士事務所数", value: "3,000", suffix: "件以上" },
                     { icon: MapPin, label: "対応エリア", value: "全国", suffix: "対応" },
-                    { icon: Shield, label: "相談・紹介", value: "無料", suffix: "対応" },
+                    { icon: Shield, label: "税理士のご紹介", value: "無料", suffix: "対応" },
                   ].map((s) => (
                     <div key={s.label} className="flex items-center gap-3">
                       <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-[#bdd3f5] bg-white">
@@ -1419,7 +1419,7 @@ export default function Home({ officeCount, interviewUrls }: { officeCount: numb
                 </span>
                 <span>
                   <span className="block text-xs font-semibold text-muted-foreground">
-                    お電話でのご相談はこちら（通話無料）
+                    お電話での問い合わせはこちら
                   </span>
                   <span className="block text-2xl font-extrabold text-primary">{PHONE_NUMBER}</span>
                 </span>

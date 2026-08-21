@@ -31,7 +31,7 @@ export default function ListingStickyCta() {
             </span>
             <span className="col-start-2 min-w-0 text-center">
               <span className="block whitespace-nowrap text-[0.58rem] font-bold leading-tight md:text-xs">受付：9時〜22時（平日）</span>
-              <span className="mt-1 block text-[0.9rem] font-bold leading-tight md:text-lg">お電話はこちら</span>
+              <span className="mt-1 block whitespace-nowrap text-[0.62rem] font-bold leading-tight tracking-tighter md:text-base">今すぐ紹介してもらう</span>
             </span>
             <ArrowRight className="col-start-3 h-5 w-5 md:h-6 md:w-6" strokeWidth={2.6} />
           </a>
@@ -49,7 +49,7 @@ export default function ListingStickyCta() {
               無料
             </span>
             <div className="relative ml-24 min-w-0">
-              <p className="text-[clamp(1rem,1.3vw,1.3rem)] font-bold leading-tight tracking-[-0.02em]">悩んだら、今すぐプロに問い合わせ</p>
+              <p className="text-[clamp(1rem,1.3vw,1.3rem)] font-bold leading-tight tracking-[-0.02em]">悩んだら今すぐプロに問い合わせ</p>
               <p className="mt-1 text-[clamp(0.7rem,0.85vw,0.82rem)] font-medium leading-tight">あなたに最適な税理士をご紹介します</p>
               <div className="mt-2 flex gap-2 text-[0.52rem] font-medium leading-tight text-blue-50">
                 <span className="flex items-center gap-1"><ShieldCheck className="h-4 w-4 shrink-0" />厳選税理士のみ</span>
@@ -75,7 +75,7 @@ export default function ListingStickyCta() {
             <span className="absolute left-4 top-1/2 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-[#e8f2ff] text-[#0769d6]">
               <Phone className="h-6 w-6" fill="currentColor" strokeWidth={1.5} />
             </span>
-            <span className="w-full -translate-y-[2px] whitespace-nowrap text-center text-[clamp(0.92rem,1.18vw,1.12rem)] font-bold">お電話はこちら</span>
+            <span className="w-full -translate-y-[2px] whitespace-nowrap text-center text-[clamp(0.68rem,0.9vw,0.86rem)] font-bold tracking-tight">今すぐ紹介してもらう</span>
             <ArrowRight className="absolute right-4 top-1/2 h-6 w-6 -translate-y-1/2 transition-transform group-hover:translate-x-1" strokeWidth={2.5} />
           </a>
         </div>
