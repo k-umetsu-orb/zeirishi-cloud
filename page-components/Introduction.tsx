@@ -52,7 +52,7 @@ function HeroFeatureChips({ className = "" }: { className?: string }) {
     <ul className={`testlp-hero__features ${className}`} aria-label="税理士紹介サービスの特徴">
       <li className="testlp-hero__feature">
         <JapaneseYen className="testlp-hero__feature-icon" />
-        <span>ご相談・ご紹介<br /><span className="testlp-hero__feature-emphasis">完全無料</span></span>
+        <span>税理士のご紹介<br /><span className="testlp-hero__feature-emphasis">完全無料</span></span>
       </li>
       <li className="testlp-hero__feature">
         <Image src={japanMapImage} alt="" className="testlp-hero__feature-map" />
@@ -83,7 +83,7 @@ function HeroPhoneCta() {
         </div>
         <div className="testlp-phone-cta__body">
           <p className="testlp-phone-cta__label">
-            <span>お電話でのご相談はこちら </span>
+            <span>お電話でのお問い合わせはこちら </span>
             <span>（通話無料）</span>
           </p>
           <p className="testlp-phone-cta__number">
@@ -150,10 +150,10 @@ function ConsultationStartForm({ variant = "section" }: { variant?: "hero" | "se
     <section className={`introduction-start-form introduction-start-form--${variant}`} aria-label="無料相談の開始フォーム">
       <div className="introduction-start-form__heading">
         <h2>
-          {variant === "hero" ? <><span>まずはご相談者様について</span><span>教えてください</span></> : "まずはお気軽にご相談ください"}
+          {variant === "hero" ? <><span>まずはご相談者様について</span><span>教えてください</span></> : "まずはお気軽にお問い合わせください"}
         </h2>
         <p>
-          {variant === "hero" ? <><span>ご相談・ご紹介はすべて無料です。</span><span>専門コーディネーターが丁寧にお伺いします。</span></> : "ご相談・ご紹介はすべて無料です。専門コーディネーターが丁寧にお伺いします。"}
+          {variant === "hero" ? <><span>ご紹介は無料です。</span><span>専門コーディネーターが丁寧にお伺いします。</span></> : "ご紹介は無料です。専門コーディネーターが丁寧にお伺いします。"}
         </p>
       </div>
       <div className="introduction-start-form__choices">
@@ -185,7 +185,7 @@ const merits = [
   { icon: <MapPin className="w-10 h-10" />, title: "地域から探せる", desc: "お住まいの地域やエリアから税理士を見つけられます。" },
   { icon: <ClipboardList className="w-10 h-10" />, title: "相談内容で探せる", desc: "税務・会計の相談内容に合う税理士を効率よく探せます。" },
   { icon: <Search className="w-10 h-10" />, title: "候補を比較できる", desc: "サービス内容、得意分野を一覧で比べて検討できます。", spDesc: ["サービス内容、得意分野を", "一覧で比べて検討できます。"] },
-  { icon: <MessageCircle className="w-10 h-10" />, title: "無料で個別相談", desc: "ご要望を伺ったうえで、無料でご相談可能です。", spDesc: ["ご要望を伺ったうえで、", "無料でご相談可能です。"] },
+  { icon: <MessageCircle className="w-10 h-10" />, title: "無料で税理士を紹介", desc: "ご要望を伺ったうえで、無料でご紹介可能です。", spDesc: ["ご要望を伺ったうえで、", "無料でご紹介可能です。"] },
 ];
 
 const steps = [
@@ -204,7 +204,7 @@ const REQUEST_DETAIL_EXAMPLES = [
 ];
 
 const faqItems = [
-  { question: "紹介サービスの利用に費用はかかりますか？",     answer: "いいえ、ご相談から紹介まですべて無料でご利用いただけます。成功報酬も一切かかりません。" },
+  { question: "紹介サービスの利用に費用はかかりますか？",     answer: "いいえ、ご紹介は無料です。成功報酬も一切かかりません。" },
   { question: "どのような税理士を紹介してもらえますか？",     answer: "法人税・所得税・相続税・事業承継など多様な分野に対応する税理士をご紹介します。地域・予算のご希望にも対応いたします。" },
   { question: "紹介された税理士と必ず契約しなければなりませんか？", answer: "いいえ、ご契約は任意です。面談後にお断りいただいても問題ありません。" },
   { question: "どのくらいの期間で紹介してもらえますか？",     answer: "通常、お問い合わせから1〜3営業日以内にご連絡し、1週間程度でご紹介いたします。" },
@@ -263,7 +263,7 @@ function ReassuranceBand() {
     <div className="intro-reassurance">
       <p className="intro-reassurance__heading">相談の前にご確認ください</p>
       <ul className="intro-reassurance__list">
-        <li><CircleCheck /><span><strong>相談・紹介は無料</strong><small>費用は一切かかりません。</small></span></li>
+        <li><CircleCheck /><span><strong>ご紹介は無料</strong><small>費用は一切かかりません。</small></span></li>
         <li><CircleCheck /><span><strong>候補を比べてから判断</strong><small>納得してから検討できます。</small></span></li>
         <li><CircleCheck /><span><strong>契約はご自身の意思で</strong><small>無理な営業はありません。</small></span></li>
       </ul>
@@ -627,13 +627,13 @@ export default function Introduction() {
               </span>
 
               <h1 className="testlp-hero__title testlp-hero__title--consultation">
-                <span className="testlp-hero__title-line">あなたに合った税理士との</span>
                 <span className="testlp-hero__title-line">
                   <span className="testlp-hero__highlight">
-                    <span>無料相談会</span>
+                    <span>あなたに合った</span>
                   </span>
-                  を設定します
+                  税理士を
                 </span>
+                <span className="testlp-hero__title-line">ご紹介します</span>
               </h1>
 
               <p className="testlp-hero__lead hidden md:block">
@@ -734,10 +734,10 @@ export default function Introduction() {
         >
           <div className="container text-center">
             <h2 className="font-bold text-2xl md:text-3xl text-white mb-3">
-              まずはお気軽にご相談ください
+              まずはお気軽にお問い合わせください
             </h2>
             <p className="text-white/70 text-sm mb-8 max-w-md mx-auto leading-relaxed">
-              ご相談・紹介は完全無料です。お気軽にお申し込みください。
+              ご紹介は完全無料です。お気軽にお申し込みください。
             </p>
             <div className="intro-final-cta">
               <HeroFormCta />
