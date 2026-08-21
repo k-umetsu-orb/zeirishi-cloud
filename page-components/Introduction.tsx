@@ -84,7 +84,6 @@ function HeroPhoneCta() {
         <div className="testlp-phone-cta__body">
           <p className="testlp-phone-cta__label">
             <span>お電話でのお問い合わせはこちら </span>
-            <span>（通話無料）</span>
           </p>
           <p className="testlp-phone-cta__number">
             {PHONE_NUMBER}
