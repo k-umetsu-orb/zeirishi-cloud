@@ -1419,7 +1419,7 @@ export default function Home({ officeCount, interviewUrls }: { officeCount: numb
                 </span>
                 <span>
                   <span className="block text-xs font-semibold text-muted-foreground">
-                    お電話での問い合わせはこちら
+                    電話でのお問い合わせはこちら
                   </span>
                   <span className="block text-2xl font-extrabold text-primary">{PHONE_NUMBER}</span>
                 </span>

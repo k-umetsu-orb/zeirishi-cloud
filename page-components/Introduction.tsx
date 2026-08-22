@@ -83,8 +83,8 @@ function HeroPhoneCta() {
         </div>
         <div className="testlp-phone-cta__body">
           <p className="testlp-phone-cta__label">
-            <span className="testlp-phone-cta__label--sp">お電話での問い合わせ</span>
-            <span className="testlp-phone-cta__label--pc">お電話での問い合わせはこちら</span>
+            <span className="testlp-phone-cta__label--sp">電話でのお問い合わせ</span>
+            <span className="testlp-phone-cta__label--pc">電話でのお問い合わせはこちら</span>
           </p>
           <p className="testlp-phone-cta__number">
             {PHONE_NUMBER}
