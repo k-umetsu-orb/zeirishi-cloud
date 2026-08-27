@@ -3146,7 +3146,7 @@ export default function Introduction() {
           .testlp-hero__mobile-breadcrumb,
           .testlp-hero__badge { display: none !important; }
           .testlp-hero__mobile-only { display: block; margin-top: 12px; }
-          .testlp-hero__mobile-satisfaction { width: 100%; margin: 0 auto; }
+          .testlp-hero__mobile-satisfaction { width: 102.4%; margin: 0 0 0 -2.4%; }
           .testlp-hero__satisfaction-image { display: block; width: 100%; height: auto; }
           .testlp-hero__title { margin-top: 20px; }
           .intro-accountant-marquee:not(.intro-accountant-marquee--hero) { display: none; }
