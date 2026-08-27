@@ -14,6 +14,7 @@ import Breadcrumb from "@/components/Breadcrumb";
 import { getAllPrefectures, getCitiesByPrefecture } from "@/lib/data";
 import heroWomanImage from "@/images/女性1_crop.png";
 import japanMapImage from "@/images/japan map_ver2.png";
+import customerSatisfactionImage from "@/images/customer-satisfaction-98.png";
 import accountantPhoto1 from "@/images/男性1.png";
 import accountantPhoto2 from "@/images/男性2.png";
 import accountantPhoto3 from "@/images/男性3.png";
@@ -271,10 +272,10 @@ function ReassuranceBand() {
   );
 }
 
-function AccountantMarquee() {
+function AccountantMarquee({ inHero = false }: { inHero?: boolean }) {
   return (
-    <section className="intro-accountant-marquee" aria-label="登録税理士・会計事務所">
-      <h2>全国の税理士・会計事務所が多数登録中</h2>
+    <section className={`intro-accountant-marquee${inHero ? " intro-accountant-marquee--hero" : ""}`} aria-label="登録税理士・会計事務所">
+      {!inHero && <h2>全国の税理士・会計事務所が多数登録中</h2>}
       <div className="intro-accountant-marquee__viewport">
         <div className="intro-accountant-marquee__fade intro-accountant-marquee__fade--left" />
         <div className="intro-accountant-marquee__fade intro-accountant-marquee__fade--right" />
@@ -611,27 +612,31 @@ export default function Introduction() {
           <div className="testlp-hero__mobile-breadcrumb block md:hidden relative -top-6">
             <Breadcrumb items={[{ label: "税理士紹介サービス" }]} />
           </div>
-            <div className="testlp-hero__breadcrumb hidden md:block absolute left-8 right-8 top-6">
+          <div className="testlp-hero__breadcrumb hidden md:block absolute left-8 right-8 top-6">
             <Breadcrumb items={[{ label: "税理士紹介サービス" }]} />
           </div>
           <Image
-              src={heroWomanImage}
-              alt="税理士クラウドの相談スタッフ"
-              priority
-              sizes="(max-width: 767px) 130vw, 520px"
-              className="testlp-hero__image"
-            />
+            src={heroWomanImage}
+            alt="税理士クラウドの相談スタッフ"
+            priority
+            sizes="(max-width: 767px) 130vw, 520px"
+            className="testlp-hero__image"
+          />
             <div className="testlp-hero__copy">
-              <span className="testlp-hero__badge">
-                完全無料・全国対応
-              </span>
+              <span className="testlp-hero__badge">完全無料・全国対応</span>
+
+              <div className="testlp-hero__mobile-only testlp-hero__mobile-satisfaction">
+                <Image
+                  src={customerSatisfactionImage}
+                  alt="顧客満足度98パーセント"
+                  sizes="(max-width: 767px) 364px, 0px"
+                  className="testlp-hero__satisfaction-image"
+                />
+              </div>
 
               <h1 className="testlp-hero__title testlp-hero__title--consultation">
                 <span className="testlp-hero__title-line">
-                  <span className="testlp-hero__highlight">
-                    <span>あなたに合った</span>
-                  </span>
-                  税理士を
+                  <span className="testlp-hero__highlight"><span>あなたに合った</span></span>税理士を
                 </span>
                 <span className="testlp-hero__title-line">ご紹介します</span>
               </h1>
@@ -640,6 +645,10 @@ export default function Introduction() {
                 専門コーディネーターがご要望を丁寧にヒアリングし、<br />
                 最適な税理士・会計事務所をご紹介いたします。
               </p>
+
+              <div className="testlp-hero__mobile-only">
+                <AccountantMarquee inHero />
+              </div>
 
               <HeroFeatureChips />
             </div>
@@ -818,6 +827,85 @@ export default function Introduction() {
 
         .testlp-hero__copy {
           max-width: 74vw;
+        }
+
+        .testlp-hero__satisfaction {
+          position: relative;
+          width: min(100%, 720px);
+          overflow: hidden;
+          border: 2px solid #1656ad;
+          border-radius: 18px;
+          background: linear-gradient(135deg, #f7fbff 0%, #ffffff 72%, #edf5ff 100%);
+          padding: 16px 24px 18px;
+          color: #0b438e;
+          box-shadow: 0 12px 28px rgba(18, 79, 166, 0.14);
+        }
+
+        .testlp-hero__satisfaction::after {
+          position: absolute;
+          right: -4px;
+          bottom: -38px;
+          width: 45%;
+          height: 110px;
+          border-radius: 50%;
+          background: radial-gradient(ellipse at center, rgba(47, 123, 218, 0.16) 0%, rgba(47, 123, 218, 0) 70%);
+          content: "";
+          pointer-events: none;
+        }
+
+        .testlp-hero__satisfaction-top {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          border-bottom: 3px dotted #afccec;
+          padding-bottom: 10px;
+          font-weight: 700;
+          line-height: 1.35;
+        }
+
+        .testlp-hero__satisfaction-icon {
+          display: flex;
+          width: 34px;
+          height: 34px;
+          flex: 0 0 auto;
+          align-items: center;
+          justify-content: center;
+          border-radius: 9999px;
+          background: #e7f0ff;
+          color: #125fc2;
+        }
+        .testlp-hero__satisfaction-icon svg { width: 20px; height: 20px; }
+
+        .testlp-hero__satisfaction-main {
+          position: relative;
+          z-index: 1;
+          display: flex;
+          align-items: end;
+          justify-content: space-between;
+          gap: 20px;
+          padding-top: 9px;
+        }
+
+        .testlp-hero__satisfaction-label {
+          font-family: "Noto Serif JP", serif;
+          font-size: clamp(1.7rem, 3.4vw, 3.45rem);
+          font-weight: 800;
+          letter-spacing: 0.04em;
+          line-height: 1.1;
+        }
+
+        .testlp-hero__satisfaction strong {
+          color: #125fc2;
+          font-family: "Noto Serif JP", serif;
+          font-size: clamp(3.7rem, 8vw, 7rem);
+          font-weight: 900;
+          letter-spacing: -0.07em;
+          line-height: 0.78;
+        }
+
+        .testlp-hero__satisfaction strong span {
+          margin-left: 1px;
+          font-size: 0.65em;
         }
 
         .testlp-hero__badge {
@@ -2840,6 +2928,23 @@ export default function Introduction() {
         .intro-accountant-marquee__fade--left { left: 0; background: linear-gradient(90deg, #f4f7fb, transparent); }
         .intro-accountant-marquee__fade--right { right: 0; background: linear-gradient(270deg, #f4f7fb, transparent); }
 
+        .intro-accountant-marquee--hero {
+          width: min(100%, 720px);
+          border: 0;
+          background: transparent;
+          padding: 16px 0 0;
+        }
+        .intro-accountant-marquee--hero .intro-accountant-marquee__item { margin: 0 8px; }
+        .intro-accountant-marquee--hero .intro-accountant-marquee__photo {
+          width: 94px;
+          height: 94px;
+          border-width: 3px;
+          box-shadow: 0 4px 12px rgba(32, 72, 126, 0.14);
+        }
+        .intro-accountant-marquee--hero .intro-accountant-marquee__fade { width: 42px; }
+        .intro-accountant-marquee--hero .intro-accountant-marquee__fade--left { background: linear-gradient(90deg, #f8fbff, transparent); }
+        .intro-accountant-marquee--hero .intro-accountant-marquee__fade--right { background: linear-gradient(270deg, #f8fbff, transparent); }
+
         .intro-sticky-cta {
           position: fixed;
           right: 0;
@@ -2923,6 +3028,9 @@ export default function Introduction() {
           .intro-accountant-marquee h2 { margin-bottom: 20px; font-size: 1.2rem; }
           .intro-accountant-marquee__item { margin: 0 10px; }
           .intro-accountant-marquee__photo { width: 88px; height: 88px; border-width: 3px; }
+          .intro-accountant-marquee--hero { width: 100%; padding-top: 16px; }
+          .intro-accountant-marquee--hero .intro-accountant-marquee__item { margin: 0 7px; }
+          .intro-accountant-marquee--hero .intro-accountant-marquee__photo { width: 58px; height: 58px; }
 
           .intro-sticky-cta { padding: 5px 0 calc(5px + env(safe-area-inset-bottom)); }
           .intro-sticky-cta__inner {
@@ -3029,6 +3137,24 @@ export default function Introduction() {
         @media (min-width: 768px) {
           .testlp-phone-cta__label--sp { display: none !important; }
           .testlp-phone-cta__label--pc { display: inline !important; }
+        }
+
+        .testlp-hero__mobile-only { display: none; }
+
+        @media (max-width: 767px) {
+          .testlp-hero__inner { padding-top: 28px; }
+          .testlp-hero__mobile-breadcrumb,
+          .testlp-hero__badge { display: none !important; }
+          .testlp-hero__mobile-only { display: block; margin-top: 12px; }
+          .testlp-hero__mobile-satisfaction { width: 100%; margin: 0 auto; }
+          .testlp-hero__satisfaction-image { display: block; width: 100%; height: auto; }
+          .testlp-hero__title { margin-top: 20px; }
+          .intro-accountant-marquee:not(.intro-accountant-marquee--hero) { display: none; }
+          .intro-accountant-marquee--hero { margin-top: 0; padding-top: 0; }
+          .intro-accountant-marquee--hero .intro-accountant-marquee__photo { width: 88px; height: 88px; }
+          .testlp-hero__features { margin-top: 4px; }
+          .intro-accountant-marquee--hero .intro-accountant-marquee__fade--left { background: linear-gradient(90deg, #f8fbff, transparent); }
+          .intro-accountant-marquee--hero .intro-accountant-marquee__fade--right { background: linear-gradient(270deg, #f8fbff, transparent); }
         }
 
         .intro-sticky-cta__inner .testlp-phone-cta__label--sp {
