@@ -293,7 +293,7 @@ export default function IntroductionQuestionnaire() {
             <div className="intro-questionnaire__card">
               <div className="intro-questionnaire__contact-fields">
                 <div className="intro-questionnaire__privacy-note"><LockKeyhole /> 入力情報は個人情報保護方針に基づき、許可なく第三者に共有されることはありません。</div>
-                <label>事業形態<select value={businessType} onChange={(event) => setBusinessType(event.target.value)} disabled={isBusinessTypeFixed} required><option value="">選択してください</option><option value="法人">法人</option><option value="個人">個人</option></select></label>
+                <label>法人/個人<select value={businessType} onChange={(event) => setBusinessType(event.target.value)} disabled={isBusinessTypeFixed} required><option value="">選択してください</option><option value="法人">法人</option><option value="個人">個人</option></select></label>
                 {isCorporate && <label>会社名<input value={companyName} onChange={(event) => setCompanyName(event.target.value)} placeholder="例：株式会社税理士クラウド" required /></label>}
                 {isCorporate && <label>従業員数<select value={employeeCount} onChange={(event) => setEmployeeCount(event.target.value)} required><option value="">選択してください</option>{EMPLOYEE_COUNT_OPTIONS.map((option) => <option key={option} value={option}>{option}</option>)}</select></label>}
                 {isCorporate && <label>業種<input value={industry} onChange={(event) => setIndustry(event.target.value)} placeholder="例：IT・Webサービス" required /></label>}

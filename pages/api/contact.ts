@@ -24,6 +24,13 @@ type ContactPayload = {
   requestDetail?: string;
 };
 
+function getConsultationCategory(clientType: string | undefined, businessType: string | undefined, isIntroductionStep: boolean) {
+  if (!isIntroductionStep) return clientType || "未入力";
+  if (clientType === "法人") return "法人";
+  if (clientType === "個人事業主・フリーランス") return "個人";
+  return `${clientType || "未入力"}（${businessType || "未入力"}）`;
+}
+
 function escapeHtml(text: string) {
   return text
     .replace(/&/g, "&amp;")
@@ -84,14 +91,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   const isIntroductionStep = sourcePage === "/introduction/step";
   const isCorporate = businessType === "法人";
-  const isRedundantClientType = clientType === "法人" || clientType === "個人事業主・フリーランス";
-  const introductionProfileLines = isIntroductionStep
-    ? [
-        ...(!isRedundantClientType ? [`【ご相談者様の区分】${clientType || "未入力"}`] : []),
-        `【事業形態】${businessType}`,
-        ...(isCorporate ? [`【会社名】${companyName}`, `【従業員数】${employeeCount}`, `【業種】${industry}`] : []),
-      ]
-    : [`【ご相談者様の区分】${clientType || "未入力"}`];
+  const consultationCategory = getConsultationCategory(clientType, businessType, isIntroductionStep);
 
   if (
     !prefectureName ||
@@ -116,7 +116,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       subject: `【税理士クラウド お問い合わせ】${consultType ? `${consultType} - ` : ""}${name}`,
       text: [
         `【流入元ページ】${sourcePage || "不明"}`,
-        ...introductionProfileLines,
+        `【ご相談者様の区分】${consultationCategory}`,
+        ...(isIntroductionStep && isCorporate ? [`【会社名】${companyName}`, `【従業員数】${employeeCount}`, `【業種】${industry}`] : []),
         `【お名前】${name}`,
         `【メールアドレス】${email}`,
         `【電話番号】${phone || "未入力"}`,
@@ -136,7 +137,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         "このたびは税理士クラウドにお問い合わせいただきありがとうございます。",
         "以下の内容で受け付けいたしました。",
         "",
-        ...introductionProfileLines,
+        `【ご相談者様の区分】${consultationCategory}`,
+        ...(isIntroductionStep && isCorporate ? [`【会社名】${companyName}`, `【従業員数】${employeeCount}`, `【業種】${industry}`] : []),
         `【お名前】${name}`,
         `【メールアドレス】${email}`,
         `【電話番号】${phone || "未入力"}`,
