@@ -13,6 +13,11 @@ type ContactPayload = {
   consultType?: string;
   prefectureName?: string;
   cityName?: string;
+  annualSales?: string;
+  businessType?: string;
+  companyName?: string;
+  employeeCount?: string;
+  industry?: string;
   name?: string;
   email?: string;
   phone?: string;
@@ -66,18 +71,36 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     consultType,
     prefectureName,
     cityName,
+    annualSales,
+    businessType,
+    companyName,
+    employeeCount,
+    industry,
     name,
     email,
     phone,
     requestDetail,
   } = req.body as ContactPayload;
 
+  const isIntroductionStep = sourcePage === "/introduction/step";
+  const isCorporate = businessType === "法人";
+  const isRedundantClientType = clientType === "法人" || clientType === "個人事業主・フリーランス";
+  const introductionProfileLines = isIntroductionStep
+    ? [
+        ...(!isRedundantClientType ? [`【ご相談者様の区分】${clientType || "未入力"}`] : []),
+        `【事業形態】${businessType}`,
+        ...(isCorporate ? [`【会社名】${companyName}`, `【従業員数】${employeeCount}`, `【業種】${industry}`] : []),
+      ]
+    : [`【ご相談者様の区分】${clientType || "未入力"}`];
+
   if (
     !prefectureName ||
     !name?.trim() ||
     !email?.trim() ||
     !phone?.trim() ||
-    !requestDetail?.trim()
+    !requestDetail?.trim() ||
+    (isIntroductionStep && (!annualSales?.trim() || !businessType?.trim())) ||
+    (isIntroductionStep && isCorporate && (!companyName?.trim() || !employeeCount?.trim() || !industry?.trim()))
   ) {
     res.status(400).json({ ok: false, error: "必須項目が未入力です" });
     return;
@@ -93,11 +116,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       subject: `【税理士クラウド お問い合わせ】${consultType ? `${consultType} - ` : ""}${name}`,
       text: [
         `【流入元ページ】${sourcePage || "不明"}`,
-        `【ご相談者様の区分】${clientType || "未入力"}`,
+        ...introductionProfileLines,
         `【お名前】${name}`,
         `【メールアドレス】${email}`,
         `【電話番号】${phone || "未入力"}`,
         `【お探しのエリア】${area}`,
+        ...(isIntroductionStep ? [`【年間のおおよその売上額】${annualSales}`] : []),
         `【依頼したい内容】${requestDetail}`,
       ].join("\n"),
     });
@@ -112,11 +136,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         "このたびは税理士クラウドにお問い合わせいただきありがとうございます。",
         "以下の内容で受け付けいたしました。",
         "",
-        `【ご相談者様の区分】${clientType || "未入力"}`,
+        ...introductionProfileLines,
         `【お名前】${name}`,
         `【メールアドレス】${email}`,
         `【電話番号】${phone || "未入力"}`,
         `【お探しのエリア】${area}`,
+        ...(isIntroductionStep ? [`【年間のおおよその売上額】${annualSales}`] : []),
         `【依頼したい内容】${requestDetail}`,
         "",
         "内容を確認のうえ、担当のコーディネーターより1〜3営業日以内にご連絡いたします。",

@@ -29,6 +29,21 @@ const REGION_GROUPS = [
   { label: "国外", prefectures: [] },
 ];
 
+const ANNUAL_SALES_OPTIONS = [
+  "年500万円未満",
+  "年500万円〜1,000万円未満",
+  "年1,000万円〜2,000万円未満",
+  "年2,000万円以上",
+];
+
+const EMPLOYEE_COUNT_OPTIONS = ["1人", "2〜9人", "10〜49人", "50〜99人", "100〜499人", "500〜999人", "1,000人〜"];
+
+function getDefaultBusinessType(clientType: string) {
+  if (clientType === "法人") return "法人";
+  if (clientType === "個人事業主・フリーランス") return "個人";
+  return "";
+}
+
 type ChoiceCardProps = {
   label: string;
   selected: boolean;
@@ -78,7 +93,12 @@ export default function IntroductionQuestionnaire() {
   const [region, setRegion] = useState("");
   const [prefecture, setPrefecture] = useState("");
   const [city, setCity] = useState("");
+  const [annualSales, setAnnualSales] = useState("");
   const [requestDetail, setRequestDetail] = useState("");
+  const [businessType, setBusinessType] = useState("");
+  const [companyName, setCompanyName] = useState("");
+  const [employeeCount, setEmployeeCount] = useState("");
+  const [industry, setIndustry] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -90,6 +110,7 @@ export default function IntroductionQuestionnaire() {
     const initial = router.query.clientType;
     if (typeof initial === "string" && STARTERS.some(({ label }) => label === initial)) {
       setClientType(initial);
+      setBusinessType(getDefaultBusinessType(initial));
       setStep(1);
     }
   }, [router.query.clientType]);
@@ -113,12 +134,24 @@ export default function IntroductionQuestionnaire() {
     () => allPrefectures.filter((item) => !region || REGION_GROUPS.find(({ label }) => label === region)?.prefectures.includes(item.slug)),
     [allPrefectures, region],
   );
-  const progressStep = step === 0 ? 0 : step <= 3 ? 1 : step === 4 ? 2 : 3;
+  const progressStep = step === 0 ? 0 : step <= 3 ? 1 : step === 4 ? 2 : step === 5 ? 3 : 4;
   const hasRequestDetail = Boolean(requestDetail.trim());
+  const isCorporate = businessType === "法人";
+  const isBusinessTypeFixed = clientType === "法人" || clientType === "個人事業主・フリーランス";
+  const hasRequiredProfile = Boolean(
+    businessType
+    && (!isCorporate || (companyName.trim() && employeeCount && industry.trim())),
+  );
+
+  function selectClientType(type: string) {
+    setClientType(type);
+    setBusinessType(getDefaultBusinessType(type));
+    setStep(1);
+  }
 
   function next() {
     if (!canContinue) return;
-    if (step < 5) {
+    if (step < 6) {
       setStep((current) => current + 1);
       return;
     }
@@ -139,6 +172,11 @@ export default function IntroductionQuestionnaire() {
           consultType: clientType,
           prefectureName: selectedPrefecture?.name || (prefecture === "overseas" ? "海外" : "未選択"),
           cityName: cities.find((item) => item.slug === city)?.name || "",
+          annualSales,
+          businessType,
+          companyName: companyName.trim(),
+          employeeCount,
+          industry: industry.trim(),
           name,
           email,
           phone,
@@ -161,8 +199,9 @@ export default function IntroductionQuestionnaire() {
     Boolean(region),
     Boolean(prefecture),
     true,
+    Boolean(annualSales),
     true,
-    Boolean(name.trim() && email.trim() && phone.trim() && agreed),
+    Boolean(hasRequiredProfile && name.trim() && email.trim() && phone.trim() && agreed),
   ][step];
 
   return (
@@ -192,7 +231,7 @@ export default function IntroductionQuestionnaire() {
             <QuestionMessage showAvatar={false}>まずはご相談者様について教えてください</QuestionMessage>
             <div className="intro-questionnaire__card">
               <div className="intro-questionnaire__options intro-questionnaire__options--stack">
-                {STARTERS.map(({ label, icon }) => <ChoiceCard key={label} label={label} icon={icon} selected={clientType === label} onClick={() => { setClientType(label); setStep(1); }} />)}
+                {STARTERS.map(({ label, icon }) => <ChoiceCard key={label} label={label} icon={icon} selected={clientType === label} onClick={() => selectClientType(label)} />)}
               </div>
             </div>
           </section>}
@@ -230,24 +269,37 @@ export default function IntroductionQuestionnaire() {
           </section>}
 
           {step >= 4 && <section className="intro-questionnaire__question" data-question-step="4">
+            <QuestionMessage>年間のおおよその売上額を教えてください</QuestionMessage>
+            <div className="intro-questionnaire__card">
+              <div className="intro-questionnaire__options intro-questionnaire__options--stack">
+                {ANNUAL_SALES_OPTIONS.map((label) => <ChoiceCard key={label} label={label} selected={annualSales === label} onClick={() => { setAnnualSales(label); setStep(5); }} />)}
+              </div>
+            </div>
+          </section>}
+
+          {step >= 5 && <section className="intro-questionnaire__question" data-question-step="5">
             <QuestionMessage>税理士に依頼したい内容を教えてください <small>任意</small></QuestionMessage>
             <div className="intro-questionnaire__card">
               <div className="intro-questionnaire__textarea-wrap">
                 <label htmlFor="requestDetail">依頼したい内容（任意）</label>
                 <textarea id="requestDetail" value={requestDetail} onChange={(event) => setRequestDetail(event.target.value)} rows={6} placeholder={"例\n・法人化とその後の顧問契約\n・初年度決算申告（IT関連業）\n・新規法人設立"} />
               </div>
-              {step === 4 && <div className="intro-questionnaire__actions"><button type="button" onClick={() => setStep(5)} className={`intro-questionnaire__back ${hasRequestDetail ? "" : "is-primary"}`}>スキップ</button><button type="button" disabled={!hasRequestDetail} onClick={next} className={`intro-questionnaire__next ${hasRequestDetail ? "" : "is-muted"}`}>次へ<ArrowRight /></button></div>}
+              {step === 5 && <div className="intro-questionnaire__actions"><button type="button" onClick={() => setStep(6)} className={`intro-questionnaire__back ${hasRequestDetail ? "" : "is-primary"}`}>スキップ</button><button type="button" disabled={!hasRequestDetail} onClick={next} className={`intro-questionnaire__next ${hasRequestDetail ? "" : "is-muted"}`}>次へ<ArrowRight /></button></div>}
             </div>
           </section>}
 
-          {step >= 5 && <section className="intro-questionnaire__question" data-question-step="5">
-            <QuestionMessage>税理士情報を受け取るための連絡先情報を教えてください</QuestionMessage>
+          {step >= 6 && <section className="intro-questionnaire__question" data-question-step="6">
+            <QuestionMessage>最後に、税理士情報を受け取るための連絡先情報を教えてください</QuestionMessage>
             <div className="intro-questionnaire__card">
               <div className="intro-questionnaire__contact-fields">
                 <div className="intro-questionnaire__privacy-note"><LockKeyhole /> 入力情報は個人情報保護方針に基づき、許可なく第三者に共有されることはありません。</div>
-                <label>お名前<input value={name} onChange={(event) => setName(event.target.value)} placeholder="例：山田 太郎" /></label>
-                <label>メールアドレス<input type="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="例：zeiri4@zeiri4.com" /></label>
-                <label>電話番号<input type="tel" value={phone} onChange={(event) => setPhone(event.target.value)} placeholder="例：0312345678" /></label>
+                <label>事業形態<select value={businessType} onChange={(event) => setBusinessType(event.target.value)} disabled={isBusinessTypeFixed} required><option value="">選択してください</option><option value="法人">法人</option><option value="個人">個人</option></select></label>
+                {isCorporate && <label>会社名<input value={companyName} onChange={(event) => setCompanyName(event.target.value)} placeholder="例：株式会社税理士クラウド" required /></label>}
+                {isCorporate && <label>従業員数<select value={employeeCount} onChange={(event) => setEmployeeCount(event.target.value)} required><option value="">選択してください</option>{EMPLOYEE_COUNT_OPTIONS.map((option) => <option key={option} value={option}>{option}</option>)}</select></label>}
+                {isCorporate && <label>業種<input value={industry} onChange={(event) => setIndustry(event.target.value)} placeholder="例：IT・Webサービス" required /></label>}
+                <label>お名前<input value={name} onChange={(event) => setName(event.target.value)} placeholder="例：山田 太郎" required /></label>
+                <label>メールアドレス<input type="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="例：zeiri4@zeiri4.com" required /></label>
+                <label>電話番号<input type="tel" value={phone} onChange={(event) => setPhone(event.target.value)} placeholder="例：0312345678" required /></label>
                 <label className="intro-questionnaire__agreement"><input type="checkbox" checked={agreed} onChange={(event) => setAgreed(event.target.checked)} /><span><a href="https://orb-inc.co.jp/privacy-policy" target="_blank" rel="noreferrer">プライバシーポリシー</a>に同意する</span></label>
               </div>
               {submitError && <p className="intro-questionnaire__error">{submitError}</p>}
@@ -296,8 +348,8 @@ export default function IntroductionQuestionnaire() {
         .intro-questionnaire__choice > svg:last-child { color: #0a70c1; }
         .intro-questionnaire__select-wrap, .intro-questionnaire__textarea-wrap { display: grid; gap: 8px; }
         .intro-questionnaire__select-wrap label, .intro-questionnaire__textarea-wrap label, .intro-questionnaire__contact-fields > label { color: #1b5698; font-size: .76rem; font-weight: 800; }
-        .intro-questionnaire__select-wrap select, .intro-questionnaire__textarea-wrap textarea, .intro-questionnaire__contact-fields input:not([type=checkbox]) { width: 100%; border: 1px solid #82b2e2; border-radius: 4px; background: #fff; padding: 12px; color: #153e79; font: inherit; font-size: .86rem; outline: none; }
-        .intro-questionnaire__select-wrap select:focus, .intro-questionnaire__textarea-wrap textarea:focus, .intro-questionnaire__contact-fields input:focus { border-color: #0875c9; box-shadow: 0 0 0 3px rgba(8, 117, 201, .13); }
+        .intro-questionnaire__select-wrap select, .intro-questionnaire__textarea-wrap textarea, .intro-questionnaire__contact-fields input:not([type=checkbox]), .intro-questionnaire__contact-fields select { width: 100%; border: 1px solid #82b2e2; border-radius: 4px; background: #fff; padding: 12px; color: #153e79; font: inherit; font-size: .86rem; outline: none; }
+        .intro-questionnaire__select-wrap select:focus, .intro-questionnaire__textarea-wrap textarea:focus, .intro-questionnaire__contact-fields input:focus, .intro-questionnaire__contact-fields select:focus { border-color: #0875c9; box-shadow: 0 0 0 3px rgba(8, 117, 201, .13); }
         .intro-questionnaire__textarea-wrap textarea { resize: vertical; line-height: 1.65; }
         .intro-questionnaire__contact-fields { display: grid; gap: 14px; }
         .intro-questionnaire__contact-fields > label { display: grid; gap: 6px; }
