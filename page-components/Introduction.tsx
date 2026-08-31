@@ -40,6 +40,26 @@ const ACCOUNTANT_PHOTOS = [
 ];
 const MARQUEE_PHOTOS = Array.from({ length: 6 }, () => ACCOUNTANT_PHOTOS).flat();
 
+type ConcernTone = "blue" | "orange" | "teal" | "purple";
+type ConcernIcon = "message" | "cloud" | "file" | "landmark";
+
+export type IntroductionConcern = {
+  title: string;
+  body: string;
+  tone: ConcernTone;
+  icon?: ConcernIcon;
+};
+
+export type IntroductionPageContent = {
+  heroHeadline?: string;
+  heroHighlight?: string;
+  concernsHeading?: string;
+  concernsLead?: string;
+  concerns?: IntroductionConcern[];
+  documentTitle?: string;
+  documentDescription?: string;
+};
+
 function reportPhoneConversion() {
   window.gtag?.("event", "conversion", {
     send_to: "AW-18309633981/l7z9CMu21c0cEL2v25pE",
@@ -213,11 +233,11 @@ const faqItems = [
 ];
 
 const concernItems = [
-  { icon: <MessageCircle className="w-11 h-11" />, title: "会社設立後の疑問が不安", body: "会社を設立したけれど\n何から始めればいいかわからない", tone: "blue" },
-  { icon: <MessageCircle className="w-11 h-11" />, title: "今の税理士と合わない", body: "コミュニケーションや\n対応に不満がある", tone: "orange" },
-  { icon: <Cloud className="w-11 h-11" />, title: "クラウド会計を使いたい", body: "効率的に記帳や管理を\nしたいと考えている", tone: "teal" },
-  { icon: <MessageCircle className="w-11 h-11" />, title: "申告や相続を相談したい", body: "確定申告や相続のことを\n専門家に相談したい", tone: "purple" },
-];
+  { icon: "message", title: "会社設立後の疑問が不安", body: "会社を設立したけれど\n何から始めればいいかわからない", tone: "blue" },
+  { icon: "message", title: "今の税理士と合わない", body: "コミュニケーションや\n対応に不満がある", tone: "orange" },
+  { icon: "cloud", title: "クラウド会計を使いたい", body: "効率的に記帳や管理を\nしたいと考えている", tone: "teal" },
+  { icon: "message", title: "申告や相続を相談したい", body: "確定申告や相続のことを\n専門家に相談したい", tone: "purple" },
+] satisfies IntroductionConcern[];
 
 const finderRows = [
   { icon: <Briefcase className="w-5 h-5" />, label: "対応業種の例", chips: ["建設", "不動産", "飲食", "医療", "美容", "IT・EC"], accent: "blue" },
@@ -225,21 +245,29 @@ const finderRows = [
   { icon: <FileText className="w-5 h-5" />, label: "ご相談内容の例", chips: ["確定申告", "顧問契約", "記帳代行", "会社設立", "相続", "資金繰り"], accent: "orange" },
 ];
 
-function ConcernsSection() {
+function ConcernIconGraphic({ icon = "message" }: { icon?: ConcernIcon }) {
+  if (icon === "cloud") return <Cloud className="w-11 h-11" />;
+  if (icon === "file") return <FileText className="w-11 h-11" />;
+  if (icon === "landmark") return <Landmark className="w-11 h-11" />;
+  return <MessageCircle className="w-11 h-11" />;
+}
+
+function ConcernsSection({ content }: { content?: IntroductionPageContent }) {
+  const items = content?.concerns ?? concernItems;
+
   return (
     <section className="intro-concerns-section">
       <div className="container max-w-7xl intro-concerns">
         <h2 className="intro-section-heading">
-          <span>税理士に関してこんな</span><br className="intro-concerns-title-break" />
-          <span>お悩みはありませんか？</span>
+          {content?.concernsHeading ? content.concernsHeading : <><span>税理士に関してこんな</span><br className="intro-concerns-title-break" /><span>お悩みはありませんか？</span></>}
         </h2>
         <p className="intro-section-lead">
-          まだ依頼内容が固まっていなくても大丈夫です。
+          {content?.concernsLead ?? "まだ依頼内容が固まっていなくても大丈夫です。"}
         </p>
         <div className="intro-concerns__grid">
-          {concernItems.map((item) => (
+          {items.map((item) => (
             <article key={item.title} className={`intro-concern intro-concern--${item.tone}`}>
-              <div className="intro-concern__icon">{item.icon}</div>
+              <div className="intro-concern__icon"><ConcernIconGraphic icon={item.icon} /></div>
               <div>
                 <h3>{item.title}</h3>
                 <p>{item.body}</p>
@@ -590,10 +618,10 @@ function IntroductionForm() {
 
 // ─── Page ──────────────────────────────────────────────────────────────────────
 
-export default function Introduction() {
+export default function Introduction({ content }: { content?: IntroductionPageContent }) {
   usePageTitle(
-    "税理士・会計事務所の無料紹介サービス | 税理士クラウド",
-    "税理士・会計事務所をお探しながら税理士クラウドへご相談ください。税理士業界に特化した専門のコーディネーターがあなたにぴったりの税理士・会計事務所をご紹介します。",
+    content?.documentTitle ?? "税理士・会計事務所の無料紹介サービス | 税理士クラウド",
+    content?.documentDescription ?? "税理士・会計事務所をお探しながら税理士クラウドへご相談ください。税理士業界に特化した専門のコーディネーターがあなたにぴったりの税理士・会計事務所をご紹介します。",
   );
   return (
     <div className="min-h-screen flex flex-col">
@@ -634,12 +662,33 @@ export default function Introduction() {
                 />
               </div>
 
-              <h1 className="testlp-hero__title testlp-hero__title--consultation">
-                <span className="testlp-hero__title-line">
-                  <span className="testlp-hero__highlight"><span>あなたに合った</span></span>税理士を
-                </span>
-                <span className="testlp-hero__title-line">ご紹介します</span>
-              </h1>
+              {content?.heroHeadline ? (
+                <h1 className="testlp-hero__title testlp-hero__title--consultation">
+                  {content.heroHeadline.split("||").map((line, index) => {
+                    const highlight = content.heroHighlight ?? "";
+                    const highlightAt = highlight ? line.indexOf(highlight) : -1;
+
+                    return (
+                      <span className="testlp-hero__title-line" key={`${line}-${index}`}>
+                        {highlightAt >= 0 ? (
+                          <>
+                            {line.slice(0, highlightAt)}
+                            <span className="testlp-hero__highlight"><span>{highlight}</span></span>
+                            {line.slice(highlightAt + highlight.length)}
+                          </>
+                        ) : line}
+                      </span>
+                    );
+                  })}
+                </h1>
+              ) : (
+                <h1 className="testlp-hero__title testlp-hero__title--consultation">
+                  <span className="testlp-hero__title-line">
+                    <span className="testlp-hero__highlight"><span>あなたに合った</span></span>税理士を
+                  </span>
+                  <span className="testlp-hero__title-line">ご紹介します</span>
+                </h1>
+              )}
 
               <p className="testlp-hero__lead hidden md:block">
                 専門コーディネーターがご要望を丁寧にヒアリングし、<br />
@@ -660,7 +709,7 @@ export default function Introduction() {
 
         <AccountantMarquee />
 
-        <ConcernsSection />
+        <ConcernsSection content={content} />
 
         {/* ── Service features ── */}
         <section className="intro-value-section">

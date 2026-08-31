@@ -187,12 +187,21 @@ const MAP_CARD_REGIONS = [
 // ─── 悩み別導線 ───────────────────────────────────────────────────────────────
 
 const consultLinks = [
-  { href: "/introduction-01", icon: Search,    label: "顧問税理士の見直し" },
-  { href: "/introduction-02", icon: RefreshCw, label: "確定申告・年末調整" },
+  { href: "/introduction-01", icon: Search,    label: "税理士の見直し" },
+  { href: "/introduction-02", icon: RefreshCw, label: "確定申告" },
   { href: "/introduction-03", icon: FileText,  label: "相続税" },
   { href: "/introduction-04", icon: Shield,    label: "税務調査" },
   { href: "/introduction-05", icon: Building2, label: "事業承継" },
   { href: "/introduction-06", icon: BookOpen,  label: "会社設立" },
+];
+
+const industryLinks = [
+  { href: "/introduction", label: "美容" },
+  { href: "/introduction", label: "建設" },
+  { href: "/introduction", label: "IT・通信" },
+  { href: "/introduction", label: "教育" },
+  { href: "/introduction", label: "福祉" },
+  { href: "/introduction", label: "不動産" },
 ];
 
 // ─── Static data ──────────────────────────────────────────────────────────────
@@ -811,23 +820,42 @@ export default function Home({ officeCount, interviewUrls }: { officeCount: numb
 
             </div>
 
-            {/* ── 人気の相談内容から探す ── */}
+            {/* ── 相談内容・業種から探す ── */}
             <div className="mt-8 rounded-2xl border border-[#e2ebf8] bg-white/95 p-5 shadow-[0_16px_44px_rgba(7,27,63,0.08)] md:mt-10 md:p-8">
-              <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:gap-8">
-                <h2 className="shrink-0 text-lg font-extrabold leading-snug text-[#071b3f] md:text-xl">
-                  相談内容から探す
+              <div className="flex flex-col gap-5 lg:flex-row lg:items-stretch lg:gap-8">
+                <h2 className="shrink-0 text-lg font-extrabold leading-snug text-[#071b3f] md:text-xl lg:self-center">
+                  相談内容・業種から探す
                 </h2>
-                <div className="flex flex-wrap items-center gap-3">
-                  {consultLinks.map(({ href, icon: Icon, label }) => (
-                    <Link
-                      key={href}
-                      href={href}
-                      className="inline-flex h-12 w-[184px] shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-full border border-[#d8e4f5] bg-white px-4 text-sm font-bold text-[#071b3f] transition-colors hover:border-[#1a50a8] hover:text-[#1a50a8]"
-                    >
-                      <Icon className="h-4 w-4 shrink-0 text-[#1a50a8]" />
-                      <span>{label}</span>
-                    </Link>
-                  ))}
+                <div className="flex min-w-0 flex-1 flex-col gap-3">
+                  <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+                    <p className="w-20 shrink-0 text-sm font-bold text-[#1a50a8]">相談内容</p>
+                    <div className="grid w-full grid-cols-2 gap-3 lg:grid-cols-6">
+                      {consultLinks.map(({ href, icon: Icon, label }) => (
+                        <Link
+                          key={label}
+                          href={href}
+                          className="inline-flex h-12 min-w-0 items-center justify-center gap-1.5 whitespace-nowrap rounded-full border border-[#d8e4f5] bg-white px-2 text-[11px] font-bold text-[#071b3f] transition-colors hover:border-[#1a50a8] hover:text-[#1a50a8] xl:gap-2 xl:px-4 xl:text-sm"
+                        >
+                          <Icon className="h-4 w-4 shrink-0 text-[#1a50a8]" />
+                          <span>{label}</span>
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-2 border-t border-[#e2ebf8] pt-3 sm:flex-row sm:items-center">
+                    <p className="w-20 shrink-0 text-sm font-bold text-[#1a50a8]">業種</p>
+                    <div className="grid w-full grid-cols-2 gap-3 lg:grid-cols-6">
+                      {industryLinks.map(({ href, label }) => (
+                        <Link
+                          key={label}
+                          href={href}
+                          className="inline-flex h-11 min-w-0 items-center justify-center whitespace-nowrap rounded-full border border-[#d8e4f5] bg-[#f8fbff] px-2 text-xs font-bold text-[#071b3f] transition-colors hover:border-[#1a50a8] hover:bg-[#f1f5ff] hover:text-[#1a50a8] xl:px-4 xl:text-sm"
+                        >
+                          {label}
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
