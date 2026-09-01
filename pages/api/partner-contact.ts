@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { Resend } from "resend";
 
-const NOTIFY_TO = ["k.umezu@orb-inc.co.jp", "himori@orb-inc.co.jp", "y.suzuki@orb-inc.co.jp"];
+const NOTIFY_TO = ["k.umezu@orb-inc.co.jp", "himori@orb-inc.co.jp", "y.suzuki@orb-inc.co.jp", "s.ohori@orb-inc.co.jp"];
 const FROM_EMAIL = process.env.RESEND_FROM || "税理士クラウド <no-reply@orb-inc.co.jp>";
 
 type PartnerContactPayload = {
