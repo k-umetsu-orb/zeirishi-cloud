@@ -5,7 +5,7 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { Search, ArrowRight, Users, Shield, Building2, MapPin, ChevronRight, ChevronDown, Mail, FileText, RefreshCw, BookOpen, Phone } from "lucide-react";
+import { Search, ArrowRight, Users, Shield, Building2, MapPin, ChevronRight, ChevronDown, Mail, FileText, RefreshCw, BookOpen, Phone, Sparkles } from "lucide-react";
 import { useState } from "react";
 import { usePageTitle } from "@/lib/usePageTitle";
 import GlobalHeader from "@/components/GlobalHeader";
@@ -196,12 +196,12 @@ const consultLinks = [
 ];
 
 const industryLinks = [
-  { href: "/introduction", label: "美容" },
-  { href: "/introduction", label: "建設" },
-  { href: "/introduction", label: "IT・通信" },
-  { href: "/introduction", label: "教育" },
-  { href: "/introduction", label: "福祉" },
-  { href: "/introduction", label: "不動産" },
+  { href: "/introduction", icon: Sparkles,  label: "美容" },
+  { href: "/introduction", icon: Building2, label: "建設" },
+  { href: "/introduction", icon: Search,    label: "IT・通信" },
+  { href: "/introduction", icon: BookOpen,  label: "教育" },
+  { href: "/introduction", icon: Users,     label: "福祉" },
+  { href: "/introduction", icon: MapPin,    label: "不動産" },
 ];
 
 // ─── Static data ──────────────────────────────────────────────────────────────
@@ -725,19 +725,38 @@ export default function Home({ officeCount, interviewUrls }: { officeCount: numb
             </div>
 
             <div className="relative z-10 mt-8 rounded-2xl border border-[#d8e4f5] bg-white/95 p-4 shadow-[0_16px_44px_rgba(7,27,63,0.08)]">
-              <h2 className="mb-4 text-center text-xl font-extrabold text-[#071b3f]">相談内容から探す</h2>
-              <div className="grid grid-cols-2 gap-2">
-                {consultLinks.map(({ href, icon: Icon, label }) => (
-                  <Link
-                    key={href}
-                    href={href}
-                    className="inline-flex h-12 min-w-0 items-center rounded-full border border-[#d8e4f5] bg-white px-2 text-[11px] font-bold leading-none text-[#071b3f] transition-colors hover:border-[#1a50a8] hover:text-[#1a50a8]"
-                  >
-                    <Icon className="mr-1 h-3.5 w-3.5 shrink-0 text-[#1a50a8]" />
-                    <span className="min-w-0 flex-1 whitespace-nowrap">{label}</span>
-                    <ChevronRight className="ml-1 h-3.5 w-3.5 shrink-0 text-[#071b3f]" />
-                  </Link>
-                ))}
+              <h2 className="mb-4 text-center text-xl font-extrabold text-[#071b3f]">相談内容・業種から探す</h2>
+              <div>
+                <p className="mb-2 text-sm font-bold text-[#1a50a8]">相談内容</p>
+                <div className="grid grid-cols-2 gap-2">
+                  {consultLinks.map(({ href, icon: Icon, label }) => (
+                    <Link
+                      key={label}
+                      href={href}
+                      className="inline-flex h-12 min-w-0 items-center rounded-full border border-[#d8e4f5] bg-white px-2 text-[13px] font-bold leading-none text-[#071b3f] transition-colors hover:border-[#1a50a8] hover:text-[#1a50a8]"
+                    >
+                      <Icon className="mr-1 h-3.5 w-3.5 shrink-0 text-[#1a50a8]" />
+                      <span className="min-w-0 flex-1 whitespace-nowrap">{label}</span>
+                      <ChevronRight className="ml-1 h-3.5 w-3.5 shrink-0 text-[#071b3f]" />
+                    </Link>
+                  ))}
+                </div>
+              </div>
+              <div className="mt-4 border-t border-[#e2ebf8] pt-4">
+                <p className="mb-2 text-sm font-bold text-[#1a50a8]">業種</p>
+                <div className="grid grid-cols-2 gap-2">
+                  {industryLinks.map(({ href, icon: Icon, label }) => (
+                    <Link
+                      key={label}
+                      href={href}
+                      className="inline-flex h-12 min-w-0 items-center rounded-full border border-[#d8e4f5] bg-[#f8fbff] px-2 text-[13px] font-bold leading-none text-[#071b3f] transition-colors hover:border-[#1a50a8] hover:bg-[#f1f5ff] hover:text-[#1a50a8]"
+                    >
+                      <Icon className="mr-1 h-3.5 w-3.5 shrink-0 text-[#1a50a8]" />
+                      <span className="min-w-0 flex-1 whitespace-nowrap">{label}</span>
+                      <ChevronRight className="ml-1 h-3.5 w-3.5 shrink-0 text-[#071b3f]" />
+                    </Link>
+                  ))}
+                </div>
               </div>
               <Link
                 href="/introduction"
@@ -845,12 +864,13 @@ export default function Home({ officeCount, interviewUrls }: { officeCount: numb
                   <div className="flex flex-col gap-2 border-t border-[#e2ebf8] pt-3 sm:flex-row sm:items-center">
                     <p className="w-20 shrink-0 text-sm font-bold text-[#1a50a8]">業種</p>
                     <div className="grid w-full grid-cols-2 gap-3 lg:grid-cols-6">
-                      {industryLinks.map(({ href, label }) => (
+                      {industryLinks.map(({ href, icon: Icon, label }) => (
                         <Link
                           key={label}
                           href={href}
                           className="inline-flex h-11 min-w-0 items-center justify-center whitespace-nowrap rounded-full border border-[#d8e4f5] bg-[#f8fbff] px-2 text-xs font-bold text-[#071b3f] transition-colors hover:border-[#1a50a8] hover:bg-[#f1f5ff] hover:text-[#1a50a8] xl:px-4 xl:text-sm"
                         >
+                          <Icon className="mr-1.5 h-4 w-4 shrink-0 text-[#1a50a8] xl:mr-2" />
                           {label}
                         </Link>
                       ))}

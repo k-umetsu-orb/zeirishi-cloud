@@ -36,10 +36,18 @@ const ANNUAL_SALES_OPTIONS = [
   "年2,000万円以上",
 ];
 
+const CORPORATE_ANNUAL_SALES_OPTIONS = [
+  "年1,000万円未満",
+  "年1,000万円〜3,000万円未満",
+  "年3,000万円〜1億円未満",
+  "年1億円以上",
+];
+
 const EMPLOYEE_COUNT_OPTIONS = ["1人", "2〜9人", "10〜49人", "50〜99人", "100〜499人", "500〜999人", "1,000人〜"];
 
 function getDefaultBusinessType(clientType: string) {
   if (clientType === "法人") return "法人";
+  if (clientType === "法人設立・法人化予定") return "法人設立予定";
   if (clientType === "個人事業主・フリーランス") return "個人";
   return "";
 }
@@ -137,15 +145,22 @@ export default function IntroductionQuestionnaire() {
   const progressStep = step === 0 ? 0 : step <= 3 ? 1 : step === 4 ? 2 : step === 5 ? 3 : 4;
   const hasRequestDetail = Boolean(requestDetail.trim());
   const isCorporate = businessType === "法人";
-  const isBusinessTypeFixed = clientType === "法人" || clientType === "個人事業主・フリーランス";
+  const isCorporationPlanned = businessType === "法人設立予定";
+  const requiresIndustry = isCorporate || isCorporationPlanned;
+  const isBusinessTypeFixed = clientType === "法人" || clientType === "法人設立・法人化予定" || clientType === "個人事業主・フリーランス";
+  const annualSalesOptions = clientType === "法人" || clientType === "法人設立・法人化予定"
+    ? CORPORATE_ANNUAL_SALES_OPTIONS
+    : ANNUAL_SALES_OPTIONS;
   const hasRequiredProfile = Boolean(
     businessType
-    && (!isCorporate || (companyName.trim() && employeeCount && industry.trim())),
+    && (!isCorporate || (companyName.trim() && employeeCount && industry.trim()))
+    && (!isCorporationPlanned || industry.trim()),
   );
 
   function selectClientType(type: string) {
     setClientType(type);
     setBusinessType(getDefaultBusinessType(type));
+    setAnnualSales("");
     setStep(1);
   }
 
@@ -272,7 +287,7 @@ export default function IntroductionQuestionnaire() {
             <QuestionMessage>年間のおおよその売上額を教えてください</QuestionMessage>
             <div className="intro-questionnaire__card">
               <div className="intro-questionnaire__options intro-questionnaire__options--stack">
-                {ANNUAL_SALES_OPTIONS.map((label) => <ChoiceCard key={label} label={label} selected={annualSales === label} onClick={() => { setAnnualSales(label); setStep(5); }} />)}
+                {annualSalesOptions.map((label) => <ChoiceCard key={label} label={label} selected={annualSales === label} onClick={() => { setAnnualSales(label); setStep(5); }} />)}
               </div>
             </div>
           </section>}
@@ -293,10 +308,10 @@ export default function IntroductionQuestionnaire() {
             <div className="intro-questionnaire__card">
               <div className="intro-questionnaire__contact-fields">
                 <div className="intro-questionnaire__privacy-note"><LockKeyhole /> 入力情報は個人情報保護方針に基づき、許可なく第三者に共有されることはありません。</div>
-                <label>法人/個人<select value={businessType} onChange={(event) => setBusinessType(event.target.value)} disabled={isBusinessTypeFixed} required><option value="">選択してください</option><option value="法人">法人</option><option value="個人">個人</option></select></label>
+                <label>法人/個人<select value={businessType} onChange={(event) => setBusinessType(event.target.value)} disabled={isBusinessTypeFixed} required><option value="">選択してください</option><option value="法人">法人</option><option value="個人">個人</option><option value="法人設立予定">法人設立予定</option></select></label>
                 {isCorporate && <label>会社名<input value={companyName} onChange={(event) => setCompanyName(event.target.value)} placeholder="例：株式会社税理士クラウド" required /></label>}
                 {isCorporate && <label>従業員数<select value={employeeCount} onChange={(event) => setEmployeeCount(event.target.value)} required><option value="">選択してください</option>{EMPLOYEE_COUNT_OPTIONS.map((option) => <option key={option} value={option}>{option}</option>)}</select></label>}
-                {isCorporate && <label>業種<input value={industry} onChange={(event) => setIndustry(event.target.value)} placeholder="例：IT・Webサービス" required /></label>}
+                {requiresIndustry && <label>業種<input value={industry} onChange={(event) => setIndustry(event.target.value)} placeholder="例：IT・Webサービス" required /></label>}
                 <label>お名前<input value={name} onChange={(event) => setName(event.target.value)} placeholder="例：山田 太郎" required /></label>
                 <label>メールアドレス<input type="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="例：zeiri4@zeiri4.com" required /></label>
                 <label>電話番号<input type="tel" value={phone} onChange={(event) => setPhone(event.target.value)} placeholder="例：0312345678" required /></label>

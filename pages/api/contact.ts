@@ -91,6 +91,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   const isIntroductionStep = sourcePage === "/introduction/step";
   const isCorporate = businessType === "法人";
+  const isCorporationPlanned = businessType === "法人設立予定";
   const consultationCategory = getConsultationCategory(clientType, businessType, isIntroductionStep);
 
   if (
@@ -100,7 +101,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     !phone?.trim() ||
     !requestDetail?.trim() ||
     (isIntroductionStep && (!annualSales?.trim() || !businessType?.trim())) ||
-    (isIntroductionStep && isCorporate && (!companyName?.trim() || !employeeCount?.trim() || !industry?.trim()))
+    (isIntroductionStep && isCorporate && (!companyName?.trim() || !employeeCount?.trim() || !industry?.trim())) ||
+    (isIntroductionStep && isCorporationPlanned && !industry?.trim())
   ) {
     res.status(400).json({ ok: false, error: "必須項目が未入力です" });
     return;
@@ -118,6 +120,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         `【流入元ページ】${sourcePage || "不明"}`,
         `【ご相談者様の区分】${consultationCategory}`,
         ...(isIntroductionStep && isCorporate ? [`【会社名】${companyName}`, `【従業員数】${employeeCount}`, `【業種】${industry}`] : []),
+        ...(isIntroductionStep && isCorporationPlanned ? [`【業種】${industry}`] : []),
         `【お名前】${name}`,
         `【メールアドレス】${email}`,
         `【電話番号】${phone || "未入力"}`,
@@ -139,6 +142,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         "",
         `【ご相談者様の区分】${consultationCategory}`,
         ...(isIntroductionStep && isCorporate ? [`【会社名】${companyName}`, `【従業員数】${employeeCount}`, `【業種】${industry}`] : []),
+        ...(isIntroductionStep && isCorporationPlanned ? [`【業種】${industry}`] : []),
         `【お名前】${name}`,
         `【メールアドレス】${email}`,
         `【電話番号】${phone || "未入力"}`,
