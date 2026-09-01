@@ -93,6 +93,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const isCorporate = businessType === "法人";
   const isCorporationPlanned = businessType === "法人設立予定";
   const consultationCategory = getConsultationCategory(clientType, businessType, isIntroductionStep);
+  const financialAmountLabel = clientType === "相続税申告" ? "おおよその相続財産の総額" : "年間のおおよその売上額";
 
   if (
     !prefectureName ||
@@ -125,7 +126,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         `【メールアドレス】${email}`,
         `【電話番号】${phone || "未入力"}`,
         `【お探しのエリア】${area}`,
-        ...(isIntroductionStep ? [`【年間のおおよその売上額】${annualSales}`] : []),
+        ...(isIntroductionStep ? [`【${financialAmountLabel}】${annualSales}`] : []),
         `【依頼したい内容】${requestDetail}`,
       ].join("\n"),
     });
@@ -147,7 +148,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         `【メールアドレス】${email}`,
         `【電話番号】${phone || "未入力"}`,
         `【お探しのエリア】${area}`,
-        ...(isIntroductionStep ? [`【年間のおおよその売上額】${annualSales}`] : []),
+        ...(isIntroductionStep ? [`【${financialAmountLabel}】${annualSales}`] : []),
         `【依頼したい内容】${requestDetail}`,
         "",
         "内容を確認のうえ、担当のコーディネーターより1〜3営業日以内にご連絡いたします。",

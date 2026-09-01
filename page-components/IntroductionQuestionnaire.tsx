@@ -42,6 +42,16 @@ const CORPORATE_ANNUAL_SALES_OPTIONS = [
   "年1億円以上",
 ];
 
+const INHERITANCE_ASSET_TOTAL_OPTIONS = [
+  "3,600万円未満",
+  "3,600万円〜5,000万円未満",
+  "5,000万円〜8,000万円未満",
+  "8,000万円〜1億円未満",
+  "1億円〜2億円未満",
+  "2億円以上",
+  "わからない",
+];
+
 const EMPLOYEE_COUNT_OPTIONS = ["1人", "2〜9人", "10〜49人", "50〜99人", "100〜499人", "500〜999人", "1,000人〜"];
 
 function getDefaultBusinessType(clientType: string) {
@@ -147,7 +157,14 @@ export default function IntroductionQuestionnaire() {
   const isCorporationPlanned = businessType === "法人設立予定";
   const requiresIndustry = isCorporate || isCorporationPlanned;
   const isBusinessTypeFixed = clientType === "法人" || clientType === "法人設立・法人化予定" || clientType === "個人事業主・フリーランス";
-  const annualSalesOptions = clientType === "法人" || clientType === "法人設立・法人化予定"
+  const isInheritanceTax = clientType === "相続税申告";
+  const financialAmountQuestion = isInheritanceTax ? "おおよその相続財産の総額を教えてください" : "年間のおおよその売上額を教えてください";
+  const requestDetailPlaceholder = isInheritanceTax
+    ? "例\n・相続税申告の手続き\n・相続財産の評価（不動産など）\n・二次相続を見据えた対策"
+    : "例\n・法人化とその後の顧問契約\n・初年度決算申告（IT関連業）\n・新規法人設立";
+  const annualSalesOptions = isInheritanceTax
+    ? INHERITANCE_ASSET_TOTAL_OPTIONS
+    : clientType === "法人" || clientType === "法人設立・法人化予定"
     ? CORPORATE_ANNUAL_SALES_OPTIONS
     : ANNUAL_SALES_OPTIONS;
   const hasRequiredProfile = Boolean(
@@ -283,7 +300,7 @@ export default function IntroductionQuestionnaire() {
           </section>}
 
           {step >= 4 && <section className="intro-questionnaire__question" data-question-step="4">
-            <QuestionMessage>年間のおおよその売上額を教えてください</QuestionMessage>
+            <QuestionMessage>{financialAmountQuestion}</QuestionMessage>
             <div className="intro-questionnaire__card">
               <div className="intro-questionnaire__options intro-questionnaire__options--stack">
                 {annualSalesOptions.map((label) => <ChoiceCard key={label} label={label} selected={annualSales === label} onClick={() => { setAnnualSales(label); setStep(5); }} />)}
@@ -296,7 +313,7 @@ export default function IntroductionQuestionnaire() {
             <div className="intro-questionnaire__card">
               <div className="intro-questionnaire__textarea-wrap">
                 <label htmlFor="requestDetail">依頼したい内容（任意）</label>
-                <textarea id="requestDetail" value={requestDetail} onChange={(event) => setRequestDetail(event.target.value)} rows={6} placeholder={"例\n・法人化とその後の顧問契約\n・初年度決算申告（IT関連業）\n・新規法人設立"} />
+                <textarea id="requestDetail" value={requestDetail} onChange={(event) => setRequestDetail(event.target.value)} rows={6} placeholder={requestDetailPlaceholder} />
               </div>
               {step === 5 && <div className="intro-questionnaire__actions"><button type="button" onClick={() => setStep(6)} className={`intro-questionnaire__back ${hasRequestDetail ? "" : "is-primary"}`}>スキップ</button><button type="button" disabled={!hasRequestDetail} onClick={next} className={`intro-questionnaire__next ${hasRequestDetail ? "" : "is-muted"}`}>次へ<ArrowRight /></button></div>}
             </div>
