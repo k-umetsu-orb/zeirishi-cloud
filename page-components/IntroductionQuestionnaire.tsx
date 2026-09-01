@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { ArrowRight, Building2, CheckCircle2, ClipboardList, FilePenLine, Landmark, LockKeyhole, MessageCircle, UserRound } from "lucide-react";
+import { ArrowRight, Building2, CheckCircle2, FilePenLine, Landmark, LockKeyhole, MessageCircle, UserRound } from "lucide-react";
 import GlobalFooter from "@/components/GlobalFooter";
 import { getAllPrefectures, getCitiesByPrefecture } from "@/lib/data";
 import logoIcon from "@/images/税アイコン.png";
@@ -15,7 +15,6 @@ const STARTERS = [
   { label: "法人設立・法人化予定", icon: FilePenLine },
   { label: "個人事業主・フリーランス", icon: UserRound },
   { label: "相続税申告", icon: Landmark },
-  { label: "確定申告・その他", icon: ClipboardList },
 ];
 
 const REGION_GROUPS = [
@@ -245,7 +244,7 @@ export default function IntroductionQuestionnaire() {
           {step >= 0 && <section className="intro-questionnaire__question" data-question-step="0">
             <QuestionMessage showAvatar={false}>まずはご相談者様について教えてください</QuestionMessage>
             <div className="intro-questionnaire__card">
-              <div className="intro-questionnaire__options intro-questionnaire__options--stack">
+              <div className="intro-questionnaire__options intro-questionnaire__options--stack intro-questionnaire__options--starters">
                 {STARTERS.map(({ label, icon }) => <ChoiceCard key={label} label={label} icon={icon} selected={clientType === label} onClick={() => selectClientType(label)} />)}
               </div>
             </div>
@@ -356,6 +355,7 @@ export default function IntroductionQuestionnaire() {
         .intro-questionnaire__heading p { margin: 0; color: #607996; font-size: .72rem; line-height: 1.65; }
         .intro-questionnaire__options { display: grid; gap: 10px; }
         .intro-questionnaire__options--two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .intro-questionnaire__options--starters .intro-questionnaire__choice { min-height: 58px; }
         .intro-questionnaire__choice { display: flex; min-height: 45px; align-items: center; justify-content: center; gap: 9px; border: 1.5px solid #70a5da; border-radius: 4px; background: #fff; padding: 9px 14px; color: #16579d; font-size: .83rem; font-weight: 800; text-align: center; transition: .18s ease; }
         .intro-questionnaire__choice:not(:disabled):hover, .intro-questionnaire__choice.is-selected { border-color: #0a70c1; background: #e9f4fd; box-shadow: inset 0 0 0 1px #0a70c1; }
         .intro-questionnaire__choice:disabled { cursor: default; opacity: 1; }

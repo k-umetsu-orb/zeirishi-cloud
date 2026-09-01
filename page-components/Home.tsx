@@ -5,7 +5,7 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { Search, ArrowRight, Users, Shield, Building2, MapPin, ChevronRight, ChevronDown, Mail, FileText, RefreshCw, BookOpen, Phone, Sparkles } from "lucide-react";
+import { Search, ArrowRight, Users, Shield, Building2, MapPin, ChevronRight, ChevronDown, Mail, FileText, BookOpen, Phone, Sparkles } from "lucide-react";
 import { useState } from "react";
 import { usePageTitle } from "@/lib/usePageTitle";
 import GlobalHeader from "@/components/GlobalHeader";
@@ -188,7 +188,6 @@ const MAP_CARD_REGIONS = [
 
 const consultLinks = [
   { href: "/introduction-01", icon: Search,    label: "税理士の見直し" },
-  { href: "/introduction-02", icon: RefreshCw, label: "確定申告" },
   { href: "/introduction-03", icon: FileText,  label: "相続税" },
   { href: "/introduction-04", icon: Shield,    label: "税務調査" },
   { href: "/introduction-05", icon: Building2, label: "事業承継" },

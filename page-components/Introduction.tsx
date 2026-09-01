@@ -155,7 +155,6 @@ const consultationStarters = [
   { label: "法人設立・法人化予定", icon: FilePenLine },
   { label: "個人事業主・フリーランス", icon: UserRound },
   { label: "相続税申告", icon: Landmark },
-  { label: "確定申告・その他", icon: ClipboardList },
 ];
 
 function ConsultationStartForm({ variant = "section" }: { variant?: "hero" | "section" }) {
