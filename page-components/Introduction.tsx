@@ -2147,9 +2147,8 @@ export default function Introduction({ content }: { content?: IntroductionPageCo
         .intro-flow-highlight { display: flex; align-items: center; gap: 28px; margin-top: 34px; border: 2px solid #1457c5; border-radius: 20px; background: #f8fbff; padding: 24px 50px; }
         .intro-flow-highlight > svg { width: 108px; height: 108px; flex: 0 0 auto; color: #0c54c7; }
         .intro-flow-highlight h3 { margin: 0; color: #0648b2; font-size: clamp(1.25rem, 2.3vw, 2rem); font-weight: 900; line-height: 1.4; }
-        .intro-flow-highlight__marker { background: none; }
+        .intro-flow-highlight__marker { background: linear-gradient(transparent 68%, #ffde31 68%); }
         .intro-flow-highlight__sp-break { display: none; }
-        .intro-flow-highlight h3::first-letter { text-decoration: underline 0.32em #ffde31; text-underline-offset: -0.14em; }
         .intro-flow-highlight p { margin: 12px 0 0; color: #1f3358; font-size: clamp(0.84rem, 1.25vw, 1.05rem); font-weight: 600; line-height: 1.65; }
         .intro-flow__cta { max-width: none; margin-top: 28px; }
 
@@ -2639,9 +2638,7 @@ export default function Introduction({ content }: { content?: IntroductionPageCo
           .intro-merit p { margin-top: 9px; color: #607087; font-size: 0.78rem; line-height: 1.58; }
           .intro-merit__sp-break { display: initial; }
 
-          .intro-flow-highlight__marker { background: linear-gradient(transparent 68%, #ffde31 68%); }
           .intro-flow-highlight__sp-break { display: block; }
-          .intro-flow-highlight h3::first-letter { text-decoration: none; }
 
           .intro-flow-highlight {
             align-items: center;
