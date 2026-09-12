@@ -52,6 +52,10 @@ const INHERITANCE_ASSET_TOTAL_OPTIONS = [
   "わからない",
 ];
 
+const LEGAL_HEIR_OPTIONS = ["1人", "2人", "3人", "4人", "5人以上", "わからない"];
+const INHERITANCE_ASSET_OPTIONS = ["預金・株式など金融資産", "土地・建物", "自動車", "生命保険", "不明な財産がある"];
+const INHERITANCE_STATUS_OPTIONS = ["発生（お亡くなりになっている）", "未発生（お亡くなりになっていない）", "わからない"];
+
 const EMPLOYEE_COUNT_OPTIONS = ["1人", "2〜9人", "10〜49人", "50〜99人", "100〜499人", "500〜999人", "1,000人〜"];
 
 function getDefaultBusinessType(clientType: string) {
@@ -85,6 +89,20 @@ function ChoiceCard({ label, selected, onClick, icon: Icon, disabled = false }: 
   );
 }
 
+function MultipleChoiceCard({ label, selected, onClick }: Omit<ChoiceCardProps, "icon" | "disabled">) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={`intro-questionnaire__choice intro-questionnaire__choice--multiple ${selected ? "is-selected" : ""}`}
+      aria-pressed={selected}
+    >
+      <span className="intro-questionnaire__choice-checkbox" aria-hidden="true" />
+      <span>{label}</span>
+    </button>
+  );
+}
+
 function CoordinatorAvatar({ decorative = false }: { decorative?: boolean }) {
   return (
     <div className="intro-questionnaire__assistant-icon" aria-hidden={decorative || undefined}>
@@ -111,6 +129,9 @@ export default function IntroductionQuestionnaireLp01() {
   const [prefecture, setPrefecture] = useState("");
   const [city, setCity] = useState("");
   const [annualSales, setAnnualSales] = useState("");
+  const [legalHeirCount, setLegalHeirCount] = useState("");
+  const [inheritanceAssets, setInheritanceAssets] = useState<string[]>([]);
+  const [inheritanceStatus, setInheritanceStatus] = useState("");
   const [requestDetail, setRequestDetail] = useState("");
   const [businessType, setBusinessType] = useState("");
   const [companyName, setCompanyName] = useState("");
@@ -151,13 +172,19 @@ export default function IntroductionQuestionnaireLp01() {
     () => allPrefectures.filter((item) => !region || REGION_GROUPS.find(({ label }) => label === region)?.prefectures.includes(item.slug)),
     [allPrefectures, region],
   );
-  const progressStep = step === 0 ? 0 : step <= 3 ? 1 : step === 4 ? 2 : step === 5 ? 3 : 4;
   const hasRequestDetail = Boolean(requestDetail.trim());
   const isCorporate = businessType === "法人";
   const isCorporationPlanned = businessType === "法人設立予定";
   const requiresIndustry = isCorporate || isCorporationPlanned;
   const isBusinessTypeFixed = clientType === "法人" || clientType === "法人設立・法人化予定" || clientType === "個人事業主・フリーランス";
   const isInheritanceTax = clientType === "相続税申告";
+  const legalHeirsStep = 4;
+  const inheritanceAssetsStep = 5;
+  const financialAmountStep = isInheritanceTax ? 6 : 4;
+  const inheritanceStatusStep = 7;
+  const requestDetailStep = isInheritanceTax ? 8 : 5;
+  const contactStep = isInheritanceTax ? 9 : 6;
+  const progressStep = step === 0 ? 0 : step <= 3 ? 1 : step < requestDetailStep ? 2 : step === requestDetailStep ? 3 : 4;
   const financialAmountQuestion = isInheritanceTax ? "おおよその相続財産の総額を教えてください" : "年間のおおよその売上額を教えてください";
   const requestDetailPlaceholder = isInheritanceTax
     ? "例\n・相続税申告の手続き\n・相続財産の評価（不動産など）\n・二次相続を見据えた対策"
@@ -177,12 +204,15 @@ export default function IntroductionQuestionnaireLp01() {
     setClientType(type);
     setBusinessType(getDefaultBusinessType(type));
     setAnnualSales("");
+    setLegalHeirCount("");
+    setInheritanceAssets([]);
+    setInheritanceStatus("");
     setStep(1);
   }
 
   function next() {
     if (!canContinue) return;
-    if (step < 6) {
+    if (step < contactStep) {
       setStep((current) => current + 1);
       return;
     }
@@ -204,6 +234,9 @@ export default function IntroductionQuestionnaireLp01() {
           prefectureName: selectedPrefecture?.name || (prefecture === "overseas" ? "海外" : "未選択"),
           cityName: cities.find((item) => item.slug === city)?.name || "",
           annualSales,
+          legalHeirCount,
+          inheritanceAssets,
+          inheritanceStatus,
           businessType,
           companyName: companyName.trim(),
           employeeCount,
@@ -225,15 +258,27 @@ export default function IntroductionQuestionnaireLp01() {
     }
   }
 
-  const canContinue = [
-    Boolean(clientType),
-    Boolean(region),
-    Boolean(prefecture),
-    true,
-    Boolean(annualSales),
-    true,
-    Boolean(hasRequiredProfile && name.trim() && email.trim() && phone.trim() && agreed),
-  ][step];
+  const canContinue = step === 0
+    ? Boolean(clientType)
+    : step === 1
+    ? Boolean(region)
+    : step === 2
+    ? Boolean(prefecture)
+    : step === 3
+    ? true
+    : isInheritanceTax && step === legalHeirsStep
+    ? Boolean(legalHeirCount)
+    : isInheritanceTax && step === inheritanceAssetsStep
+    ? inheritanceAssets.length > 0
+    : step === financialAmountStep
+    ? Boolean(annualSales)
+    : isInheritanceTax && step === inheritanceStatusStep
+    ? Boolean(inheritanceStatus)
+    : step === requestDetailStep
+    ? true
+    : step === contactStep
+    ? Boolean(hasRequiredProfile && name.trim() && email.trim() && phone.trim() && agreed)
+    : false;
 
   return (
     <div className="min-h-screen bg-[#e5f4fd] text-[#153e79]">
@@ -299,27 +344,55 @@ export default function IntroductionQuestionnaireLp01() {
             </div>
           </section>}
 
-          {step >= 4 && <section className="intro-questionnaire__question" data-question-step="4">
-            <QuestionMessage>{financialAmountQuestion}</QuestionMessage>
+          {isInheritanceTax && step >= legalHeirsStep && <section className="intro-questionnaire__question" data-question-step={legalHeirsStep}>
+            <QuestionMessage>法定相続人は何人いますか <small>1つだけ選択</small></QuestionMessage>
             <div className="intro-questionnaire__card">
-              <div className="intro-questionnaire__options intro-questionnaire__options--stack">
-                {annualSalesOptions.map((label) => <ChoiceCard key={label} label={label} selected={annualSales === label} onClick={() => { setAnnualSales(label); setStep(5); }} />)}
+              <div className="intro-questionnaire__options intro-questionnaire__options--two">
+                {LEGAL_HEIR_OPTIONS.map((label) => <ChoiceCard key={label} label={label} selected={legalHeirCount === label} onClick={() => { setLegalHeirCount(label); setStep(inheritanceAssetsStep); }} />)}
               </div>
             </div>
           </section>}
 
-          {step >= 5 && <section className="intro-questionnaire__question" data-question-step="5">
+          {isInheritanceTax && step >= inheritanceAssetsStep && <section className="intro-questionnaire__question" data-question-step={inheritanceAssetsStep}>
+            <QuestionMessage>該当する相続財産をお選びください <small>複数選択可</small></QuestionMessage>
+            <div className="intro-questionnaire__card">
+              <div className="intro-questionnaire__options intro-questionnaire__options--stack">
+                {INHERITANCE_ASSET_OPTIONS.map((label) => <MultipleChoiceCard key={label} label={label} selected={inheritanceAssets.includes(label)} onClick={() => setInheritanceAssets((current) => current.includes(label) ? current.filter((item) => item !== label) : [...current, label])} />)}
+              </div>
+              {step === inheritanceAssetsStep && <div className="intro-questionnaire__actions"><span /><button type="button" disabled={!canContinue} onClick={next} className="intro-questionnaire__next">次へ<ArrowRight /></button></div>}
+            </div>
+          </section>}
+
+          {step >= financialAmountStep && <section className="intro-questionnaire__question" data-question-step={financialAmountStep}>
+            <QuestionMessage>{financialAmountQuestion}</QuestionMessage>
+            <div className="intro-questionnaire__card">
+              <div className="intro-questionnaire__options intro-questionnaire__options--stack">
+                {annualSalesOptions.map((label) => <ChoiceCard key={label} label={label} selected={annualSales === label} onClick={() => { setAnnualSales(label); setStep(isInheritanceTax ? inheritanceStatusStep : requestDetailStep); }} />)}
+              </div>
+            </div>
+          </section>}
+
+          {isInheritanceTax && step >= inheritanceStatusStep && <section className="intro-questionnaire__question" data-question-step={inheritanceStatusStep}>
+            <QuestionMessage>相続が発生しているか、現状を教えて下さい</QuestionMessage>
+            <div className="intro-questionnaire__card">
+              <div className="intro-questionnaire__options intro-questionnaire__options--stack">
+                {INHERITANCE_STATUS_OPTIONS.map((label) => <ChoiceCard key={label} label={label} selected={inheritanceStatus === label} onClick={() => { setInheritanceStatus(label); setStep(requestDetailStep); }} />)}
+              </div>
+            </div>
+          </section>}
+
+          {step >= requestDetailStep && <section className="intro-questionnaire__question" data-question-step={requestDetailStep}>
             <QuestionMessage>税理士に依頼したい内容を教えてください <small>任意</small></QuestionMessage>
             <div className="intro-questionnaire__card">
               <div className="intro-questionnaire__textarea-wrap">
                 <label htmlFor="requestDetail">依頼したい内容（任意）</label>
                 <textarea id="requestDetail" value={requestDetail} onChange={(event) => setRequestDetail(event.target.value)} rows={6} placeholder={requestDetailPlaceholder} />
               </div>
-              {step === 5 && <div className="intro-questionnaire__actions"><button type="button" onClick={() => setStep(6)} className={`intro-questionnaire__back ${hasRequestDetail ? "" : "is-primary"}`}>スキップ</button><button type="button" disabled={!hasRequestDetail} onClick={next} className={`intro-questionnaire__next ${hasRequestDetail ? "" : "is-muted"}`}>次へ<ArrowRight /></button></div>}
+              {step === requestDetailStep && <div className="intro-questionnaire__actions"><button type="button" onClick={() => setStep(contactStep)} className={`intro-questionnaire__back ${hasRequestDetail ? "" : "is-primary"}`}>スキップ</button><button type="button" disabled={!hasRequestDetail} onClick={next} className={`intro-questionnaire__next ${hasRequestDetail ? "" : "is-muted"}`}>次へ<ArrowRight /></button></div>}
             </div>
           </section>}
 
-          {step >= 6 && <section className="intro-questionnaire__question" data-question-step="6">
+          {step >= contactStep && <section className="intro-questionnaire__question" data-question-step={contactStep}>
             <QuestionMessage>最後に、税理士情報を受け取るための連絡先情報を教えてください</QuestionMessage>
             <div className="intro-questionnaire__card">
               <div className="intro-questionnaire__contact-fields">
@@ -378,6 +451,11 @@ export default function IntroductionQuestionnaireLp01() {
         .intro-questionnaire__choice:disabled { cursor: default; opacity: 1; }
         .intro-questionnaire__choice > svg { width: 19px; height: 19px; flex: 0 0 auto; }
         .intro-questionnaire__choice > svg:last-child { color: #0a70c1; }
+        .intro-questionnaire__choice--multiple { display: grid; grid-template-columns: 20px 1fr 20px; justify-items: center; }
+        .intro-questionnaire__choice--multiple > span:last-child { grid-column: 2; }
+        .intro-questionnaire__choice-checkbox { grid-column: 1; width: 18px; height: 18px; border: 1.5px solid #6b8eb2; border-radius: 3px; background: #fff; }
+        .intro-questionnaire__choice--multiple.is-selected .intro-questionnaire__choice-checkbox { display: grid; place-items: center; border-color: #0a70c1; background: #0a70c1; color: #fff; }
+        .intro-questionnaire__choice--multiple.is-selected .intro-questionnaire__choice-checkbox::after { content: "✓"; font-size: .78rem; line-height: 1; }
         .intro-questionnaire__select-wrap, .intro-questionnaire__textarea-wrap { display: grid; gap: 8px; }
         .intro-questionnaire__select-wrap label, .intro-questionnaire__textarea-wrap label, .intro-questionnaire__contact-fields > label { color: #1b5698; font-size: .76rem; font-weight: 800; }
         .intro-questionnaire__select-wrap select, .intro-questionnaire__textarea-wrap textarea, .intro-questionnaire__contact-fields input:not([type=checkbox]), .intro-questionnaire__contact-fields select { width: 100%; border: 1px solid #82b2e2; border-radius: 4px; background: #fff; padding: 12px; color: #153e79; font: inherit; font-size: .86rem; outline: none; }

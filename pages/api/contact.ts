@@ -14,6 +14,9 @@ type ContactPayload = {
   prefectureName?: string;
   cityName?: string;
   annualSales?: string;
+  legalHeirCount?: string;
+  inheritanceAssets?: string[];
+  inheritanceStatus?: string;
   businessType?: string;
   companyName?: string;
   employeeCount?: string;
@@ -79,6 +82,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     prefectureName,
     cityName,
     annualSales,
+    legalHeirCount,
+    inheritanceAssets,
+    inheritanceStatus,
     businessType,
     companyName,
     employeeCount,
@@ -89,11 +95,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     requestDetail,
   } = req.body as ContactPayload;
 
-  const isIntroductionStep = sourcePage === "/introduction/step";
+  const isIntroductionStep = sourcePage === "/introduction/step" || sourcePage === "/introduction-lp01/step";
+  const isInheritanceTax = clientType === "相続税申告";
   const isCorporate = businessType === "法人";
   const isCorporationPlanned = businessType === "法人設立予定";
   const consultationCategory = getConsultationCategory(clientType, businessType, isIntroductionStep);
   const financialAmountLabel = clientType === "相続税申告" ? "おおよその相続財産の総額" : "年間のおおよその売上額";
+  const inheritanceAssetText = inheritanceAssets?.join("、") || "未入力";
 
   if (
     !prefectureName ||
@@ -102,6 +110,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     !phone?.trim() ||
     !requestDetail?.trim() ||
     (isIntroductionStep && (!annualSales?.trim() || !businessType?.trim())) ||
+    (isIntroductionStep && isInheritanceTax && (!legalHeirCount?.trim() || !inheritanceAssets?.length || !inheritanceStatus?.trim())) ||
     (isIntroductionStep && isCorporate && (!companyName?.trim() || !employeeCount?.trim() || !industry?.trim())) ||
     (isIntroductionStep && isCorporationPlanned && !industry?.trim())
   ) {
@@ -126,7 +135,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         `【メールアドレス】${email}`,
         `【電話番号】${phone || "未入力"}`,
         `【お探しのエリア】${area}`,
+        ...(isIntroductionStep && isInheritanceTax ? [`【法定相続人】${legalHeirCount}`, `【相続財産】${inheritanceAssetText}`] : []),
         ...(isIntroductionStep ? [`【${financialAmountLabel}】${annualSales}`] : []),
+        ...(isIntroductionStep && isInheritanceTax ? [`【相続の発生状況】${inheritanceStatus}`] : []),
         `【依頼したい内容】${requestDetail}`,
       ].join("\n"),
     });
@@ -148,7 +159,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         `【メールアドレス】${email}`,
         `【電話番号】${phone || "未入力"}`,
         `【お探しのエリア】${area}`,
+        ...(isIntroductionStep && isInheritanceTax ? [`【法定相続人】${legalHeirCount}`, `【相続財産】${inheritanceAssetText}`] : []),
         ...(isIntroductionStep ? [`【${financialAmountLabel}】${annualSales}`] : []),
+        ...(isIntroductionStep && isInheritanceTax ? [`【相続の発生状況】${inheritanceStatus}`] : []),
         `【依頼したい内容】${requestDetail}`,
         "",
         "内容を確認のうえ、担当のコーディネーターより1〜3営業日以内にご連絡いたします。",
