@@ -217,6 +217,7 @@ export default function IntroductionQuestionnaire() {
 
       if (!response.ok) throw new Error("送信に失敗しました");
       window.oaiq?.("measure", "lead_created", { type: "customer_action" });
+      sessionStorage.setItem("cv_lead_pending", "1");
       await router.push("/introduction/thanks");
     } catch {
       setSubmitError("送信に失敗しました。時間をおいてもう一度お試しください。");

@@ -414,6 +414,7 @@ function IntroductionForm() {
       });
       if (!res.ok) throw new Error();
       window.oaiq?.("measure", "lead_created", { type: "customer_action" });
+      sessionStorage.setItem("cv_lead_pending", "1");
       router.push("/introduction/thanks");
     } catch {
       setSubmitError("送信に失敗しました。時間をおいて再度お試しください。");

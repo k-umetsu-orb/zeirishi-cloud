@@ -35,6 +35,17 @@ export default function App({ Component, pageProps }: AppProps) {
     };
   }, [router.events]);
 
+  useEffect(() => {
+    const handleRouteChangeComplete = () => {
+      window.fbq?.("track", "PageView");
+    };
+
+    router.events.on("routeChangeComplete", handleRouteChangeComplete);
+    return () => {
+      router.events.off("routeChangeComplete", handleRouteChangeComplete);
+    };
+  }, [router.events]);
+
   return (
     <>
       <Head>

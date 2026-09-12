@@ -20,6 +20,7 @@ declare module "*.svg" {
 
 interface Window {
   gtag?: (...args: unknown[]) => void;
+  fbq?: ((...args: unknown[]) => void) & { callMethod?: (...args: unknown[]) => void; queue?: unknown[] };
   dataLayer?: unknown[];
   oaiq?: (...args: unknown[]) => void;
 }
