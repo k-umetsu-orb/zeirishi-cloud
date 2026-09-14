@@ -6,14 +6,25 @@ const FROM_EMAIL = process.env.RESEND_FROM || "税理士クラウド <no-reply@o
 
 type PartnerContactPayload = {
   officeName?: string;
+  employeeCount?: string;
+  taxAccountantCount?: string;
   name?: string;
   email?: string;
   phone?: string;
   message?: string;
+  services?: string[];
+  servicesOther?: string;
+  concerns?: string[];
+  concernsOther?: string;
 };
 
 function escapeHtml(value: string) {
   return value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\"/g, "&quot;").replace(/'/g, "&#039;");
+}
+
+function formatChecklist(values: string[] | undefined, otherText: string | undefined) {
+  if (!values || values.length === 0) return "未選択";
+  return values.map((value) => (value === "その他" && otherText?.trim() ? `その他（${otherText.trim()}）` : value)).join("、");
 }
 
 async function sendEmail(to: string | string[], subject: string, text: string, replyTo?: string) {
@@ -33,8 +44,8 @@ async function sendEmail(to: string | string[], subject: string, text: string, r
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== "POST") return res.status(405).end();
 
-  const { officeName, name, email, phone, message } = req.body as PartnerContactPayload;
-  if (!officeName?.trim() || !name?.trim() || !email?.trim() || !phone?.trim()) {
+  const { officeName, employeeCount, taxAccountantCount, name, email, phone, message, services, servicesOther, concerns, concernsOther } = req.body as PartnerContactPayload;
+  if (!officeName?.trim() || !employeeCount?.trim() || !taxAccountantCount?.trim() || !name?.trim() || !email?.trim() || !phone?.trim()) {
     return res.status(400).json({ ok: false, error: "必須項目が未入力です" });
   }
 
@@ -43,9 +54,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       "【お問い合わせ種別】税理士・会計事務所の掲載希望",
       "【流入元ページ】/partner",
       `【事務所名】${officeName.trim()}`,
-      `【ご担当者名】${name.trim()}`,
+      `【従業員数】${employeeCount.trim()}`,
+      `【所属税理士数】${taxAccountantCount.trim()}`,
+      `【お名前】${name.trim()}`,
       `【メールアドレス】${email.trim()}`,
       `【電話番号】${phone.trim()}`,
+      `【ご利用中のサービス】${formatChecklist(services, servicesOther)}`,
+      `【現在のお悩みごと】${formatChecklist(concerns, concernsOther)}`,
       `【お問い合わせ内容】${message?.trim() || "未入力"}`,
     ].join("\n");
 
@@ -59,9 +74,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       "以下の内容で受け付けました。",
       "",
       `【事務所名】${officeName.trim()}`,
-      `【ご担当者名】${name.trim()}`,
+      `【従業員数】${employeeCount.trim()}`,
+      `【所属税理士数】${taxAccountantCount.trim()}`,
+      `【お名前】${name.trim()}`,
       `【メールアドレス】${email.trim()}`,
       `【電話番号】${phone.trim()}`,
+      `【ご利用中のサービス】${formatChecklist(services, servicesOther)}`,
+      `【現在のお悩みごと】${formatChecklist(concerns, concernsOther)}`,
       `【お問い合わせ内容】${message?.trim() || "未入力"}`,
       "",
       "※本メールは自動送信です。",
