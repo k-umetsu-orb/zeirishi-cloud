@@ -132,6 +132,7 @@ export default function IntroductionQuestionnaireLp01() {
   const [legalHeirCount, setLegalHeirCount] = useState("");
   const [inheritanceAssets, setInheritanceAssets] = useState<string[]>([]);
   const [inheritanceStatus, setInheritanceStatus] = useState("");
+  const [advisoryContractPreference, setAdvisoryContractPreference] = useState("");
   const [requestDetail, setRequestDetail] = useState("");
   const [businessType, setBusinessType] = useState("");
   const [companyName, setCompanyName] = useState("");
@@ -174,6 +175,7 @@ export default function IntroductionQuestionnaireLp01() {
   );
   const hasRequestDetail = Boolean(requestDetail.trim());
   const isCorporate = businessType === "法人";
+  const isIndividual = businessType === "個人";
   const isCorporationPlanned = businessType === "法人設立予定";
   const requiresIndustry = isCorporate || isCorporationPlanned;
   const isBusinessTypeFixed = clientType === "法人" || clientType === "法人設立・法人化予定" || clientType === "個人事業主・フリーランス";
@@ -197,7 +199,8 @@ export default function IntroductionQuestionnaireLp01() {
   const hasRequiredProfile = Boolean(
     businessType
     && (!isCorporate || (companyName.trim() && employeeCount && industry.trim()))
-    && (!isCorporationPlanned || industry.trim()),
+    && (!isCorporationPlanned || industry.trim())
+    && (!isIndividual || advisoryContractPreference),
   );
 
   function selectClientType(type: string) {
@@ -237,6 +240,7 @@ export default function IntroductionQuestionnaireLp01() {
           legalHeirCount,
           inheritanceAssets,
           inheritanceStatus,
+          advisoryContractPreference,
           businessType,
           companyName: companyName.trim(),
           employeeCount,
@@ -404,10 +408,11 @@ export default function IntroductionQuestionnaireLp01() {
                 <label>お名前<input value={name} onChange={(event) => setName(event.target.value)} placeholder="例：山田 太郎" required /></label>
                 <label>メールアドレス<input type="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="例：zeiri4@zeiri4.com" required /></label>
                 <label>電話番号<input type="tel" value={phone} onChange={(event) => setPhone(event.target.value)} placeholder="例：0312345678" required /></label>
+                {isIndividual && <label>税理士との顧問契約を希望する<select value={advisoryContractPreference} onChange={(event) => setAdvisoryContractPreference(event.target.value)} required><option value="">選択してください</option><option value="はい">はい</option><option value="いいえ">いいえ</option><option value="未定">未定</option></select></label>}
                 <label className="intro-questionnaire__agreement"><input type="checkbox" checked={agreed} onChange={(event) => setAgreed(event.target.checked)} /><span><a href="https://orb-inc.co.jp/privacy-policy" target="_blank" rel="noreferrer">プライバシーポリシー</a>に同意する</span></label>
               </div>
               {submitError && <p className="intro-questionnaire__error">{submitError}</p>}
-              <div className="intro-questionnaire__actions"><span /><button type="button" disabled={!canContinue || isSubmitting} onClick={next} className="intro-questionnaire__next">{isSubmitting ? "送信中..." : "送信する"}<ArrowRight /></button></div>
+              <div className="intro-questionnaire__actions"><span /><button type="button" disabled={!canContinue || isSubmitting} onClick={next} className="intro-questionnaire__next">{isSubmitting ? "送信中..." : "税理士の紹介を依頼する"}<ArrowRight /></button></div>
             </div>
           </section>}
 

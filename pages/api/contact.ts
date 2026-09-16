@@ -17,6 +17,7 @@ type ContactPayload = {
   legalHeirCount?: string;
   inheritanceAssets?: string[];
   inheritanceStatus?: string;
+  advisoryContractPreference?: string;
   businessType?: string;
   companyName?: string;
   employeeCount?: string;
@@ -85,6 +86,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     legalHeirCount,
     inheritanceAssets,
     inheritanceStatus,
+    advisoryContractPreference,
     businessType,
     companyName,
     employeeCount,
@@ -98,6 +100,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const isIntroductionStep = sourcePage === "/introduction/step" || sourcePage === "/introduction-lp01/step";
   const isInheritanceTax = clientType === "相続税申告";
   const isCorporate = businessType === "法人";
+  const isIndividual = businessType === "個人";
   const isCorporationPlanned = businessType === "法人設立予定";
   const consultationCategory = getConsultationCategory(clientType, businessType, isIntroductionStep);
   const financialAmountLabel = clientType === "相続税申告" ? "おおよその相続財産の総額" : "年間のおおよその売上額";
@@ -111,6 +114,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     !requestDetail?.trim() ||
     (isIntroductionStep && (!annualSales?.trim() || !businessType?.trim())) ||
     (isIntroductionStep && isInheritanceTax && (!legalHeirCount?.trim() || !inheritanceAssets?.length || !inheritanceStatus?.trim())) ||
+    (isIntroductionStep && isIndividual && !advisoryContractPreference?.trim()) ||
     (isIntroductionStep && isCorporate && (!companyName?.trim() || !employeeCount?.trim() || !industry?.trim())) ||
     (isIntroductionStep && isCorporationPlanned && !industry?.trim())
   ) {
@@ -134,6 +138,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         `【お名前】${name}`,
         `【メールアドレス】${email}`,
         `【電話番号】${phone || "未入力"}`,
+        ...(isIntroductionStep && isIndividual ? [`【税理士との顧問契約を希望する】${advisoryContractPreference}`] : []),
         `【お探しのエリア】${area}`,
         ...(isIntroductionStep && isInheritanceTax ? [`【法定相続人】${legalHeirCount}`, `【相続財産】${inheritanceAssetText}`] : []),
         ...(isIntroductionStep ? [`【${financialAmountLabel}】${annualSales}`] : []),
@@ -158,6 +163,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         `【お名前】${name}`,
         `【メールアドレス】${email}`,
         `【電話番号】${phone || "未入力"}`,
+        ...(isIntroductionStep && isIndividual ? [`【税理士との顧問契約を希望する】${advisoryContractPreference}`] : []),
         `【お探しのエリア】${area}`,
         ...(isIntroductionStep && isInheritanceTax ? [`【法定相続人】${legalHeirCount}`, `【相続財産】${inheritanceAssetText}`] : []),
         ...(isIntroductionStep ? [`【${financialAmountLabel}】${annualSales}`] : []),

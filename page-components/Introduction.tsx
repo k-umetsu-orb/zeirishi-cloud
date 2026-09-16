@@ -87,6 +87,15 @@ function HeroFeatureChips({ className = "" }: { className?: string }) {
   );
 }
 
+function PhoneCtaNotice() {
+  return (
+    <div className="testlp-phone-cta__notice">
+      <p className="testlp-phone-cta__notice--full">※こちらのお電話から税理士へ直接相談はできませんのでご注意ください。</p>
+      <p className="testlp-phone-cta__notice--sticky-sp">※こちらのお電話から税理士へ相談はできません。</p>
+    </div>
+  );
+}
+
 function HeroPhoneCta() {
   return (
     <a
@@ -122,6 +131,7 @@ function HeroPhoneCta() {
           <span>受付時間：9時〜22時（平日）</span>
         </p>
       </div>
+      <PhoneCtaNotice />
     </a>
   );
 }
@@ -1065,6 +1075,7 @@ export default function Introduction({ content }: { content?: IntroductionPageCo
         }
 
         .testlp-phone-cta {
+          position: relative;
           border: 2px solid #1a50a8;
           background: rgba(255, 255, 255, 0.97);
           padding: 2.5vw 3vw;
@@ -1098,6 +1109,7 @@ export default function Introduction({ content }: { content?: IntroductionPageCo
         .testlp-phone-cta__body {
           min-width: 0;
           text-align: center;
+          transform: translateY(-3px);
         }
 
         .testlp-phone-cta__tap {
@@ -1170,6 +1182,24 @@ export default function Introduction({ content }: { content?: IntroductionPageCo
           flex: 0 0 auto;
           color: #1a50a8;
         }
+
+        .testlp-phone-cta__notice {
+          /* 本体の高さ・中央配置に影響させず、下端の余白内に収める。 */
+          position: absolute;
+          right: 6px;
+          bottom: 4px;
+          left: 6px;
+          margin: 0;
+          color: #58708f;
+          font-size: clamp(8px, 0.72vw, 10px);
+          font-weight: 700;
+          line-height: 1.2;
+          text-align: center;
+          overflow-wrap: anywhere;
+        }
+
+        .testlp-phone-cta__notice p { margin: 0; }
+        .testlp-phone-cta__notice--sticky-sp { display: none; }
 
         .testlp-form-cta {
           padding: 2.5vw 3vw;
@@ -3124,6 +3154,19 @@ export default function Introduction({ content }: { content?: IntroductionPageCo
           .intro-sticky-cta__inner .testlp-form-cta__arrow { width: 22px; height: 22px; }
           .intro-sticky-cta__inner .testlp-form-cta__arrow-svg { width: 13px; height: 13px; }
           .intro-sticky-cta__inner .testlp-phone-cta__hours { display: none; }
+          .intro-concerns__cta:not(.intro-sticky-cta__inner) .testlp-phone-cta__notice {
+            bottom: 12px;
+          }
+          .intro-sticky-cta__inner .testlp-phone-cta__notice--full { display: none; }
+          .intro-sticky-cta__inner .testlp-phone-cta__notice--sticky-sp { display: block; }
+          .intro-sticky-cta__inner .testlp-phone-cta__notice {
+            right: 4px;
+            bottom: 3px;
+            left: 4px;
+            font-size: clamp(5.5px, 1.75vw, 7px);
+            line-height: 1.15;
+            white-space: nowrap;
+          }
           .intro-sticky-cta__inner .testlp-phone-cta__main {
             grid-template-columns: 28px minmax(0, 1fr);
             align-items: center;
