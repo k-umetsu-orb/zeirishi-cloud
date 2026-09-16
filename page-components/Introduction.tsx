@@ -91,7 +91,7 @@ function PhoneCtaNotice() {
   return (
     <div className="testlp-phone-cta__notice">
       <p className="testlp-phone-cta__notice--full">※こちらのお電話から税理士へ直接相談はできませんのでご注意ください。</p>
-      <p className="testlp-phone-cta__notice--sticky-sp">※こちらのお電話から税理士へ相談はできません。</p>
+      <p className="testlp-phone-cta__notice--sticky-sp">※こちらのお電話から税理士へ直接相談はできません。</p>
     </div>
   );
 }
@@ -3161,9 +3161,9 @@ export default function Introduction({ content }: { content?: IntroductionPageCo
           .intro-sticky-cta__inner .testlp-phone-cta__notice--sticky-sp { display: block; }
           .intro-sticky-cta__inner .testlp-phone-cta__notice {
             right: 4px;
-            bottom: 3px;
+            bottom: 7px;
             left: 4px;
-            font-size: clamp(5.5px, 1.75vw, 7px);
+            font-size: clamp(5px, 1.65vw, 6.5px);
             line-height: 1.15;
             white-space: nowrap;
           }
