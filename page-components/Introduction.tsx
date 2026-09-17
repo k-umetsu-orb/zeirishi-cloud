@@ -90,7 +90,7 @@ function HeroFeatureChips({ className = "" }: { className?: string }) {
 function PhoneCtaNotice() {
   return (
     <div className="testlp-phone-cta__notice">
-      <p className="testlp-phone-cta__notice--full">※こちらのお電話から税理士へ直接相談はできませんのでご注意ください。</p>
+      <p className="testlp-phone-cta__notice--full">※こちらのお電話から税理士へ直接相談はできないためご注意ください。</p>
       <p className="testlp-phone-cta__notice--sticky-sp">※こちらのお電話から税理士へ直接相談はできません。</p>
     </div>
   );
