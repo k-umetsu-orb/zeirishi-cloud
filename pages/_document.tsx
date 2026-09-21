@@ -2,7 +2,7 @@ import { Html, Head, Main, NextScript } from "next/document";
 import Script from "next/script";
 
 const OAIQ_PIXEL_ID = "5S4y7hFbybamPw8uW2p91K";
-const META_PIXEL_ID = "1433223742075932";
+const META_PIXEL_ID = "2008100979887367";
 
 export default function Document() {
   return (
