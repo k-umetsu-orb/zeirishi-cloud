@@ -3250,7 +3250,7 @@ export default function Introduction({ content, showDesktopSatisfaction = false 
         @media (min-width: 1024px) {
           .testlp-hero--desktop-satisfaction .testlp-hero__breadcrumb,
           .testlp-hero--desktop-satisfaction .testlp-hero__badge { display: none; }
-          .testlp-hero--desktop-satisfaction .testlp-hero__inner { padding-top: 16px; }
+          .testlp-hero--desktop-satisfaction .testlp-hero__inner { padding-top: 40px; }
           .testlp-hero--desktop-satisfaction .testlp-hero__copy { top: 0; }
           .testlp-hero--desktop-satisfaction .testlp-hero__desktop-satisfaction {
             display: block;
@@ -3260,7 +3260,7 @@ export default function Introduction({ content, showDesktopSatisfaction = false 
           .testlp-hero__desktop-satisfaction-image { display: block; width: 100%; height: auto; }
           .testlp-hero--desktop-satisfaction .testlp-hero__title { margin-top: -8px; }
           .testlp-hero--desktop-satisfaction .testlp-hero__start-panel {
-            top: 40px;
+            top: 64px;
             transform: none;
           }
         }
