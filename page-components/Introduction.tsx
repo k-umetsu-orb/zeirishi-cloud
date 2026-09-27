@@ -628,7 +628,10 @@ function IntroductionForm() {
 
 // ─── Page ──────────────────────────────────────────────────────────────────────
 
-export default function Introduction({ content }: { content?: IntroductionPageContent }) {
+export default function Introduction({ content, showDesktopSatisfaction = false }: {
+  content?: IntroductionPageContent;
+  showDesktopSatisfaction?: boolean;
+}) {
   usePageTitle(
     content?.documentTitle ?? "税理士・会計事務所の無料紹介サービス | 税理士クラウド",
     content?.documentDescription ?? "税理士・会計事務所をお探しながら税理士クラウドへご相談ください。税理士業界に特化した専門のコーディネーターがあなたにぴったりの税理士・会計事務所をご紹介します。",
@@ -640,7 +643,7 @@ export default function Introduction({ content }: { content?: IntroductionPageCo
       <main className="flex-1 introduction-main">
 
         {/* ── Hero ── */}
-      <section className="testlp-hero">
+      <section className={`testlp-hero${showDesktopSatisfaction ? " testlp-hero--desktop-satisfaction" : ""}`}>
           <div className="testlp-hero__wash" />
           <div className="testlp-hero__top-fade" />
           <div className="testlp-hero__ring testlp-hero__ring--top" />
@@ -662,6 +665,17 @@ export default function Introduction({ content }: { content?: IntroductionPageCo
           />
             <div className="testlp-hero__copy">
               <span className="testlp-hero__badge">完全無料・全国対応</span>
+
+              {showDesktopSatisfaction && (
+                <div className="testlp-hero__desktop-satisfaction">
+                  <Image
+                    src={customerSatisfactionImage}
+                    alt="税理士クラウドで税理士を紹介してもらったユーザーの顧客満足度98パーセント"
+                    sizes="(min-width: 1024px) 620px, 0px"
+                    className="testlp-hero__desktop-satisfaction-image"
+                  />
+                </div>
+              )}
 
               <div className="testlp-hero__mobile-only testlp-hero__mobile-satisfaction">
                 <Image
@@ -3229,6 +3243,27 @@ export default function Introduction({ content }: { content?: IntroductionPageCo
         }
 
         .testlp-hero__mobile-only { display: none; }
+
+        .testlp-hero__desktop-satisfaction { display: none; }
+
+        /* /introduction のPC専用。既存のSP要素・スタイルには適用しない。 */
+        @media (min-width: 1024px) {
+          .testlp-hero--desktop-satisfaction .testlp-hero__breadcrumb,
+          .testlp-hero--desktop-satisfaction .testlp-hero__badge { display: none; }
+          .testlp-hero--desktop-satisfaction .testlp-hero__inner { padding-top: 16px; }
+          .testlp-hero--desktop-satisfaction .testlp-hero__copy { top: 0; }
+          .testlp-hero--desktop-satisfaction .testlp-hero__desktop-satisfaction {
+            display: block;
+            width: min(94%, 620px);
+            margin-left: -15px;
+          }
+          .testlp-hero__desktop-satisfaction-image { display: block; width: 100%; height: auto; }
+          .testlp-hero--desktop-satisfaction .testlp-hero__title { margin-top: -8px; }
+          .testlp-hero--desktop-satisfaction .testlp-hero__start-panel {
+            top: 40px;
+            transform: none;
+          }
+        }
 
         @media (max-width: 767px) {
           .testlp-hero__inner { padding-top: 28px; }
