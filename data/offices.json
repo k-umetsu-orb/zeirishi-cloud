@@ -20565,14 +20565,14 @@
     "cityName": "福岡市",
     "ward": "minamiku",
     "wardName": "南区",
-    "address": "福岡県福岡市南区清水2-8-10第5幸田ビル201号",
+    "address": "福岡県福岡市南区若久1丁目17番10号YK.BLD2階",
     "nearestStations": [
       "takamiya",
-      "takeshita"
+      "oohashi"
     ],
     "nearestStationNames": [
-      "高宮駅から徒歩10分",
-      "竹下駅から徒歩11分"
+      "高宮駅から徒歩20分",
+      "大橋駅から徒歩20分"
     ],
     "industries": [
       "建設",

@@ -25,7 +25,7 @@ export default function ListingStickyCta() {
             <ArrowRight className="h-5 w-5 md:h-6 md:w-6" strokeWidth={2.6} />
           </Link>
 
-          <a href={`tel:${PHONE_NUMBER}`} aria-label={`電話で相談する ${PHONE_NUMBER}`} className="group grid min-w-0 grid-cols-[2rem_minmax(0,1fr)_1.25rem] items-center gap-1 rounded-[18px] bg-white px-3 py-2 text-[#0755b6] md:grid-cols-[3.5rem_minmax(0,1fr)_1.5rem] md:px-5">
+          <a href={`tel:${PHONE_NUMBER}`} aria-label={`電話で相談する ${PHONE_NUMBER}`} className="group relative grid min-w-0 grid-cols-[2rem_minmax(0,1fr)_1.25rem] items-center gap-1 rounded-[18px] bg-white px-3 py-2 text-[#0755b6] md:grid-cols-[3.5rem_minmax(0,1fr)_1.5rem] md:px-5">
             <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#e8f2ff] text-[#0769d6] md:h-14 md:w-14">
               <Phone className="h-4 w-4 md:h-7 md:w-7" fill="currentColor" strokeWidth={1.5} />
             </span>
@@ -34,6 +34,7 @@ export default function ListingStickyCta() {
               <span className="mt-1 block whitespace-nowrap text-[0.62rem] font-bold leading-tight tracking-tighter md:text-base">今すぐ紹介してもらう</span>
             </span>
             <ArrowRight className="col-start-3 h-5 w-5 md:h-6 md:w-6" strokeWidth={2.6} />
+            <span className="absolute inset-x-1 bottom-[5px] whitespace-nowrap text-center text-[clamp(5px,1.65vw,6.5px)] font-bold leading-none text-[#58708f] md:bottom-2 md:text-[0.62rem]">※こちらのお電話から税理士へ直接相談はできません。</span>
           </a>
         </div>
 
@@ -77,6 +78,7 @@ export default function ListingStickyCta() {
             </span>
             <span className="w-full -translate-y-[2px] whitespace-nowrap text-center text-[clamp(0.68rem,0.9vw,0.86rem)] font-bold tracking-tight">今すぐ紹介してもらう</span>
             <ArrowRight className="absolute right-4 top-1/2 h-6 w-6 -translate-y-1/2 transition-transform group-hover:translate-x-1" strokeWidth={2.5} />
+            <span className="absolute inset-x-3 bottom-2 whitespace-nowrap text-center text-[0.56rem] font-bold leading-none text-[#58708f]">※こちらのお電話から税理士へ直接相談はできないためご注意ください。</span>
           </a>
         </div>
       </aside>
