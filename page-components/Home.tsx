@@ -195,7 +195,7 @@ const consultLinks = [
 ];
 
 const industryLinks = [
-  { href: "/introduction", icon: Sparkles,  label: "美容" },
+  { href: "/introduction-beauty-salon", icon: Sparkles,  label: "美容" },
   { href: "/introduction", icon: Building2, label: "建設" },
   { href: "/introduction", icon: Search,    label: "IT・通信" },
   { href: "/introduction", icon: BookOpen,  label: "教育" },

@@ -4,7 +4,7 @@
  */
 import { useState } from "react";
 import { usePageTitle } from "@/lib/usePageTitle";
-import Image from "next/image";
+import Image, { type StaticImageData } from "next/image";
 import { useRouter } from "next/router";
 import { ArrowRight, Building2, CalendarCheck, ChevronDown, CircleCheck, FilePenLine, Landmark, MousePointerClick, Phone, MessageCircle, Cloud, FileText, MapPin, Search, Calculator, Briefcase, Handshake, ClipboardList, ClipboardCheck, JapaneseYen, Mail, UserRound, Users } from "lucide-react";
 import GlobalHeader from "@/components/GlobalHeader";
@@ -50,12 +50,36 @@ export type IntroductionConcern = {
   icon?: ConcernIcon;
 };
 
+export type IntroductionIndustrySection = {
+  heading: string;
+  lead: string;
+  benefits: Array<{
+    title: string;
+    body: string;
+  }>;
+  voicesHeading: string;
+  voices: Array<{
+    photo: StaticImageData;
+    photoAlt: string;
+    name: string;
+    quote: string;
+    before?: string[];
+    after?: string[];
+  }>;
+};
+
 export type IntroductionPageContent = {
+  pageTheme?: "beauty";
   heroHeadline?: string;
   heroHighlight?: string;
+  heroLead?: string[];
+  breadcrumbLabel?: string;
   concernsHeading?: string;
   concernsLead?: string;
   concerns?: IntroductionConcern[];
+  industrySection?: IntroductionIndustrySection;
+  faqItems?: Array<{ question: string; answer: string }>;
+  excludedConsultationStarters?: string[];
   documentTitle?: string;
   documentDescription?: string;
 };
@@ -167,9 +191,16 @@ const consultationStarters = [
   { label: "相続税申告", icon: Landmark },
 ];
 
-function ConsultationStartForm({ variant = "section" }: { variant?: "hero" | "section" }) {
+function ConsultationStartForm({
+  variant = "section",
+  excludedOptions = [],
+}: {
+  variant?: "hero" | "section";
+  excludedOptions?: string[];
+}) {
   const router = useRouter();
   const [selected, setSelected] = useState("");
+  const visibleConsultationStarters = consultationStarters.filter(({ label }) => !excludedOptions.includes(label));
 
   function proceed() {
     if (!selected) return;
@@ -177,7 +208,10 @@ function ConsultationStartForm({ variant = "section" }: { variant?: "hero" | "se
   }
 
   return (
-    <section className={`introduction-start-form introduction-start-form--${variant}`} aria-label="無料相談の開始フォーム">
+    <section
+      className={`introduction-start-form introduction-start-form--${variant}${visibleConsultationStarters.length === 3 ? " introduction-start-form--three-options" : ""}`}
+      aria-label="無料相談の開始フォーム"
+    >
       <div className="introduction-start-form__heading">
         <h2>
           {variant === "hero" ? <><span>まずはご相談者様について</span><span>教えてください</span></> : "まずはお気軽にお問い合わせください"}
@@ -187,7 +221,7 @@ function ConsultationStartForm({ variant = "section" }: { variant?: "hero" | "se
         </p>
       </div>
       <div className="introduction-start-form__choices">
-        {consultationStarters.map(({ label, icon: Icon }) => (
+        {visibleConsultationStarters.map(({ label, icon: Icon }) => (
           <button
             key={label}
             type="button"
@@ -290,6 +324,64 @@ function ConcernsSection({ content }: { content?: IntroductionPageContent }) {
         <div className="intro-concerns__cta">
           <HeroFormCta />
           <HeroPhoneCta />
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function IndustrySpecialtySection({ section }: { section: IntroductionIndustrySection }) {
+  const benefitIcons = [<FileText key="file" />, <UserRound key="user" />, <Landmark key="landmark" />];
+
+  return (
+    <section className="intro-industry-section">
+      <div className="container max-w-7xl intro-industry-section__inner">
+        <h2 className="intro-section-heading">{section.heading}</h2>
+        <p className="intro-section-lead">
+          {section.lead.split("|").map((part, index) => (
+            <span key={part}>{index > 0 && <br className="md:hidden" />}{part}</span>
+          ))}
+        </p>
+
+        <div className="intro-industry-benefits">
+          {section.benefits.map((benefit, index) => (
+            <article className="intro-industry-benefit" key={benefit.title}>
+              <div className="intro-industry-benefit__icon">{benefitIcons[index % benefitIcons.length]}</div>
+              <h3>{benefit.title}</h3>
+              <p>{benefit.body}</p>
+            </article>
+          ))}
+        </div>
+
+        <div className="intro-industry-voices">
+          <h3>{section.voicesHeading}</h3>
+          <div className="intro-industry-voices__grid">
+            {section.voices.map((voice) => (
+              <article className="intro-industry-voice" key={voice.name}>
+                <div className="intro-industry-voice__header">
+                  <div className="intro-industry-voice__photo">
+                    <Image src={voice.photo} alt={voice.photoAlt} fill sizes="(max-width: 767px) 88px, 112px" className="object-cover" />
+                  </div>
+                  <div className="intro-industry-voice__body">
+                    <p className="intro-industry-voice__person"><strong>{voice.name}</strong></p>
+                    <blockquote>「{voice.quote}」</blockquote>
+                  </div>
+                </div>
+                {voice.before && voice.after && (
+                  <div className="intro-industry-voice__details">
+                    <div className="intro-industry-voice__detail intro-industry-voice__detail--before">
+                      <p>Before</p>
+                      <ul>{voice.before.map((item) => <li key={item}>{item}</li>)}</ul>
+                    </div>
+                    <div className="intro-industry-voice__detail intro-industry-voice__detail--after">
+                      <p>After</p>
+                      <ul>{voice.after.map((item) => <li key={item}>{item}</li>)}</ul>
+                    </div>
+                  </div>
+                )}
+              </article>
+            ))}
+          </div>
         </div>
       </div>
     </section>
@@ -637,7 +729,7 @@ export default function Introduction({ content, showDesktopSatisfaction = false 
     content?.documentDescription ?? "税理士・会計事務所をお探しながら税理士クラウドへご相談ください。税理士業界に特化した専門のコーディネーターがあなたにぴったりの税理士・会計事務所をご紹介します。",
   );
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className={`min-h-screen flex flex-col${content?.pageTheme === "beauty" ? " introduction-theme--beauty" : ""}`}>
       <GlobalHeader />
 
       <main className="flex-1 introduction-main">
@@ -651,10 +743,10 @@ export default function Introduction({ content, showDesktopSatisfaction = false 
 
         <div className="testlp-hero__inner">
           <div className="testlp-hero__mobile-breadcrumb block md:hidden relative -top-6">
-            <Breadcrumb items={[{ label: "税理士紹介サービス" }]} />
+            <Breadcrumb items={[{ label: content?.breadcrumbLabel ?? "税理士紹介サービス" }]} />
           </div>
           <div className="testlp-hero__breadcrumb hidden md:block absolute left-8 right-8 top-6">
-            <Breadcrumb items={[{ label: "税理士紹介サービス" }]} />
+            <Breadcrumb items={[{ label: content?.breadcrumbLabel ?? "税理士紹介サービス" }]} />
           </div>
           <Image
             src={heroWomanImage}
@@ -715,8 +807,12 @@ export default function Introduction({ content, showDesktopSatisfaction = false 
               )}
 
               <p className="testlp-hero__lead hidden md:block">
-                専門コーディネーターがご要望を丁寧にヒアリングし、<br />
-                最適な税理士・会計事務所をご紹介いたします。
+                {(content?.heroLead ?? [
+                  "専門コーディネーターがご要望を丁寧にヒアリングし、",
+                  "最適な税理士・会計事務所をご紹介いたします。",
+                ]).map((line, index, lines) => (
+                  <span key={line}>{line}{index < lines.length - 1 && <br />}</span>
+                ))}
               </p>
 
               <div className="testlp-hero__mobile-only">
@@ -726,7 +822,7 @@ export default function Introduction({ content, showDesktopSatisfaction = false 
               <HeroFeatureChips />
             </div>
             <div className="testlp-hero__start-panel">
-              <ConsultationStartForm variant="hero" />
+              <ConsultationStartForm variant="hero" excludedOptions={content?.excludedConsultationStarters} />
             </div>
           </div>
         </section>
@@ -734,6 +830,8 @@ export default function Introduction({ content, showDesktopSatisfaction = false 
         <AccountantMarquee />
 
         <ConcernsSection content={content} />
+
+        {content?.industrySection && <IndustrySpecialtySection section={content.industrySection} />}
 
         {/* ── Service features ── */}
         <section className="intro-value-section">
@@ -794,7 +892,7 @@ export default function Introduction({ content, showDesktopSatisfaction = false 
             <h2 className="font-bold text-2xl md:text-3xl text-foreground text-center mb-10">
               よくあるご質問
             </h2>
-            <FAQ items={faqItems} />
+            <FAQ items={content?.faqItems ?? faqItems} />
           </div>
         </section>
 
@@ -805,7 +903,7 @@ export default function Introduction({ content, showDesktopSatisfaction = false 
           style={{ background: "linear-gradient(180deg,#dce8f5 0%,#eef4fb 100%)" }}
         >
           <div className="container">
-            <ConsultationStartForm />
+            <ConsultationStartForm excludedOptions={content?.excludedConsultationStarters} />
           </div>
         </section>
 
@@ -2771,6 +2869,12 @@ export default function Introduction({ content, showDesktopSatisfaction = false 
         .introduction-start-form--section .introduction-start-form__privacy { margin-top: 22px; font-size: 0.82rem; }
         .introduction-start-form--section .introduction-start-form__privacy svg { width: 18px; height: 18px; }
 
+        /* 美容LPの3択フォームも、従来の4択フォームと同じ縦幅を維持する。 */
+        .introduction-theme--beauty .introduction-start-form--section.introduction-start-form--three-options .introduction-start-form__choices {
+          min-height: 338px;
+          grid-auto-rows: 1fr;
+        }
+
         @media (min-width: 1024px) {
           .testlp-hero__inner {
             min-height: 520px;
@@ -2795,6 +2899,10 @@ export default function Introduction({ content, showDesktopSatisfaction = false 
           .testlp-hero__start-panel .introduction-start-form__choice { gap: 9px; padding: 0 11px; }
           .testlp-hero__start-panel .introduction-start-form__choice > svg:first-child { width: 18px; height: 18px; }
           .testlp-hero__start-panel .introduction-start-form__privacy { margin-top: 14px; font-size: 0.58rem; }
+          .introduction-theme--beauty .testlp-hero__start-panel .introduction-start-form--three-options .introduction-start-form__choices {
+            min-height: 251px;
+            grid-auto-rows: 1fr;
+          }
           .testlp-hero__image { display: none; }
         }
 
@@ -2908,6 +3016,12 @@ export default function Introduction({ content, showDesktopSatisfaction = false 
           .testlp-hero__start-panel .introduction-start-form__choice-arrow { width: 20px; height: 20px; }
           .testlp-hero__start-panel .introduction-start-form__privacy { margin-top: 18px; font-size: 0.78rem; }
           .testlp-hero__start-panel .introduction-start-form__privacy svg { width: 18px; height: 18px; }
+          .introduction-theme--beauty .testlp-hero__start-panel .introduction-start-form--three-options .introduction-start-form__choices {
+            min-height: 310px;
+          }
+          .introduction-theme--beauty .introduction-start-form--section.introduction-start-form--three-options .introduction-start-form__choices {
+            min-height: 318px;
+          }
 
           .intro-concerns__cta {
             width: calc(100% - 32px);
@@ -3246,6 +3360,116 @@ export default function Introduction({ content, showDesktopSatisfaction = false 
 
         .testlp-hero__desktop-satisfaction { display: none; }
 
+        /* 美容サロンLP専用：オーナーの声と同じローズ・白・グレージュで背景を統一 */
+        .introduction-theme--beauty .introduction-main {
+          background: #f8f3f1;
+        }
+        .introduction-theme--beauty .testlp-hero {
+          background: linear-gradient(105deg, #fffafb 0%, #fff 55%, #f8eef2 100%);
+        }
+        .introduction-theme--beauty .testlp-hero__wash {
+          background: linear-gradient(90deg, rgba(255, 250, 251, 0.98) 0%, rgba(255, 252, 252, 0.9) 51%, rgba(248, 238, 242, 0.18) 72%, rgba(248, 238, 242, 0.02) 100%);
+        }
+        .introduction-theme--beauty .intro-accountant-marquee {
+          background: #fdf8f5;
+        }
+        .introduction-theme--beauty .intro-concerns-section {
+          background: radial-gradient(circle at 50% 0%, #fffdfd 0%, #fff8fa 58%, #f7edef 100%);
+        }
+        .introduction-theme--beauty .intro-concerns {
+          border-color: #ecdde0;
+          background: rgba(255, 253, 253, 0.94);
+        }
+        .introduction-theme--beauty .intro-concerns__center {
+          background: linear-gradient(145deg, #fbe9ef 0%, #f7dce5 100%);
+          color: #b63263;
+          box-shadow: inset 0 0 0 1px rgba(182, 50, 99, 0.06);
+        }
+        .introduction-theme--beauty .intro-concerns__center::before,
+        .introduction-theme--beauty .intro-concerns__center::after {
+          border-color: #d98aa6;
+        }
+        .introduction-theme--beauty .intro-value-section {
+          background: linear-gradient(150deg, #f5efec, #fffaf9 56%, #f3e9e8);
+        }
+        .introduction-theme--beauty .intro-value-section__inner {
+          border-color: #eadbdd;
+          background: rgba(255, 253, 252, 0.94);
+        }
+        .introduction-theme--beauty .intro-finder-section {
+          background: radial-gradient(circle at 50% 0%, #fffdfd 0%, #fff9fa 58%, #f7eeee 100%);
+        }
+        .introduction-theme--beauty .intro-flow-section {
+          background: linear-gradient(150deg, #f5edeb, #fffafa 55%, #f3e9e8);
+        }
+        .introduction-theme--beauty .intro-flow-section__inner {
+          border-color: #eadbdd;
+          background: rgba(255, 253, 252, 0.94);
+        }
+        .introduction-theme--beauty .introduction-main > section.bg-white {
+          background: #fffaf9 !important;
+        }
+        .introduction-theme--beauty #form {
+          background: linear-gradient(180deg, #f4eceb 0%, #fbf6f4 100%) !important;
+        }
+
+        .intro-industry-section {
+          padding: 76px 0;
+          background: linear-gradient(180deg, #fffafc 0%, #f9f4f1 100%);
+        }
+        .intro-industry-section__inner {
+          border: 1px solid #f0d9e1;
+          border-radius: 28px;
+          background: rgba(255, 255, 255, 0.94);
+          padding: 56px clamp(28px, 5vw, 72px);
+          box-shadow: 0 22px 60px rgba(96, 55, 69, 0.08);
+        }
+        .intro-industry-benefits {
+          display: grid;
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+          gap: 20px;
+          margin-top: 40px;
+        }
+        .intro-industry-benefit {
+          border: 1px solid #f0d9e1;
+          border-radius: 20px;
+          background: #fff;
+          padding: 28px 24px;
+        }
+        .intro-industry-benefit__icon {
+          display: grid;
+          place-items: center;
+          width: 54px;
+          height: 54px;
+          margin-bottom: 18px;
+          border-radius: 16px;
+          background: #fff0f5;
+          color: #b63263;
+        }
+        .intro-industry-benefit__icon svg { width: 28px; height: 28px; }
+        .intro-industry-benefit h3 { color: #142b57; font-size: 1.12rem; font-weight: 800; }
+        .intro-industry-benefit p { margin-top: 10px; color: #5f6f89; font-size: 0.9rem; line-height: 1.8; }
+        .intro-industry-voices { margin-top: 52px; }
+        .intro-industry-voices > h3 { color: #142b57; font-family: serif; font-size: clamp(1.65rem, 3vw, 2.35rem); font-weight: 700; text-align: center; }
+        .intro-industry-voices__grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; margin-top: 26px; }
+        .intro-industry-voice { position: relative; display: flex; flex-direction: column; gap: 20px; border-radius: 20px; background: #fdf8f5; padding: 24px; }
+        .intro-industry-voice::before { position: absolute; top: 14px; right: 22px; color: #ebc8d4; font-family: serif; font-size: 4rem; line-height: 1; content: "“"; }
+        .intro-industry-voice__header { display: grid; grid-template-columns: 112px minmax(0, 1fr); align-items: center; gap: 24px; }
+        .intro-industry-voice__photo { position: relative; width: 112px; height: 136px; overflow: hidden; border-radius: 16px; background: #f2e9e6; }
+        .intro-industry-voice__body { position: relative; min-width: 0; }
+        .intro-industry-voice blockquote { color: #273b61; font-size: 1.08rem; font-weight: 700; line-height: 1.8; }
+        .intro-industry-voice__person { display: flex; align-items: baseline; gap: 8px; margin-bottom: 8px; color: #25395d; }
+        .intro-industry-voice__person strong { font-size: 1.15rem; }
+        .intro-industry-voice__details { display: grid; flex: 1; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+        .intro-industry-voice__detail { height: 100%; border-radius: 14px; padding: 16px; }
+        .intro-industry-voice__detail--before { background: #f2ece8; }
+        .intro-industry-voice__detail--after { background: #f8e6ed; }
+        .intro-industry-voice__detail > p { color: #8f7d77; font-size: 1rem; font-weight: 800; }
+        .intro-industry-voice__detail--after > p { color: #b63263; }
+        .intro-industry-voice__detail ul { margin-top: 8px; color: #554c49; font-size: 0.82rem; font-weight: 700; line-height: 1.65; }
+        .intro-industry-voice__detail li { position: relative; padding-left: 0.85em; }
+        .intro-industry-voice__detail li::before { position: absolute; left: 0; content: "・"; }
+
         /* /introduction のPC専用。既存のSP要素・スタイルには適用しない。 */
         @media (min-width: 1024px) {
           .testlp-hero--desktop-satisfaction .testlp-hero__breadcrumb,
@@ -3266,6 +3490,28 @@ export default function Introduction({ content, showDesktopSatisfaction = false 
         }
 
         @media (max-width: 767px) {
+          .intro-industry-section { padding: 34px 0; }
+          .intro-industry-section__inner { width: calc(100% - 28px); border-radius: 20px; padding: 32px 18px; }
+          .intro-industry-section .intro-section-heading { font-size: 1.4rem; }
+          .intro-industry-benefits,
+          .intro-industry-voices__grid { grid-template-columns: 1fr; }
+          .intro-industry-benefits { gap: 14px; margin-top: 28px; }
+          .intro-industry-benefit { display: grid; grid-template-columns: 48px minmax(0, 1fr); gap: 0 14px; border-radius: 16px; padding: 20px; }
+          .intro-industry-benefit__icon { grid-row: 1 / span 2; width: 48px; height: 48px; margin: 0; }
+          .intro-industry-benefit h3 { align-self: end; font-size: 1rem; }
+          .intro-industry-benefit p { margin-top: 5px; font-size: 0.82rem; line-height: 1.65; }
+          .intro-industry-voices { margin-top: 38px; }
+          .intro-industry-voices > h3 { font-size: 1.6rem; }
+          .intro-industry-voices__grid { gap: 14px; margin-top: 20px; }
+          .intro-industry-voice { gap: 16px; border-radius: 16px; padding: 28px 18px 18px; }
+          .intro-industry-voice::before { top: 8px; right: 14px; font-size: 2.6rem; }
+          .intro-industry-voice__header { grid-template-columns: 88px minmax(0, 1fr); gap: 16px; }
+          .intro-industry-voice__photo { width: 88px; height: 112px; border-radius: 13px; }
+          .intro-industry-voice blockquote { font-size: 0.98rem; line-height: 1.75; }
+          .intro-industry-voice__person { flex-wrap: wrap; }
+          .intro-industry-voice__details { grid-template-columns: 1fr; gap: 8px; }
+          .intro-industry-voice__detail { min-height: 150px; padding: 14px 15px; }
+          .intro-industry-voice__detail ul { font-size: 0.8rem; }
           .testlp-hero__inner { padding-top: 28px; }
           .testlp-hero__mobile-breadcrumb,
           .testlp-hero__badge { display: none !important; }

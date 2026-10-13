@@ -19,6 +19,7 @@ export const getServerSideProps: GetServerSideProps = async ({ res }) => {
     { loc: `${SITE_URL}/introduction-04`, lastmod: today, changefreq: 'monthly', priority: 0.7 },
     { loc: `${SITE_URL}/introduction-05`, lastmod: today, changefreq: 'monthly', priority: 0.7 },
     { loc: `${SITE_URL}/introduction-06`, lastmod: today, changefreq: 'monthly', priority: 0.7 },
+    { loc: `${SITE_URL}/introduction-beauty-salon`, lastmod: today, changefreq: 'monthly', priority: 0.7 },
     // 会社情報
     { loc: `${SITE_URL}/company`,         lastmod: today, changefreq: 'monthly', priority: 0.5 },
     // 利用規約
