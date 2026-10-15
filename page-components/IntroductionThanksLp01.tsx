@@ -13,9 +13,12 @@ export default function IntroductionThanksLp01() {
 
   useEffect(() => {
     if (router.pathname !== "/introduction-lp01/thanks") return;
+    if (!sessionStorage.getItem("cv_lead_pending")) return;
+    sessionStorage.removeItem("cv_lead_pending");
     window.gtag?.("event", "conversion", {
       send_to: "AW-18309633981/Wyg-CMCst80cEL2v25pE",
     });
+    window.fbq?.("track", "Lead");
   }, [router.pathname]);
 
   return (
