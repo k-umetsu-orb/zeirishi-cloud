@@ -194,9 +194,11 @@ const consultationStarters = [
 function ConsultationStartForm({
   variant = "section",
   excludedOptions = [],
+  stepPath = "/introduction/step",
 }: {
   variant?: "hero" | "section";
   excludedOptions?: string[];
+  stepPath?: string;
 }) {
   const router = useRouter();
   const [selected, setSelected] = useState("");
@@ -204,7 +206,7 @@ function ConsultationStartForm({
 
   function proceed() {
     if (!selected) return;
-    void router.push({ pathname: "/introduction/step", query: { clientType: selected } });
+    void router.push({ pathname: stepPath, query: { clientType: selected } });
   }
 
   return (
@@ -295,7 +297,13 @@ function ConcernIconGraphic({ icon = "message" }: { icon?: ConcernIcon }) {
   return <MessageCircle className="w-11 h-11" />;
 }
 
-function ConcernsSection({ content }: { content?: IntroductionPageContent }) {
+function ConcernsSection({
+  content,
+  hidePhoneCtas = false,
+}: {
+  content?: IntroductionPageContent;
+  hidePhoneCtas?: boolean;
+}) {
   const items = content?.concerns ?? concernItems;
 
   return (
@@ -321,9 +329,9 @@ function ConcernsSection({ content }: { content?: IntroductionPageContent }) {
             <ClipboardCheck />
           </div>
         </div>
-        <div className="intro-concerns__cta">
+        <div className={`intro-concerns__cta${hidePhoneCtas ? " intro-concerns__cta--form-only" : ""}`}>
           <HeroFormCta />
-          <HeroPhoneCta />
+          {!hidePhoneCtas && <HeroPhoneCta />}
         </div>
       </div>
     </section>
@@ -430,12 +438,12 @@ function AccountantMarquee({ inHero = false }: { inHero?: boolean }) {
   );
 }
 
-function IntroductionStickyCta() {
+function IntroductionStickyCta({ hidePhoneCtas = false }: { hidePhoneCtas?: boolean }) {
   return (
-    <aside className="intro-sticky-cta" aria-label="無料相談・電話相談">
-      <div className="intro-sticky-cta__inner intro-concerns__cta">
+    <aside className="intro-sticky-cta" aria-label={hidePhoneCtas ? "無料相談" : "無料相談・電話相談"}>
+      <div className={`intro-sticky-cta__inner intro-concerns__cta${hidePhoneCtas ? " intro-concerns__cta--form-only" : ""}`}>
         <HeroFormCta />
-        <HeroPhoneCta />
+        {!hidePhoneCtas && <HeroPhoneCta />}
       </div>
     </aside>
   );
@@ -720,9 +728,16 @@ function IntroductionForm() {
 
 // ─── Page ──────────────────────────────────────────────────────────────────────
 
-export default function Introduction({ content, showDesktopSatisfaction = false }: {
+export default function Introduction({
+  content,
+  showDesktopSatisfaction = false,
+  hidePhoneCtas = false,
+  formStepPath = "/introduction/step",
+}: {
   content?: IntroductionPageContent;
   showDesktopSatisfaction?: boolean;
+  hidePhoneCtas?: boolean;
+  formStepPath?: string;
 }) {
   usePageTitle(
     content?.documentTitle ?? "税理士・会計事務所の無料紹介サービス | 税理士クラウド",
@@ -822,14 +837,18 @@ export default function Introduction({ content, showDesktopSatisfaction = false 
               <HeroFeatureChips />
             </div>
             <div className="testlp-hero__start-panel">
-              <ConsultationStartForm variant="hero" excludedOptions={content?.excludedConsultationStarters} />
+              <ConsultationStartForm
+                variant="hero"
+                excludedOptions={content?.excludedConsultationStarters}
+                stepPath={formStepPath}
+              />
             </div>
           </div>
         </section>
 
         <AccountantMarquee />
 
-        <ConcernsSection content={content} />
+        <ConcernsSection content={content} hidePhoneCtas={hidePhoneCtas} />
 
         {content?.industrySection && <IndustrySpecialtySection section={content.industrySection} />}
 
@@ -879,9 +898,9 @@ export default function Introduction({ content, showDesktopSatisfaction = false 
                 <p>複数の税理士・会計事務所を比較し、自分に合った相談先を選べます。</p>
               </div>
             </div>
-            <div className="intro-flow__cta intro-concerns__cta">
+            <div className={`intro-flow__cta intro-concerns__cta${hidePhoneCtas ? " intro-concerns__cta--form-only" : ""}`}>
               <HeroFormCta />
-              <HeroPhoneCta />
+              {!hidePhoneCtas && <HeroPhoneCta />}
             </div>
           </div>
         </section>
@@ -903,7 +922,10 @@ export default function Introduction({ content, showDesktopSatisfaction = false 
           style={{ background: "linear-gradient(180deg,#dce8f5 0%,#eef4fb 100%)" }}
         >
           <div className="container">
-            <ConsultationStartForm excludedOptions={content?.excludedConsultationStarters} />
+            <ConsultationStartForm
+              excludedOptions={content?.excludedConsultationStarters}
+              stepPath={formStepPath}
+            />
           </div>
         </section>
 
@@ -928,7 +950,7 @@ export default function Introduction({ content, showDesktopSatisfaction = false 
       </main>
 
       <GlobalFooter />
-      <IntroductionStickyCta />
+      <IntroductionStickyCta hidePhoneCtas={hidePhoneCtas} />
       <style jsx global>{`
         .testlp-hero {
           position: relative;
@@ -3530,6 +3552,115 @@ export default function Introduction({ content, showDesktopSatisfaction = false 
         .intro-sticky-cta__inner .testlp-phone-cta__label--sp {
           font-size: 0.72rem !important;
           letter-spacing: -0.02em !important;
+        }
+
+        /* 電話CTAなしLP：フォームCTAを単独で中央配置する。 */
+        .intro-concerns__cta--form-only {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .intro-concerns__cta--form-only:not(.intro-sticky-cta__inner) {
+          max-width: none;
+          overflow: visible;
+          border: 0;
+          background: transparent;
+          padding: 0;
+          box-shadow: none;
+        }
+        .intro-concerns__cta--form-only:not(.intro-sticky-cta__inner) .testlp-form-cta {
+          width: min(100%, 930px);
+          min-height: 108px;
+          border: 0;
+          border-radius: 20px;
+          padding: 14px 26px;
+        }
+        .intro-concerns__cta--form-only:not(.intro-sticky-cta__inner) .testlp-form-cta__main {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 14px;
+        }
+        .intro-concerns__cta--form-only:not(.intro-sticky-cta__inner) .testlp-form-cta__free {
+          width: 62px;
+          height: 62px;
+          flex: 0 0 auto;
+          border-width: 0;
+        }
+        .intro-concerns__cta--form-only:not(.intro-sticky-cta__inner) .testlp-form-cta__free svg {
+          width: 33px;
+          height: 33px;
+        }
+        .intro-concerns__cta--form-only:not(.intro-sticky-cta__inner) .testlp-form-cta__body {
+          min-width: 0;
+          flex: 0 1 auto;
+        }
+        .intro-concerns__cta--form-only:not(.intro-sticky-cta__inner) .testlp-form-cta__label {
+          display: block;
+          margin-bottom: 3px;
+          font-size: 0.9rem;
+        }
+        .intro-concerns__cta--form-only:not(.intro-sticky-cta__inner) .testlp-form-cta__title {
+          font-size: clamp(1.15rem, 2vw, 1.55rem);
+        }
+        .intro-concerns__cta--form-only:not(.intro-sticky-cta__inner) .testlp-form-cta__note {
+          margin-top: 4px;
+          font-size: 0.84rem;
+        }
+        .intro-concerns__cta--form-only:not(.intro-sticky-cta__inner) .testlp-form-cta__arrow {
+          position: static;
+          width: 42px;
+          height: 42px;
+          flex: 0 0 auto;
+        }
+        .intro-concerns__cta--form-only:not(.intro-sticky-cta__inner) .testlp-form-cta__arrow-svg {
+          width: 22px;
+          height: 22px;
+        }
+        .intro-sticky-cta__inner.intro-concerns__cta--form-only .testlp-form-cta {
+          border-right: 0;
+          border-bottom: 0;
+        }
+
+        @media (min-width: 768px) {
+          .intro-sticky-cta__inner.intro-concerns__cta--form-only {
+            width: calc(min(100% - 64px, 1280px) * 0.75);
+          }
+        }
+
+        @media (max-width: 767px) {
+          .intro-concerns__cta--form-only:not(.intro-sticky-cta__inner) .testlp-form-cta {
+            width: min(100%, 780px);
+            min-height: 118px;
+            padding: 14px 18px;
+          }
+          .intro-sticky-cta__inner.intro-concerns__cta--form-only .testlp-form-cta__label {
+            font-size: 0.75rem;
+            white-space: nowrap;
+          }
+          .intro-sticky-cta__inner.intro-concerns__cta--form-only .testlp-form-cta__title { font-size: 1.3rem; }
+          .intro-sticky-cta__inner.intro-concerns__cta--form-only .testlp-form-cta__note { font-size: 0.68rem; }
+          .intro-concerns__cta--form-only:not(.intro-sticky-cta__inner) .testlp-form-cta__free {
+            width: 56px;
+            height: 56px;
+          }
+          .intro-concerns__cta--form-only:not(.intro-sticky-cta__inner) .testlp-form-cta__free svg {
+            width: 30px;
+            height: 30px;
+          }
+          .intro-concerns__cta--form-only:not(.intro-sticky-cta__inner) .testlp-form-cta__title {
+            font-size: clamp(0.98rem, 4.25vw, 1.1rem);
+            white-space: normal;
+          }
+          .intro-concerns__cta--form-only:not(.intro-sticky-cta__inner) .testlp-form-cta__note { font-size: 0.68rem; }
+          .intro-concerns__cta--form-only:not(.intro-sticky-cta__inner) .testlp-form-cta__arrow {
+            width: 38px;
+            height: 38px;
+          }
+          .intro-concerns__cta--form-only:not(.intro-sticky-cta__inner) .testlp-form-cta__arrow-svg {
+            width: 20px;
+            height: 20px;
+          }
         }
       `}</style>
     </div>
