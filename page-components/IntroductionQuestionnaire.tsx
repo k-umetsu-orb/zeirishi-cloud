@@ -177,7 +177,7 @@ export default function IntroductionQuestionnaire() {
   const isCorporate = businessType === "法人";
   const isIndividual = businessType === "個人";
   const isCorporationPlanned = businessType === "法人設立予定";
-  const requiresIndustry = isCorporate || isCorporationPlanned;
+  const requiresIndustry = isCorporate || isIndividual || isCorporationPlanned;
   const isBusinessTypeFixed = clientType === "法人" || clientType === "法人設立・法人化予定" || clientType === "個人事業主・フリーランス";
   const isInheritanceTax = clientType === "相続税申告";
   const legalHeirsStep = 4;
@@ -198,8 +198,8 @@ export default function IntroductionQuestionnaire() {
     : ANNUAL_SALES_OPTIONS;
   const hasRequiredProfile = Boolean(
     businessType
-    && (!isCorporate || (companyName.trim() && employeeCount && industry.trim()))
-    && (!isCorporationPlanned || industry.trim())
+    && (!isCorporate || (companyName.trim() && employeeCount))
+    && (!requiresIndustry || industry.trim())
     && (!isIndividual || advisoryContractPreference),
   );
 

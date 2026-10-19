@@ -102,6 +102,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const isCorporate = businessType === "法人";
   const isIndividual = businessType === "個人";
   const isCorporationPlanned = businessType === "法人設立予定";
+  const requiresIndustry = isCorporate || isIndividual || isCorporationPlanned;
   const consultationCategory = getConsultationCategory(clientType, businessType, isIntroductionStep);
   const financialAmountLabel = clientType === "相続税申告" ? "おおよその相続財産の総額" : "年間のおおよその売上額";
   const inheritanceAssetText = inheritanceAssets?.join("、") || "未入力";
@@ -115,8 +116,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     (isIntroductionStep && (!annualSales?.trim() || !businessType?.trim())) ||
     (isIntroductionStep && isInheritanceTax && (!legalHeirCount?.trim() || !inheritanceAssets?.length || !inheritanceStatus?.trim())) ||
     (isIntroductionStep && isIndividual && !advisoryContractPreference?.trim()) ||
-    (isIntroductionStep && isCorporate && (!companyName?.trim() || !employeeCount?.trim() || !industry?.trim())) ||
-    (isIntroductionStep && isCorporationPlanned && !industry?.trim())
+    (isIntroductionStep && isCorporate && (!companyName?.trim() || !employeeCount?.trim())) ||
+    (isIntroductionStep && requiresIndustry && !industry?.trim())
   ) {
     res.status(400).json({ ok: false, error: "必須項目が未入力です" });
     return;
@@ -133,8 +134,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       text: [
         `【流入元ページ】${sourcePage || "不明"}`,
         `【ご相談者様の区分】${consultationCategory}`,
-        ...(isIntroductionStep && isCorporate ? [`【会社名】${companyName}`, `【従業員数】${employeeCount}`, `【業種】${industry}`] : []),
-        ...(isIntroductionStep && isCorporationPlanned ? [`【業種】${industry}`] : []),
+        ...(isIntroductionStep && isCorporate ? [`【会社名】${companyName}`, `【従業員数】${employeeCount}`] : []),
+        ...(isIntroductionStep && requiresIndustry ? [`【業種】${industry}`] : []),
         `【お名前】${name}`,
         `【メールアドレス】${email}`,
         `【電話番号】${phone || "未入力"}`,
@@ -158,8 +159,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         "以下の内容で受け付けいたしました。",
         "",
         `【ご相談者様の区分】${consultationCategory}`,
-        ...(isIntroductionStep && isCorporate ? [`【会社名】${companyName}`, `【従業員数】${employeeCount}`, `【業種】${industry}`] : []),
-        ...(isIntroductionStep && isCorporationPlanned ? [`【業種】${industry}`] : []),
+        ...(isIntroductionStep && isCorporate ? [`【会社名】${companyName}`, `【従業員数】${employeeCount}`] : []),
+        ...(isIntroductionStep && requiresIndustry ? [`【業種】${industry}`] : []),
         `【お名前】${name}`,
         `【メールアドレス】${email}`,
         `【電話番号】${phone || "未入力"}`,
