@@ -38,7 +38,8 @@ const ANNUAL_SALES_OPTIONS = [
 const CORPORATE_ANNUAL_SALES_OPTIONS = [
   "年1,000万円未満",
   "年1,000万円〜3,000万円未満",
-  "年3,000万円〜1億円未満",
+  "年3,000万円〜5,000万円未満",
+  "年5,000万円以上〜1億円未満",
   "年1億円以上",
 ];
 
@@ -132,6 +133,7 @@ export default function IntroductionQuestionnaireLp01() {
   const [legalHeirCount, setLegalHeirCount] = useState("");
   const [inheritanceAssets, setInheritanceAssets] = useState<string[]>([]);
   const [inheritanceStatus, setInheritanceStatus] = useState("");
+  const [currentTaxAdvisorContract, setCurrentTaxAdvisorContract] = useState("");
   const [advisoryContractPreference, setAdvisoryContractPreference] = useState("");
   const [requestDetail, setRequestDetail] = useState("");
   const [businessType, setBusinessType] = useState("");
@@ -177,6 +179,7 @@ export default function IntroductionQuestionnaireLp01() {
   const isCorporate = businessType === "法人";
   const isIndividual = businessType === "個人";
   const isCorporationPlanned = businessType === "法人設立予定";
+  const requiresContractQuestions = isCorporate || isIndividual || isCorporationPlanned;
   const requiresIndustry = isCorporate || isIndividual || isCorporationPlanned;
   const isBusinessTypeFixed = clientType === "法人" || clientType === "法人設立・法人化予定" || clientType === "個人事業主・フリーランス";
   const isInheritanceTax = clientType === "相続税申告";
@@ -200,7 +203,7 @@ export default function IntroductionQuestionnaireLp01() {
     businessType
     && (!isCorporate || (companyName.trim() && employeeCount))
     && (!requiresIndustry || industry.trim())
-    && (!isIndividual || advisoryContractPreference),
+    && (!requiresContractQuestions || (advisoryContractPreference && currentTaxAdvisorContract)),
   );
 
   function selectClientType(type: string) {
@@ -240,6 +243,7 @@ export default function IntroductionQuestionnaireLp01() {
           legalHeirCount,
           inheritanceAssets,
           inheritanceStatus,
+          currentTaxAdvisorContract,
           advisoryContractPreference,
           businessType,
           companyName: companyName.trim(),
@@ -409,7 +413,8 @@ export default function IntroductionQuestionnaireLp01() {
                 <label>お名前<input value={name} onChange={(event) => setName(event.target.value)} placeholder="例：山田 太郎" required /></label>
                 <label>メールアドレス<input type="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="例：zeiri4@zeiri4.com" required /></label>
                 <label>電話番号<input type="tel" value={phone} onChange={(event) => setPhone(event.target.value)} placeholder="例：0312345678" required /></label>
-                {isIndividual && <label>税理士との顧問契約を希望する<select value={advisoryContractPreference} onChange={(event) => setAdvisoryContractPreference(event.target.value)} required><option value="">選択してください</option><option value="はい">はい</option><option value="いいえ">いいえ</option><option value="未定">未定</option></select></label>}
+                {requiresContractQuestions && <label>税理士との顧問契約を希望する<select value={advisoryContractPreference} onChange={(event) => setAdvisoryContractPreference(event.target.value)} required><option value="">選択してください</option><option value="はい">はい</option><option value="いいえ">いいえ</option><option value="未定">未定</option></select></label>}
+                {requiresContractQuestions && <label>現在の税理士契約の有無<select value={currentTaxAdvisorContract} onChange={(event) => setCurrentTaxAdvisorContract(event.target.value)} required><option value="">選択してください</option><option value="契約している">契約している</option><option value="契約していない">契約していない</option></select></label>}
                 <label className="intro-questionnaire__agreement"><input type="checkbox" checked={agreed} onChange={(event) => setAgreed(event.target.checked)} /><span><a href="https://orb-inc.co.jp/privacy-policy" target="_blank" rel="noreferrer">プライバシーポリシー</a>に同意する</span></label>
               </div>
               {submitError && <p className="intro-questionnaire__error">{submitError}</p>}
