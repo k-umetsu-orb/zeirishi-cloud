@@ -5,7 +5,7 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { Search, ArrowRight, Users, Shield, Building2, MapPin, ChevronRight, ChevronDown, Mail, FileText, BookOpen, Phone, Sparkles } from "lucide-react";
+import { Search, ArrowRight, Users, Shield, Building2, MapPin, ChevronRight, ChevronDown, Mail, FileText, BookOpen, Phone, Sparkles, Utensils, ShoppingBag } from "lucide-react";
 import { useState } from "react";
 import { usePageTitle } from "@/lib/usePageTitle";
 import GlobalHeader from "@/components/GlobalHeader";
@@ -196,11 +196,11 @@ const consultLinks = [
 
 const industryLinks = [
   { href: "/introduction-beauty-salon", icon: Sparkles,  label: "美容" },
-  { href: "/introduction", icon: Building2, label: "建設" },
-  { href: "/introduction", icon: Search,    label: "IT・通信" },
-  { href: "/introduction", icon: BookOpen,  label: "教育" },
-  { href: "/introduction", icon: Users,     label: "福祉" },
-  { href: "/introduction", icon: MapPin,    label: "不動産" },
+  { href: "/introduction-construction", icon: Building2, label: "建設" },
+  { href: "/introduction-it", icon: Search,    label: "IT" },
+  { href: "/introduction-restaurant", icon: Utensils,    label: "飲食" },
+  { href: "/introduction", icon: ShoppingBag, label: "物販・小売" },
+  { href: "/introduction", icon: Users,      label: "福祉" },
 ];
 
 // ─── Static data ──────────────────────────────────────────────────────────────

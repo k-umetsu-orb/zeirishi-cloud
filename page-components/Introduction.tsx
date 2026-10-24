@@ -57,8 +57,8 @@ export type IntroductionIndustrySection = {
     title: string;
     body: string;
   }>;
-  voicesHeading: string;
-  voices: Array<{
+  voicesHeading?: string;
+  voices?: Array<{
     photo: StaticImageData;
     photoAlt: string;
     name: string;
@@ -69,7 +69,7 @@ export type IntroductionIndustrySection = {
 };
 
 export type IntroductionPageContent = {
-  pageTheme?: "beauty";
+  pageTheme?: "beauty" | "it" | "restaurant" | "construction" | "retail";
   heroHeadline?: string;
   heroHighlight?: string;
   heroLead?: string[];
@@ -361,10 +361,11 @@ function IndustrySpecialtySection({ section }: { section: IntroductionIndustrySe
           ))}
         </div>
 
-        <div className="intro-industry-voices">
-          <h3>{section.voicesHeading}</h3>
-          <div className="intro-industry-voices__grid">
-            {section.voices.map((voice) => (
+        {section.voicesHeading && section.voices && section.voices.length > 0 && (
+          <div className="intro-industry-voices">
+            <h3>{section.voicesHeading}</h3>
+            <div className="intro-industry-voices__grid">
+              {section.voices.map((voice) => (
               <article className="intro-industry-voice" key={voice.name}>
                 <div className="intro-industry-voice__header">
                   <div className="intro-industry-voice__photo">
@@ -388,9 +389,10 @@ function IndustrySpecialtySection({ section }: { section: IntroductionIndustrySe
                   </div>
                 )}
               </article>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </section>
   );
@@ -744,7 +746,7 @@ export default function Introduction({
     content?.documentDescription ?? "税理士・会計事務所をお探しながら税理士クラウドへご相談ください。税理士業界に特化した専門のコーディネーターがあなたにぴったりの税理士・会計事務所をご紹介します。",
   );
   return (
-    <div className={`min-h-screen flex flex-col${content?.pageTheme === "beauty" ? " introduction-theme--beauty" : ""}`}>
+    <div className={`min-h-screen flex flex-col${content?.pageTheme ? ` introduction-theme--industry introduction-theme--${content.pageTheme}` : ""}`}>
       <GlobalHeader />
 
       <main className="flex-1 introduction-main">
@@ -2891,8 +2893,8 @@ export default function Introduction({
         .introduction-start-form--section .introduction-start-form__privacy { margin-top: 22px; font-size: 0.82rem; }
         .introduction-start-form--section .introduction-start-form__privacy svg { width: 18px; height: 18px; }
 
-        /* 美容LPの3択フォームも、従来の4択フォームと同じ縦幅を維持する。 */
-        .introduction-theme--beauty .introduction-start-form--section.introduction-start-form--three-options .introduction-start-form__choices {
+        /* 業種LPの3択フォームも、従来の4択フォームと同じ縦幅を維持する。 */
+        .introduction-theme--industry .introduction-start-form--section.introduction-start-form--three-options .introduction-start-form__choices {
           min-height: 338px;
           grid-auto-rows: 1fr;
         }
@@ -2921,7 +2923,7 @@ export default function Introduction({
           .testlp-hero__start-panel .introduction-start-form__choice { gap: 9px; padding: 0 11px; }
           .testlp-hero__start-panel .introduction-start-form__choice > svg:first-child { width: 18px; height: 18px; }
           .testlp-hero__start-panel .introduction-start-form__privacy { margin-top: 14px; font-size: 0.58rem; }
-          .introduction-theme--beauty .testlp-hero__start-panel .introduction-start-form--three-options .introduction-start-form__choices {
+          .introduction-theme--industry .testlp-hero__start-panel .introduction-start-form--three-options .introduction-start-form__choices {
             min-height: 251px;
             grid-auto-rows: 1fr;
           }
@@ -3038,10 +3040,10 @@ export default function Introduction({
           .testlp-hero__start-panel .introduction-start-form__choice-arrow { width: 20px; height: 20px; }
           .testlp-hero__start-panel .introduction-start-form__privacy { margin-top: 18px; font-size: 0.78rem; }
           .testlp-hero__start-panel .introduction-start-form__privacy svg { width: 18px; height: 18px; }
-          .introduction-theme--beauty .testlp-hero__start-panel .introduction-start-form--three-options .introduction-start-form__choices {
+          .introduction-theme--industry .testlp-hero__start-panel .introduction-start-form--three-options .introduction-start-form__choices {
             min-height: 310px;
           }
-          .introduction-theme--beauty .introduction-start-form--section.introduction-start-form--three-options .introduction-start-form__choices {
+          .introduction-theme--industry .introduction-start-form--section.introduction-start-form--three-options .introduction-start-form__choices {
             min-height: 318px;
           }
 
@@ -3382,6 +3384,143 @@ export default function Introduction({
 
         .testlp-hero__desktop-satisfaction { display: none; }
 
+        /* 業種別LP：仕事で見慣れた配色・面構成を借りつつ、税理士紹介であることは共通化する。 */
+        .introduction-theme--it {
+          --industry-accent: #05a7d8;
+          --industry-accent-dark: #152c68;
+          --industry-soft: #e9f8ff;
+          --industry-soft-2: #f0edff;
+          --industry-line: #bcdff0;
+        }
+        .introduction-theme--restaurant {
+          --industry-accent: #cc710b;
+          --industry-accent-dark: #33312e;
+          --industry-secondary: #6e862e;
+          --industry-soft: #fffefa;
+          --industry-soft-2: #f4f1ea;
+          --industry-line: #eac799;
+        }
+        .introduction-theme--construction {
+          --industry-accent: #e4a300;
+          --industry-accent-dark: #144a78;
+          --industry-soft: #eef6fb;
+          --industry-soft-2: #fff8d9;
+          --industry-line: #a9c8dc;
+        }
+        .introduction-theme--retail {
+          --industry-accent: #15986f;
+          --industry-accent-dark: #155d50;
+          --industry-soft: #eaf8f2;
+          --industry-soft-2: #fff5e9;
+          --industry-line: #b9ddcf;
+        }
+        .introduction-theme--industry:not(.introduction-theme--beauty) .introduction-main {
+          background: var(--industry-soft);
+        }
+        .introduction-theme--industry:not(.introduction-theme--beauty) .testlp-hero {
+          background: linear-gradient(120deg, #fff 0%, var(--industry-soft) 58%, var(--industry-soft-2) 100%);
+        }
+        .introduction-theme--industry:not(.introduction-theme--beauty) .testlp-hero__wash {
+          background:
+            linear-gradient(90deg, rgba(255,255,255,.97) 0%, rgba(255,255,255,.86) 50%, rgba(255,255,255,.12) 76%, rgba(255,255,255,0) 100%),
+            linear-gradient(var(--industry-line) 1px, transparent 1px),
+            linear-gradient(90deg, var(--industry-line) 1px, transparent 1px);
+          background-size: auto, 34px 34px, 34px 34px;
+          opacity: .82;
+        }
+        .introduction-theme--restaurant .testlp-hero__wash {
+          background:
+            radial-gradient(circle at 78% 24%, rgba(204,113,11,.15) 0 4px, transparent 5px),
+            radial-gradient(circle at 86% 32%, rgba(110,134,46,.16) 0 4px, transparent 5px),
+            linear-gradient(90deg, rgba(255,255,255,.98) 0%, rgba(255,255,255,.88) 52%, rgba(255,254,250,.2) 78%, transparent 100%);
+          background-size: 44px 44px, 44px 44px, auto;
+        }
+        .introduction-theme--retail .testlp-hero__wash {
+          background:
+            repeating-linear-gradient(90deg, rgba(21,152,111,.08) 0 2px, transparent 2px 8px),
+            linear-gradient(90deg, rgba(255,255,255,.98) 0%, rgba(255,255,255,.86) 52%, rgba(234,248,242,.18) 78%, transparent 100%);
+          background-size: 160px 44px, auto;
+        }
+        .introduction-theme--industry:not(.introduction-theme--beauty) .intro-section-heading::after {
+          background: var(--industry-accent);
+        }
+        .introduction-theme--restaurant .intro-reassurance__cta {
+          background: linear-gradient(135deg, #de7b0b, #cc710b);
+        }
+        .introduction-theme--restaurant .testlp-hero__title,
+        .introduction-theme--restaurant .testlp-hero__lead,
+        .introduction-theme--restaurant .intro-section-heading,
+        .introduction-theme--restaurant .intro-industry-benefit h3 {
+          color: #33312e;
+        }
+        .introduction-theme--restaurant .intro-concern--teal {
+          border-color: #aab978;
+        }
+        .introduction-theme--restaurant .intro-concern--teal .intro-concern__icon {
+          background: #f3f6e8;
+          color: #6e862e;
+        }
+        .introduction-theme--restaurant .intro-concern--teal h3,
+        .introduction-theme--restaurant .intro-finder--teal .intro-finder__label,
+        .introduction-theme--restaurant .intro-finder--teal .intro-finder__chips span {
+          color: #6e862e;
+        }
+        .introduction-theme--restaurant .intro-finder--teal {
+          border-color: #aab978;
+        }
+        .introduction-theme--restaurant .intro-industry-benefit__icon {
+          background: #fff1d8;
+          color: #cc710b;
+        }
+        .introduction-theme--restaurant .intro-industry-benefit:nth-child(2) .intro-industry-benefit__icon {
+          background: #f3f6e8;
+          color: #6e862e;
+        }
+        .introduction-theme--industry:not(.introduction-theme--beauty) .intro-accountant-marquee {
+          background: color-mix(in srgb, var(--industry-soft) 55%, white);
+        }
+        .introduction-theme--industry:not(.introduction-theme--beauty) .intro-concerns-section,
+        .introduction-theme--industry:not(.introduction-theme--beauty) .intro-finder-section {
+          background: radial-gradient(circle at 50% 0%, #fff 0%, var(--industry-soft) 62%, var(--industry-soft-2) 100%);
+        }
+        .introduction-theme--industry:not(.introduction-theme--beauty) .intro-concerns,
+        .introduction-theme--industry:not(.introduction-theme--beauty) .intro-value-section__inner,
+        .introduction-theme--industry:not(.introduction-theme--beauty) .intro-flow-section__inner,
+        .introduction-theme--industry:not(.introduction-theme--beauty) .intro-industry-section__inner {
+          border: 1px solid var(--industry-line);
+          background: rgba(255,255,255,.94);
+        }
+        .introduction-theme--industry:not(.introduction-theme--beauty) .intro-concerns__center {
+          background: linear-gradient(145deg, var(--industry-soft), var(--industry-soft-2));
+          color: var(--industry-accent-dark);
+          box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--industry-accent) 18%, transparent);
+        }
+        .introduction-theme--industry:not(.introduction-theme--beauty) .intro-concerns__center::before,
+        .introduction-theme--industry:not(.introduction-theme--beauty) .intro-concerns__center::after {
+          border-color: var(--industry-accent);
+        }
+        .introduction-theme--industry:not(.introduction-theme--beauty) .intro-value-section,
+        .introduction-theme--industry:not(.introduction-theme--beauty) .intro-flow-section,
+        .introduction-theme--industry:not(.introduction-theme--beauty) .intro-industry-section {
+          background: linear-gradient(150deg, var(--industry-soft), #fff 55%, var(--industry-soft-2));
+        }
+        .introduction-theme--industry:not(.introduction-theme--beauty) .intro-industry-section__inner {
+          box-shadow: 0 22px 60px color-mix(in srgb, var(--industry-accent-dark) 10%, transparent);
+        }
+        .introduction-theme--industry:not(.introduction-theme--beauty) .intro-industry-benefit {
+          border-color: var(--industry-line);
+        }
+        .introduction-theme--industry:not(.introduction-theme--beauty) .intro-industry-benefit__icon {
+          background: var(--industry-soft);
+          color: var(--industry-accent-dark);
+        }
+        .introduction-theme--industry:not(.introduction-theme--beauty) .introduction-main > section.bg-white {
+          background: color-mix(in srgb, var(--industry-soft-2) 38%, white) !important;
+        }
+        .introduction-theme--industry:not(.introduction-theme--beauty) #form {
+          background: linear-gradient(180deg, var(--industry-soft) 0%, #fff 100%) !important;
+        }
+
         /* 美容サロンLP専用：オーナーの声と同じローズ・白・グレージュで背景を統一 */
         .introduction-theme--beauty .introduction-main {
           background: #f8f3f1;
@@ -3473,8 +3612,8 @@ export default function Introduction({
         .intro-industry-benefit p { margin-top: 10px; color: #5f6f89; font-size: 0.9rem; line-height: 1.8; }
         .intro-industry-voices { margin-top: 52px; }
         .intro-industry-voices > h3 { color: #142b57; font-family: serif; font-size: clamp(1.65rem, 3vw, 2.35rem); font-weight: 700; text-align: center; }
-        .intro-industry-voices__grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; margin-top: 26px; }
-        .intro-industry-voice { position: relative; display: flex; flex-direction: column; gap: 20px; border-radius: 20px; background: #fdf8f5; padding: 24px; }
+        .intro-industry-voices__grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; margin-top: 22px; }
+        .intro-industry-voice { position: relative; display: flex; flex-direction: column; gap: 20px; border: 1px solid transparent; border-radius: 20px; background: #fdf8f5; padding: 24px; }
         .intro-industry-voice::before { position: absolute; top: 14px; right: 22px; color: #ebc8d4; font-family: serif; font-size: 4rem; line-height: 1; content: "“"; }
         .intro-industry-voice__header { display: grid; grid-template-columns: 112px minmax(0, 1fr); align-items: center; gap: 24px; }
         .intro-industry-voice__photo { position: relative; width: 112px; height: 136px; overflow: hidden; border-radius: 16px; background: #f2e9e6; }
@@ -3491,6 +3630,25 @@ export default function Introduction({
         .intro-industry-voice__detail ul { margin-top: 8px; color: #554c49; font-size: 0.82rem; font-weight: 700; line-height: 1.65; }
         .intro-industry-voice__detail li { position: relative; padding-left: 0.85em; }
         .intro-industry-voice__detail li::before { position: absolute; left: 0; content: "・"; }
+        .introduction-theme--industry:not(.introduction-theme--beauty) .intro-industry-voice {
+          border-color: var(--industry-line);
+          background: rgba(255,255,255,.96);
+        }
+        .introduction-theme--industry:not(.introduction-theme--beauty) .intro-industry-voice::before {
+          color: var(--industry-line);
+        }
+        .introduction-theme--industry:not(.introduction-theme--beauty) .intro-industry-voice__photo {
+          background: var(--industry-soft);
+        }
+        .introduction-theme--industry:not(.introduction-theme--beauty) .intro-industry-voice__detail--before {
+          background: color-mix(in srgb, var(--industry-soft-2) 72%, white);
+        }
+        .introduction-theme--industry:not(.introduction-theme--beauty) .intro-industry-voice__detail--after {
+          background: color-mix(in srgb, var(--industry-soft) 82%, white);
+        }
+        .introduction-theme--industry:not(.introduction-theme--beauty) .intro-industry-voice__detail--after > p {
+          color: var(--industry-accent-dark);
+        }
 
         /* /introduction のPC専用。既存のSP要素・スタイルには適用しない。 */
         @media (min-width: 1024px) {
