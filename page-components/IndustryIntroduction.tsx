@@ -259,15 +259,37 @@ const industryConfigs: Record<IndustryIntroductionKey, IndustryConfig> = {
   },
 };
 
-export default function IndustryIntroduction({ industry }: { industry: IndustryIntroductionKey }) {
+type IndustryIntroductionProps = {
+  industry: IndustryIntroductionKey;
+  hidePhoneCtas?: boolean;
+  noindex?: boolean;
+  canonical?: string;
+  formStepPath?: string;
+};
+
+export default function IndustryIntroduction({
+  industry,
+  hidePhoneCtas = false,
+  noindex = false,
+  canonical,
+  formStepPath,
+}: IndustryIntroductionProps) {
   const config = industryConfigs[industry];
-  const canonical = `https://zeirishi-cloud.jp/${config.slug}`;
+  const resolvedCanonical = canonical ?? (noindex ? undefined : `https://zeirishi-cloud.jp/${config.slug}`);
 
   return (
     <>
-      <PageMeta title={config.title} description={config.description} canonical={canonical} />
+      <PageMeta
+        title={config.title}
+        description={config.description}
+        canonical={resolvedCanonical}
+        noindex={noindex}
+      />
       <Introduction
         showDesktopSatisfaction
+        hidePhoneCtas={hidePhoneCtas}
+        noindex={noindex}
+        formStepPath={formStepPath}
         content={{
           ...config.content,
           documentTitle: config.title,

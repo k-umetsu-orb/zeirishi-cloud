@@ -734,16 +734,19 @@ export default function Introduction({
   content,
   showDesktopSatisfaction = false,
   hidePhoneCtas = false,
+  noindex = false,
   formStepPath = "/introduction/step",
 }: {
   content?: IntroductionPageContent;
   showDesktopSatisfaction?: boolean;
   hidePhoneCtas?: boolean;
+  noindex?: boolean;
   formStepPath?: string;
 }) {
   usePageTitle(
     content?.documentTitle ?? "税理士・会計事務所の無料紹介サービス | 税理士クラウド",
     content?.documentDescription ?? "税理士・会計事務所をお探しながら税理士クラウドへご相談ください。税理士業界に特化した専門のコーディネーターがあなたにぴったりの税理士・会計事務所をご紹介します。",
+    noindex,
   );
   return (
     <div className={`min-h-screen flex flex-col${content?.pageTheme ? ` introduction-theme--industry introduction-theme--${content.pageTheme}` : ""}`}>

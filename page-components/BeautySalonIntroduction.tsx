@@ -30,6 +30,7 @@ export default function BeautySalonIntroduction({
       <Introduction
         showDesktopSatisfaction
         hidePhoneCtas={hidePhoneCtas}
+        noindex={noindex}
         formStepPath={formStepPath}
         content={{
           pageTheme: "beauty",
