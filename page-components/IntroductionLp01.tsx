@@ -115,7 +115,10 @@ function ConsultationStartForm({ variant = "section" }: { variant?: "hero" | "se
 
   function proceed() {
     if (!selected) return;
-    void router.push({ pathname: "/introduction-lp01/step", query: { clientType: selected } });
+    void router.push({
+      pathname: "/introduction-lp01/step",
+      query: { clientType: selected, sourcePage: router.pathname },
+    });
   }
 
   return (

@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import { ArrowRight, Building2, CheckCircle2, FilePenLine, Landmark, LockKeyhole, MessageCircle, UserRound } from "lucide-react";
 import GlobalFooter from "@/components/GlobalFooter";
+import { INTRODUCTION_FORM_FLOW, normalizeIntroductionSourcePath } from "@/lib/contactSource";
 import { getAllPrefectures, getCitiesByPrefecture } from "@/lib/data";
 import logoIcon from "@/images/税アイコン.png";
 import logoText from "@/images/ロゴテキスト.png";
@@ -171,6 +172,7 @@ export default function IntroductionQuestionnaireLp01() {
 
   const cities = useMemo(() => (prefecture ? getCitiesByPrefecture(prefecture) : []), [prefecture]);
   const selectedPrefecture = allPrefectures.find((item) => item.slug === prefecture);
+  const sourcePage = normalizeIntroductionSourcePath(router.query.sourcePage, "/introduction-lp01");
   const visiblePrefectures = useMemo(
     () => allPrefectures.filter((item) => !region || REGION_GROUPS.find(({ label }) => label === region)?.prefectures.includes(item.slug)),
     [allPrefectures, region],
@@ -234,7 +236,8 @@ export default function IntroductionQuestionnaireLp01() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          sourcePage: "/introduction-lp01/step",
+          sourcePage,
+          formFlow: INTRODUCTION_FORM_FLOW,
           clientType,
           consultType: clientType,
           prefectureName: selectedPrefecture?.name || (prefecture === "overseas" ? "海外" : "未選択"),

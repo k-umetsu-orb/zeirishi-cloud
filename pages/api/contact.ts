@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { Resend } from "resend";
+import { formatContactSourceUrl, INTRODUCTION_FORM_FLOW } from "@/lib/contactSource";
 
 const NOTIFY_TO = ["k.umezu@orb-inc.co.jp", "himori@orb-inc.co.jp", "y.suzuki@orb-inc.co.jp", "s.ohori@orb-inc.co.jp", "n.iida@orb-inc.co.jp"];
 
@@ -9,6 +10,7 @@ const FROM_EMAIL = process.env.RESEND_FROM || "税理士クラウド <no-reply@o
 
 type ContactPayload = {
   sourcePage?: string;
+  formFlow?: string;
   clientType?: string;
   consultType?: string;
   prefectureName?: string;
@@ -79,6 +81,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   const {
     sourcePage,
+    formFlow,
     clientType,
     consultType,
     prefectureName,
@@ -99,7 +102,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     requestDetail,
   } = req.body as ContactPayload;
 
-  const isIntroductionStep = sourcePage === "/introduction/step" || sourcePage === "/introduction-lp01/step";
+  const isIntroductionStep = formFlow === INTRODUCTION_FORM_FLOW
+    || sourcePage === "/introduction/step"
+    || sourcePage === "/introduction-lp01/step";
   const isInheritanceTax = clientType === "相続税申告";
   const isCorporate = businessType === "法人";
   const isIndividual = businessType === "個人";
@@ -109,6 +114,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const consultationCategory = getConsultationCategory(clientType, businessType, isIntroductionStep);
   const financialAmountLabel = clientType === "相続税申告" ? "おおよその相続財産の総額" : "年間のおおよその売上額";
   const inheritanceAssetText = inheritanceAssets?.join("、") || "未入力";
+  const sourcePageUrl = formatContactSourceUrl(sourcePage);
 
   if (
     !prefectureName ||
@@ -135,7 +141,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       replyTo: email,
       subject: `【税理士クラウド お問い合わせ】${consultType ? `${consultType} - ` : ""}${name}`,
       text: [
-        `【流入元ページ】${sourcePage || "不明"}`,
+        `【流入元ページ】${sourcePageUrl}`,
         `【ご相談者様の区分】${consultationCategory}`,
         ...(isIntroductionStep && isCorporate ? [`【会社名】${companyName}`, `【従業員数】${employeeCount}`] : []),
         ...(isIntroductionStep && requiresIndustry ? [`【業種】${industry}`] : []),

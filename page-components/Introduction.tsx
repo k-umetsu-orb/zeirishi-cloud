@@ -206,7 +206,10 @@ function ConsultationStartForm({
 
   function proceed() {
     if (!selected) return;
-    void router.push({ pathname: stepPath, query: { clientType: selected } });
+    void router.push({
+      pathname: stepPath,
+      query: { clientType: selected, sourcePage: router.pathname },
+    });
   }
 
   return (
