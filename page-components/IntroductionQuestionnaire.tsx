@@ -58,7 +58,7 @@ const LEGAL_HEIR_OPTIONS = ["1人", "2人", "3人", "4人", "5人以上", "わ�
 const INHERITANCE_ASSET_OPTIONS = ["預金・株式など金融資産", "土地・建物", "自動車", "生命保険", "不明な財産がある"];
 const INHERITANCE_STATUS_OPTIONS = ["発生（お亡くなりになっている）", "未発生（お亡くなりになっていない）", "わからない"];
 
-const EMPLOYEE_COUNT_OPTIONS = ["1人", "2〜9人", "10〜49人", "50〜99人", "100〜499人", "500〜999人", "1,000人〜"];
+const EMPLOYEE_COUNT_OPTIONS = ["1人(ご本人のみ)", "2〜4人", "5〜9人", "10〜49人", "50〜99人", "100〜499人", "500〜999人", "1,000人〜"];
 
 function getDefaultBusinessType(clientType: string) {
   if (clientType === "法人") return "法人";
@@ -182,6 +182,7 @@ export default function IntroductionQuestionnaire() {
   const isIndividual = businessType === "個人";
   const isCorporationPlanned = businessType === "法人設立予定";
   const requiresContractQuestions = isCorporate || isIndividual || isCorporationPlanned;
+  const requiresEmployeeCount = isCorporate || isIndividual;
   const requiresIndustry = isCorporate || isIndividual || isCorporationPlanned;
   const isBusinessTypeFixed = clientType === "法人" || clientType === "法人設立・法人化予定" || clientType === "個人事業主・フリーランス";
   const isInheritanceTax = clientType === "相続税申告";
@@ -203,7 +204,8 @@ export default function IntroductionQuestionnaire() {
     : ANNUAL_SALES_OPTIONS;
   const hasRequiredProfile = Boolean(
     businessType
-    && (!isCorporate || (companyName.trim() && employeeCount))
+    && (!isCorporate || companyName.trim())
+    && (!requiresEmployeeCount || employeeCount)
     && (!requiresIndustry || industry.trim())
     && (!requiresContractQuestions || (advisoryContractPreference && currentTaxAdvisorContract)),
   );
@@ -411,7 +413,7 @@ export default function IntroductionQuestionnaire() {
                 <div className="intro-questionnaire__privacy-note"><LockKeyhole /> 入力情報は個人情報保護方針に基づき、許可なく第三者に共有されることはありません。</div>
                 <label>法人/個人<select value={businessType} onChange={(event) => setBusinessType(event.target.value)} disabled={isBusinessTypeFixed} required><option value="">選択してください</option><option value="法人">法人</option><option value="個人">個人</option><option value="法人設立予定">法人設立予定</option></select></label>
                 {isCorporate && <label>会社名<input value={companyName} onChange={(event) => setCompanyName(event.target.value)} placeholder="例：株式会社税理士クラウド" required /></label>}
-                {isCorporate && <label>従業員数<select value={employeeCount} onChange={(event) => setEmployeeCount(event.target.value)} required><option value="">選択してください</option>{EMPLOYEE_COUNT_OPTIONS.map((option) => <option key={option} value={option}>{option}</option>)}</select></label>}
+                {requiresEmployeeCount && <label>従業員数<select value={employeeCount} onChange={(event) => setEmployeeCount(event.target.value)} required><option value="">選択してください</option>{EMPLOYEE_COUNT_OPTIONS.map((option) => <option key={option} value={option}>{option}</option>)}</select></label>}
                 {requiresIndustry && <label>業種<input value={industry} onChange={(event) => setIndustry(event.target.value)} placeholder="例：IT・Webサービス" required /></label>}
                 <label>お名前<input value={name} onChange={(event) => setName(event.target.value)} placeholder="例：山田 太郎" required /></label>
                 <label>メールアドレス<input type="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="例：zeiri4@zeiri4.com" required /></label>
