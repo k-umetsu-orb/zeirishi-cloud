@@ -200,7 +200,7 @@ const industryLinks = [
   { href: "/introduction-it", icon: Search,    label: "IT" },
   { href: "/introduction-restaurant", icon: Utensils,    label: "飲食" },
   { href: "/introduction", icon: ShoppingBag, label: "物販・小売" },
-  { href: "/introduction", icon: Users,      label: "福祉" },
+  { href: "/introduction-care-facility", icon: Users, label: "介護・福祉" },
 ];
 
 // ─── Static data ──────────────────────────────────────────────────────────────
