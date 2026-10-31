@@ -69,7 +69,7 @@ export type IntroductionIndustrySection = {
 };
 
 export type IntroductionPageContent = {
-  pageTheme?: "beauty" | "it" | "restaurant" | "construction" | "retail";
+  pageTheme?: "beauty" | "it" | "restaurant" | "construction" | "retail" | "care-facility" | "fitness-gym" | "dental-clinic";
   heroHeadline?: string;
   heroHighlight?: string;
   heroLead?: string[];
@@ -804,7 +804,8 @@ export default function Introduction({
               {content?.heroHeadline ? (
                 <h1 className="testlp-hero__title testlp-hero__title--consultation">
                   {content.heroHeadline.split("||").map((line, index) => {
-                    const highlight = content.heroHighlight ?? "";
+                    const highlights = (content.heroHighlight ?? "").split("||");
+                    const highlight = highlights[index] ?? highlights[0] ?? "";
                     const highlightAt = highlight ? line.indexOf(highlight) : -1;
 
                     return (
@@ -3420,6 +3421,27 @@ export default function Introduction({
           --industry-soft-2: #fff5e9;
           --industry-line: #b9ddcf;
         }
+        .introduction-theme--care-facility {
+          --industry-accent: #dc6a2b;
+          --industry-accent-dark: #174b78;
+          --industry-soft: #fff6f0;
+          --industry-soft-2: #f6daca;
+          --industry-line: #efb28f;
+        }
+        .introduction-theme--fitness-gym {
+          --industry-accent: #5e45b4;
+          --industry-accent-dark: #2f2862;
+          --industry-soft: #f5f3fc;
+          --industry-soft-2: #d7d1ec;
+          --industry-line: #bdb3df;
+        }
+        .introduction-theme--dental-clinic {
+          --industry-accent: #43cbea;
+          --industry-accent-dark: #116b83;
+          --industry-soft: #f7fdff;
+          --industry-soft-2: #e2f8fd;
+          --industry-line: #a6e8f5;
+        }
         .introduction-theme--industry:not(.introduction-theme--beauty) .introduction-main {
           background: var(--industry-soft);
         }
@@ -3446,6 +3468,25 @@ export default function Introduction({
             repeating-linear-gradient(90deg, rgba(21,152,111,.08) 0 2px, transparent 2px 8px),
             linear-gradient(90deg, rgba(255,255,255,.98) 0%, rgba(255,255,255,.86) 52%, rgba(234,248,242,.18) 78%, transparent 100%);
           background-size: 160px 44px, auto;
+        }
+        .introduction-theme--care-facility .testlp-hero__wash {
+          background:
+            radial-gradient(circle at 80% 26%, rgba(220,106,43,.14) 0 5px, transparent 6px),
+            radial-gradient(circle at 88% 36%, rgba(23,75,120,.1) 0 4px, transparent 5px),
+            linear-gradient(90deg, rgba(255,255,255,.98) 0%, rgba(255,255,255,.88) 52%, rgba(246,218,202,.18) 78%, transparent 100%);
+          background-size: 48px 48px, 48px 48px, auto;
+        }
+        .introduction-theme--fitness-gym .testlp-hero__wash {
+          background:
+            repeating-linear-gradient(125deg, rgba(94,69,180,.06) 0 3px, transparent 3px 18px),
+            linear-gradient(90deg, rgba(255,255,255,.98) 0%, rgba(255,255,255,.87) 52%, rgba(215,209,236,.2) 78%, transparent 100%);
+          background-size: auto;
+        }
+        .introduction-theme--dental-clinic .testlp-hero__wash {
+          background:
+            radial-gradient(circle at 84% 30%, rgba(67,203,234,.12) 0 38px, transparent 39px),
+            linear-gradient(90deg, rgba(255,255,255,.99) 0%, rgba(255,255,255,.9) 54%, rgba(247,253,255,.24) 80%, transparent 100%);
+          background-size: 150px 150px, auto;
         }
         .introduction-theme--industry:not(.introduction-theme--beauty) .intro-section-heading::after {
           background: var(--industry-accent);
@@ -3481,6 +3522,38 @@ export default function Introduction({
         .introduction-theme--restaurant .intro-industry-benefit:nth-child(2) .intro-industry-benefit__icon {
           background: #f3f6e8;
           color: #6e862e;
+        }
+        .introduction-theme--care-facility .intro-reassurance__cta,
+        .introduction-theme--fitness-gym .intro-reassurance__cta,
+        .introduction-theme--dental-clinic .intro-reassurance__cta {
+          background: linear-gradient(135deg, var(--industry-accent), var(--industry-accent-dark));
+        }
+        .introduction-theme--care-facility :is(.intro-concern--blue, .intro-concern--orange, .intro-concern--teal, .intro-concern--purple),
+        .introduction-theme--fitness-gym :is(.intro-concern--blue, .intro-concern--orange, .intro-concern--teal, .intro-concern--purple),
+        .introduction-theme--dental-clinic :is(.intro-concern--blue, .intro-concern--orange, .intro-concern--teal, .intro-concern--purple) {
+          border-color: var(--industry-line);
+        }
+        .introduction-theme--care-facility :is(.intro-concern--blue, .intro-concern--orange, .intro-concern--teal, .intro-concern--purple) .intro-concern__icon,
+        .introduction-theme--fitness-gym :is(.intro-concern--blue, .intro-concern--orange, .intro-concern--teal, .intro-concern--purple) .intro-concern__icon,
+        .introduction-theme--dental-clinic :is(.intro-concern--blue, .intro-concern--orange, .intro-concern--teal, .intro-concern--purple) .intro-concern__icon {
+          background: var(--industry-soft);
+          color: var(--industry-accent);
+        }
+        .introduction-theme--care-facility :is(.intro-concern--blue, .intro-concern--orange, .intro-concern--teal, .intro-concern--purple) h3,
+        .introduction-theme--fitness-gym :is(.intro-concern--blue, .intro-concern--orange, .intro-concern--teal, .intro-concern--purple) h3,
+        .introduction-theme--dental-clinic :is(.intro-concern--blue, .intro-concern--orange, .intro-concern--teal, .intro-concern--purple) h3 {
+          color: var(--industry-accent-dark);
+        }
+        .introduction-theme--dental-clinic :is(.intro-finder--teal, .intro-finder--orange) {
+          border-color: var(--industry-line);
+        }
+        .introduction-theme--dental-clinic :is(.intro-finder--teal, .intro-finder--orange) .intro-finder__label,
+        .introduction-theme--dental-clinic :is(.intro-finder--teal, .intro-finder--orange) .intro-finder__chips span {
+          color: var(--industry-accent-dark);
+        }
+        .introduction-theme--dental-clinic :is(.intro-finder--teal, .intro-finder--orange) .intro-finder__chips span {
+          border-color: var(--industry-line);
+          background: var(--industry-soft);
         }
         .introduction-theme--industry:not(.introduction-theme--beauty) .intro-accountant-marquee {
           background: color-mix(in srgb, var(--industry-soft) 55%, white);

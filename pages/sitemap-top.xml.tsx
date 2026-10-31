@@ -23,6 +23,9 @@ export const getServerSideProps: GetServerSideProps = async ({ res }) => {
     { loc: `${SITE_URL}/introduction-it`, lastmod: today, changefreq: 'monthly', priority: 0.7 },
     { loc: `${SITE_URL}/introduction-restaurant`, lastmod: today, changefreq: 'monthly', priority: 0.7 },
     { loc: `${SITE_URL}/introduction-construction`, lastmod: today, changefreq: 'monthly', priority: 0.7 },
+    { loc: `${SITE_URL}/introduction-care-facility`, lastmod: today, changefreq: 'monthly', priority: 0.7 },
+    { loc: `${SITE_URL}/introduction-fitness-gym`, lastmod: today, changefreq: 'monthly', priority: 0.7 },
+    { loc: `${SITE_URL}/introduction-dental-clinic`, lastmod: today, changefreq: 'monthly', priority: 0.7 },
     // 会社情報
     { loc: `${SITE_URL}/company`,         lastmod: today, changefreq: 'monthly', priority: 0.5 },
     // 利用規約
