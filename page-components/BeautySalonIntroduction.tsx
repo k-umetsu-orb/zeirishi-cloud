@@ -54,7 +54,7 @@ export default function BeautySalonIntroduction({
               { title: "フリーランス美容師も対応", body: "面貸しや業務委託で働くフリーランス美容師の確定申告や、経費の相談にも対応します。" },
               { title: "美容サロンの税務調査に強い", body: "現金売上や材料費の管理など、美容サロンで確認されやすいポイントを踏まえて備えられます。" },
             ],
-            voicesHeading: "美容サロンオーナーの声",
+            voicesHeading: "美容サロンオーナー様の声",
             voices: [
               {
                 photo: beautySalonOwnerH,

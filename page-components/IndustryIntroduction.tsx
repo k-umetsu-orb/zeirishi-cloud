@@ -126,7 +126,7 @@ const industryConfigs: Record<IndustryIntroductionKey, IndustryConfig> = {
           { title: "開業・法人化・多店舗展開など実績多数", body: "開業準備や法人化、出店計画、融資、資金繰りなど、店舗の成長段階に合う相談先を探せます。" },
           { title: "飲食店の税務調査に強い", body: "インボイス制度への対応や日々の証憑管理、税務調査を見据えた経理体制について相談できます。" },
         ],
-        voicesHeading: "飲食店オーナー様の事例",
+        voicesHeading: "飲食店オーナー様の声",
         voices: [
           {
             photo: restaurantCase1,
@@ -182,7 +182,7 @@ const industryConfigs: Record<IndustryIntroductionKey, IndustryConfig> = {
           { title: "資金繰り・融資を相談", body: "入金までの期間や先行支払いを踏まえ、運転資金や設備資金について相談できる税理士を探せます。" },
           { title: "一人親方・法人化にも対応", body: "確定申告やインボイス対応、法人化、建設業許可・経審を見据えた決算まで相談できる税理士を探せます。" },
         ],
-        voicesHeading: "建設業オーナー様の事例",
+        voicesHeading: "建設業オーナー様の声",
         voices: [
           {
             photo: constructionCase1,
@@ -239,7 +239,7 @@ const industryConfigs: Record<IndustryIntroductionKey, IndustryConfig> = {
           { title: "在庫と粗利を見える化", body: "仕入れ、棚卸し、返品、値引きを含めて在庫を管理し、商品やチャネルごとの粗利を把握できます。" },
           { title: "仕入れ・出店の資金を計画", body: "季節仕入れや新規出店、EC拡大に必要な資金とキャッシュフローを相談できる税理士を探せます。" },
         ],
-        voicesHeading: "物販・小売オーナー様の事例",
+        voicesHeading: "物販・小売オーナー様の声",
         voices: [
           {
             photo: retailCase1,
@@ -296,7 +296,7 @@ const industryConfigs: Record<IndustryIntroductionKey, IndustryConfig> = {
           { title: "介護報酬の入金待ち・資金繰りを相談", body: "介護報酬の入金サイクルや先行する人件費を踏まえ、運転資金や融資について相談できます。" },
           { title: "人件費・施設ごとの収支管理にも対応", body: "職員配置や加算、事業所別の売上・経費を整理し、採用や新規開設の判断につなげられます。" },
         ],
-        voicesHeading: "介護施設オーナー様の事例",
+        voicesHeading: "介護施設オーナー様の声",
         voices: [
           {
             photo: careFacilityCase1,
@@ -353,7 +353,7 @@ const industryConfigs: Record<IndustryIntroductionKey, IndustryConfig> = {
           { title: "会費・回数券等ジム特有の会計に対応", body: "月会費、回数券、都度利用、物販など、複数の売上を整理して毎月の利益を確認できます。" },
           { title: "開業融資・法人化・多店舗展開も相談", body: "器具・内装への投資、採用、融資、法人化、2店舗目以降の収支計画を相談できる税理士を探せます。" },
         ],
-        voicesHeading: "フィットネスジムオーナー様の事例",
+        voicesHeading: "フィットネスジムオーナー様の声",
         voices: [
           {
             photo: fitnessGymCase1,
@@ -410,7 +410,7 @@ const industryConfigs: Record<IndustryIntroductionKey, IndustryConfig> = {
           { title: "保険診療・自費診療の会計に対応", body: "保険診療と自費診療の売上、材料費、人件費を整理し、医院の収支を確認できます。" },
           { title: "設備投資・医療法人化のタイミングを相談", body: "医療機器の導入、借入れ、採用、分院展開、医療法人化を数字に基づいて相談できる税理士を探せます。" },
         ],
-        voicesHeading: "歯科医院オーナー様の事例",
+        voicesHeading: "歯科医院オーナー様の声",
         voices: [
           {
             photo: dentalClinicCase1,
