@@ -69,7 +69,7 @@ export type IntroductionIndustrySection = {
 };
 
 export type IntroductionPageContent = {
-  pageTheme?: "beauty" | "it" | "restaurant" | "construction" | "retail" | "care-facility" | "fitness-gym" | "dental-clinic";
+  pageTheme?: "beauty" | "it" | "restaurant" | "construction" | "retail" | "care-facility" | "fitness-gym" | "dental-clinic" | "inheritance" | "ma";
   heroHeadline?: string;
   heroHighlight?: string;
   heroLead?: string[];
@@ -80,6 +80,7 @@ export type IntroductionPageContent = {
   industrySection?: IntroductionIndustrySection;
   faqItems?: Array<{ question: string; answer: string }>;
   excludedConsultationStarters?: string[];
+  heroFirstConsultationStarter?: string;
   documentTitle?: string;
   documentDescription?: string;
 };
@@ -194,15 +195,23 @@ const consultationStarters = [
 function ConsultationStartForm({
   variant = "section",
   excludedOptions = [],
+  firstOption,
   stepPath = "/introduction/step",
 }: {
   variant?: "hero" | "section";
   excludedOptions?: string[];
+  firstOption?: string;
   stepPath?: string;
 }) {
   const router = useRouter();
   const [selected, setSelected] = useState("");
-  const visibleConsultationStarters = consultationStarters.filter(({ label }) => !excludedOptions.includes(label));
+  const availableConsultationStarters = consultationStarters.filter(({ label }) => !excludedOptions.includes(label));
+  const visibleConsultationStarters = firstOption
+    ? [
+        ...availableConsultationStarters.filter(({ label }) => label === firstOption),
+        ...availableConsultationStarters.filter(({ label }) => label !== firstOption),
+      ]
+    : availableConsultationStarters;
 
   function proceed() {
     if (!selected) return;
@@ -849,6 +858,7 @@ export default function Introduction({
               <ConsultationStartForm
                 variant="hero"
                 excludedOptions={content?.excludedConsultationStarters}
+                firstOption={content?.heroFirstConsultationStarter}
                 stepPath={formStepPath}
               />
             </div>
@@ -2580,6 +2590,11 @@ export default function Introduction({
             right: clamp(136px, 12.5vw, 236px);
           }
 
+          .introduction-theme--inheritance .testlp-hero__title-line:nth-child(2),
+          .introduction-theme--inheritance .testlp-hero__title-line:nth-child(3) {
+            display: inline;
+          }
+
           .intro-value-title-break { display: none; }
           .intro-concerns-title-break { display: none; }
 
@@ -3442,6 +3457,20 @@ export default function Introduction({
           --industry-soft-2: #e2f8fd;
           --industry-line: #a6e8f5;
         }
+        .introduction-theme--inheritance {
+          --industry-accent: #ef7d22;
+          --industry-accent-dark: #0b2347;
+          --industry-soft: #f8fafc;
+          --industry-soft-2: #e9eef6;
+          --industry-line: #ccd6e4;
+        }
+        .introduction-theme--ma {
+          --industry-accent: #1f5f9e;
+          --industry-accent-dark: #0b2347;
+          --industry-soft: #f7f9fc;
+          --industry-soft-2: #e8eef6;
+          --industry-line: #becbdb;
+        }
         .introduction-theme--industry:not(.introduction-theme--beauty) .introduction-main {
           background: var(--industry-soft);
         }
@@ -3488,6 +3517,19 @@ export default function Introduction({
             linear-gradient(90deg, rgba(255,255,255,.99) 0%, rgba(255,255,255,.9) 54%, rgba(247,253,255,.24) 80%, transparent 100%);
           background-size: 150px 150px, auto;
         }
+        .introduction-theme--inheritance .testlp-hero__wash {
+          background:
+            repeating-linear-gradient(135deg, rgba(11,35,71,.045) 0 1px, transparent 1px 20px),
+            radial-gradient(circle at 84% 28%, rgba(239,125,34,.11) 0 54px, transparent 55px),
+            linear-gradient(90deg, rgba(255,255,255,.99) 0%, rgba(255,255,255,.92) 54%, rgba(233,238,246,.3) 80%, transparent 100%);
+          background-size: auto, 180px 180px, auto;
+        }
+        .introduction-theme--ma .testlp-hero__wash {
+          background:
+            linear-gradient(135deg, rgba(11,35,71,.065) 25%, transparent 25%) 0 0 / 44px 44px,
+            linear-gradient(315deg, rgba(31,95,158,.045) 25%, transparent 25%) 0 0 / 44px 44px,
+            linear-gradient(90deg, rgba(255,255,255,.99) 0%, rgba(255,255,255,.91) 54%, rgba(232,238,246,.34) 80%, transparent 100%);
+        }
         .introduction-theme--industry:not(.introduction-theme--beauty) .intro-section-heading::after {
           background: var(--industry-accent);
         }
@@ -3528,21 +3570,73 @@ export default function Introduction({
         .introduction-theme--dental-clinic .intro-reassurance__cta {
           background: linear-gradient(135deg, var(--industry-accent), var(--industry-accent-dark));
         }
+        .introduction-theme--inheritance .intro-reassurance__cta {
+          background: linear-gradient(135deg, #0b2347, #173c72);
+        }
+        .introduction-theme--ma .intro-reassurance__cta {
+          background: linear-gradient(135deg, #0b2347, #173f70);
+        }
         .introduction-theme--care-facility :is(.intro-concern--blue, .intro-concern--orange, .intro-concern--teal, .intro-concern--purple),
         .introduction-theme--fitness-gym :is(.intro-concern--blue, .intro-concern--orange, .intro-concern--teal, .intro-concern--purple),
-        .introduction-theme--dental-clinic :is(.intro-concern--blue, .intro-concern--orange, .intro-concern--teal, .intro-concern--purple) {
+        .introduction-theme--dental-clinic :is(.intro-concern--blue, .intro-concern--orange, .intro-concern--teal, .intro-concern--purple),
+        .introduction-theme--inheritance :is(.intro-concern--blue, .intro-concern--orange, .intro-concern--teal, .intro-concern--purple),
+        .introduction-theme--ma :is(.intro-concern--blue, .intro-concern--orange, .intro-concern--teal, .intro-concern--purple) {
           border-color: var(--industry-line);
         }
         .introduction-theme--care-facility :is(.intro-concern--blue, .intro-concern--orange, .intro-concern--teal, .intro-concern--purple) .intro-concern__icon,
         .introduction-theme--fitness-gym :is(.intro-concern--blue, .intro-concern--orange, .intro-concern--teal, .intro-concern--purple) .intro-concern__icon,
-        .introduction-theme--dental-clinic :is(.intro-concern--blue, .intro-concern--orange, .intro-concern--teal, .intro-concern--purple) .intro-concern__icon {
+        .introduction-theme--dental-clinic :is(.intro-concern--blue, .intro-concern--orange, .intro-concern--teal, .intro-concern--purple) .intro-concern__icon,
+        .introduction-theme--inheritance :is(.intro-concern--blue, .intro-concern--orange, .intro-concern--teal, .intro-concern--purple) .intro-concern__icon,
+        .introduction-theme--ma :is(.intro-concern--blue, .intro-concern--orange, .intro-concern--teal, .intro-concern--purple) .intro-concern__icon {
           background: var(--industry-soft);
           color: var(--industry-accent);
         }
         .introduction-theme--care-facility :is(.intro-concern--blue, .intro-concern--orange, .intro-concern--teal, .intro-concern--purple) h3,
         .introduction-theme--fitness-gym :is(.intro-concern--blue, .intro-concern--orange, .intro-concern--teal, .intro-concern--purple) h3,
-        .introduction-theme--dental-clinic :is(.intro-concern--blue, .intro-concern--orange, .intro-concern--teal, .intro-concern--purple) h3 {
+        .introduction-theme--dental-clinic :is(.intro-concern--blue, .intro-concern--orange, .intro-concern--teal, .intro-concern--purple) h3,
+        .introduction-theme--inheritance :is(.intro-concern--blue, .intro-concern--orange, .intro-concern--teal, .intro-concern--purple) h3,
+        .introduction-theme--ma :is(.intro-concern--blue, .intro-concern--orange, .intro-concern--teal, .intro-concern--purple) h3 {
           color: var(--industry-accent-dark);
+        }
+        .introduction-theme--inheritance :is(.testlp-hero__title, .testlp-hero__lead, .intro-section-heading, .intro-industry-benefit h3),
+        .introduction-theme--ma :is(.testlp-hero__title, .testlp-hero__lead, .intro-section-heading, .intro-industry-benefit h3) {
+          color: var(--industry-accent-dark);
+        }
+        :is(.introduction-theme--inheritance, .introduction-theme--ma) .introduction-start-form {
+          border-color: var(--industry-line);
+          box-shadow: 0 8px 24px color-mix(in srgb, var(--industry-accent-dark) 10%, transparent);
+        }
+        :is(.introduction-theme--inheritance, .introduction-theme--ma) .introduction-start-form__heading h2,
+        :is(.introduction-theme--inheritance, .introduction-theme--ma) .introduction-start-form__privacy {
+          color: var(--industry-accent-dark);
+        }
+        :is(.introduction-theme--inheritance, .introduction-theme--ma) .introduction-start-form__heading p {
+          color: color-mix(in srgb, var(--industry-accent-dark) 68%, white);
+        }
+        :is(.introduction-theme--inheritance, .introduction-theme--ma) .introduction-start-form__choice {
+          border-color: color-mix(in srgb, var(--industry-accent-dark) 42%, white);
+          background: linear-gradient(135deg, #fff 0%, var(--industry-soft) 100%);
+          color: var(--industry-accent-dark);
+          box-shadow: inset 0 0 0 1px rgba(255,255,255,.88), 0 2px 5px color-mix(in srgb, var(--industry-accent-dark) 7%, transparent);
+        }
+        :is(.introduction-theme--inheritance, .introduction-theme--ma) .introduction-start-form__choice > svg:first-child {
+          color: var(--industry-accent);
+        }
+        :is(.introduction-theme--inheritance, .introduction-theme--ma) .introduction-start-form__choice:hover,
+        :is(.introduction-theme--inheritance, .introduction-theme--ma) .introduction-start-form__choice.is-selected {
+          border-color: var(--industry-accent);
+          background: color-mix(in srgb, var(--industry-accent) 10%, white);
+          box-shadow: 0 4px 10px color-mix(in srgb, var(--industry-accent) 18%, transparent);
+        }
+        :is(.introduction-theme--inheritance, .introduction-theme--ma) .introduction-start-form__next {
+          background: color-mix(in srgb, var(--industry-accent-dark) 55%, white);
+        }
+        :is(.introduction-theme--inheritance, .introduction-theme--ma) .introduction-start-form__next:not(:disabled) {
+          background: linear-gradient(90deg, var(--industry-accent-dark), color-mix(in srgb, var(--industry-accent-dark) 82%, black));
+          box-shadow: 0 4px 10px color-mix(in srgb, var(--industry-accent-dark) 22%, transparent);
+        }
+        :is(.introduction-theme--inheritance, .introduction-theme--ma) .introduction-start-form__next:not(:disabled):hover {
+          background: var(--industry-accent-dark);
         }
         .introduction-theme--dental-clinic :is(.intro-finder--teal, .intro-finder--orange) {
           border-color: var(--industry-line);
@@ -3592,6 +3686,11 @@ export default function Introduction({
         .introduction-theme--industry:not(.introduction-theme--beauty) .intro-industry-benefit__icon {
           background: var(--industry-soft);
           color: var(--industry-accent-dark);
+        }
+        .introduction-theme--inheritance .intro-industry-benefit__icon,
+        .introduction-theme--ma .intro-industry-benefit__icon {
+          background: color-mix(in srgb, var(--industry-accent) 10%, white);
+          color: var(--industry-accent);
         }
         .introduction-theme--industry:not(.introduction-theme--beauty) .introduction-main > section.bg-white {
           background: color-mix(in srgb, var(--industry-soft-2) 38%, white) !important;
