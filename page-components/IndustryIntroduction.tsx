@@ -104,13 +104,13 @@ const industryConfigs: Record<IndustryIntroductionKey, IndustryConfig> = {
   },
   restaurant: {
     slug: "introduction-restaurant",
-    title: "飲食店に強い税理士の無料紹介 | 税理士クラウド",
+    title: "飲食店専門の税理士を無料紹介 | 税理士クラウド",
     description: "飲食店・カフェ・居酒屋・レストランなど、飲食業の会計や税務に詳しい税理士を無料でご紹介。原価、人件費、POS売上、資金繰り、出店まで相談先をお探しします。",
     content: {
       pageTheme: "restaurant",
       breadcrumbLabel: "飲食店向け税理士紹介",
-      heroHeadline: "飲食店に強い税理士||をご紹介します",
-      heroHighlight: "飲食店に強い税理士",
+      heroHeadline: "飲食店専門の税理士||をご紹介します",
+      heroHighlight: "飲食店専門の税理士",
       heroLead: ["飲食店の経理や確定申告に対応できる税理士を、", "ご希望の条件に合わせて無料でご紹介します。"],
       concernsHeading: "飲食店経営で、こんなお悩みはありませんか？",
       concernsLead: "毎日の営業に集中しながら、利益が残る経営を目指しませんか。",
@@ -121,7 +121,7 @@ const industryConfigs: Record<IndustryIntroductionKey, IndustryConfig> = {
         { title: "出店資金を準備したい", body: "新規出店や多店舗化に向けて\n資金繰りや融資を相談したい", tone: "purple", icon: "landmark" },
       ],
       industrySection: {
-        heading: "飲食店経営に強い税理士を紹介",
+        heading: "飲食店専門の税理士を紹介",
         lead: "原価・人件費・資金繰りから、|開業・法人化・多店舗展開まで相談できます。",
         benefits: [
           { title: "飲食店オーナーの工数と不安を解消", body: "日々の売上や仕入れ、人件費を整理し、利益を残すために確認したい数字や経営判断を相談できます。" },
