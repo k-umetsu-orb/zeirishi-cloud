@@ -14,6 +14,10 @@ import fitnessGymCase1 from "@/images/industry-cases/fitness-gym-1.png";
 import fitnessGymCase2 from "@/images/industry-cases/fitness-gym-2.png";
 import dentalClinicCase1 from "@/images/industry-cases/dental-clinic-1.png";
 import dentalClinicCase2 from "@/images/industry-cases/dental-clinic-2.png";
+import inheritanceCase1 from "@/images/industry-cases/inheritance-1.png";
+import inheritanceCase2 from "@/images/industry-cases/inheritance-2.png";
+import maCase1 from "@/images/industry-cases/ma-1.png";
+import maCase2 from "@/images/industry-cases/ma-2.png";
 
 export type IndustryIntroductionKey =
   | "it"
@@ -470,8 +474,25 @@ const industryConfigs: Record<IndustryIntroductionKey, IndustryConfig> = {
           { title: "税務調査を見据えた申告体制", body: "財産規模が大きい案件での確認事項や書面添付、申告後の税務調査対応まで相談できる税理士を探せます。" },
           { title: "納税資金・二次相続・承継まで対応", body: "納税資金、遺産分割、二次相続、事業承継など、ご家族と資産の将来を横断して相談できる税理士を探せます。" },
         ],
-        voicesHeading: "富裕層の相続事例",
-        voices: [],
+        voicesHeading: "大型相続のご相談事例",
+        voices: [
+          {
+            photo: inheritanceCase1,
+            photoAlt: "オフィスにいる相続相談者のイメージ",
+            name: "Sさん",
+            quote: "不動産も自社株も、まとめて相談できました。",
+            before: ["不動産の評価が不明", "自社株の扱いに迷う", "税務調査が不安"],
+            after: ["不動産と自社株を評価", "根拠を残して申告", "調査を見据えた体制"],
+          },
+          {
+            photo: inheritanceCase2,
+            photoAlt: "オフィスで相談する相続相談者のイメージ",
+            name: "Tさん",
+            quote: "夫の相続から、次の相続まで見通せました。",
+            before: ["財産の全体像が不明", "納税資金が不安", "子どもの負担が心配"],
+            after: ["財産を一覧で整理", "分割と納税資金を相談", "二次相続まで検討"],
+          },
+        ],
       },
       faqItems: [
         { question: "資産1億円以上の相続に対応できる税理士を紹介してもらえますか？", answer: "はい。財産の種類やおおよその規模、相続の発生状況、ご相談内容、エリアを伺い、富裕層の相続に対応した経験がある税理士・会計事務所をお探しします。" },
@@ -509,8 +530,25 @@ const industryConfigs: Record<IndustryIntroductionKey, IndustryConfig> = {
           { title: "事業承継税制・組織再編も相談", body: "事業承継税制、持株会社、株主整理、合併・分割など、実行条件や税務上の注意点を相談できます。" },
           { title: "M&A前後の税務と相続対策に対応", body: "株式・事業の譲渡前後に生じる税務や、譲渡後の資産管理・相続対策まで相談できる税理士を探せます。" },
         ],
-        voicesHeading: "事業承継・M&Aの事例",
-        voices: [],
+        voicesHeading: "事業承継・M&Aのご相談事例",
+        voices: [
+          {
+            photo: maCase1,
+            photoAlt: "オフィスにいるM&A相談者のイメージ",
+            name: "Kさん",
+            quote: "会社の売却。進め方も税金も整理できました。",
+            before: ["買い手が見つからない", "税金・手取りが不明", "譲渡方法に迷う"],
+            after: ["数字や資料を整理", "税負担と手取りを比較", "根拠を持って買い手探し"],
+          },
+          {
+            photo: maCase2,
+            photoAlt: "オフィスで相談する事業承継相談者のイメージ",
+            name: "Yさん",
+            quote: "会社を譲る前に、税金の見通しを相談できました。",
+            before: ["後継者が決まらない", "M&A後の手取りが不明", "相続を別々に検討"],
+            after: ["承継とM&Aを比較", "手元資金の目安を把握", "個人資産・相続も相談"],
+          },
+        ],
       },
       faqItems: [
         { question: "事業承継・M&Aに詳しい税理士を紹介してもらえますか？", answer: "はい。会社の規模、株主構成、後継者の状況、検討中の承継方法、ご相談内容、エリアを伺い、ご希望に合う税理士・会計事務所をお探しします。" },
