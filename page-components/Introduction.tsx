@@ -25,7 +25,7 @@ import accountantPhoto7 from "@/images/男性7.png";
 import accountantPhoto8 from "@/images/男性8.png";
 import accountantPhoto9 from "@/images/男性9.png";
 
-const PHONE_NUMBER = "03-6403-3202";
+const PHONE_NUMBER = "050-1794-7884";
 const ACCOUNTANT_PHOTOS = [
   { src: accountantPhoto1, crop: "native" },
   { src: accountantPhoto2, crop: "native" },

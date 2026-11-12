@@ -199,7 +199,7 @@ const industryLinks = [
   { href: "/introduction-construction", icon: Building2, label: "建設" },
   { href: "/introduction-it", icon: Search,    label: "IT" },
   { href: "/introduction-restaurant", icon: Utensils,    label: "飲食" },
-  { href: "/introduction", icon: ShoppingBag, label: "物販・小売" },
+  { href: "/introduction-retail", icon: ShoppingBag, label: "物販・小売" },
   { href: "/introduction-care-facility", icon: Users, label: "介護・福祉" },
 ];
 
@@ -306,7 +306,7 @@ const steps = [
   },
 ];
 
-const PHONE_NUMBER = "03-6403-3202";
+const PHONE_NUMBER = "050-1794-7884";
 
 function reportPhoneConversion() {
   window.gtag?.("event", "conversion", {

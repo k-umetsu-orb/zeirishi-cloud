@@ -13,7 +13,7 @@ import FAQ from "@/components/FAQ";
 import { getAllPrefectures, getCitiesByPrefecture } from "@/lib/data";
 import heroImage from "@/images/hero-coordinator-30s.png";
 
-const PHONE_NUMBER = "03-6403-3202";
+const PHONE_NUMBER = "050-1794-7884";
 
 function HeroTrustSignal({ className = "" }: { className?: string }) {
   return (

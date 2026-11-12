@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ArrowRight, CircleCheck, LockKeyhole, Phone, ShieldCheck, UserSearch, Users } from "lucide-react";
 
-const PHONE_NUMBER = "03-6403-3202";
+const PHONE_NUMBER = "050-1794-7884";
 
 export default function ListingStickyCta() {
   return (
