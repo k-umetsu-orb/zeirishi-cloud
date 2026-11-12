@@ -7,6 +7,7 @@ import { ArrowRight, Building2, CheckCircle2, FilePenLine, Landmark, LockKeyhole
 import GlobalFooter from "@/components/GlobalFooter";
 import { INTRODUCTION_FORM_FLOW, normalizeIntroductionSourcePath } from "@/lib/contactSource";
 import { getAllPrefectures, getCitiesByPrefecture } from "@/lib/data";
+import { CONTACTABLE_TIME_OPTIONS, PREFERRED_CONTACT_METHOD_OPTIONS } from "@/lib/introductionContactPreferences";
 import logoIcon from "@/images/税アイコン.png";
 import logoText from "@/images/ロゴテキスト.png";
 import coordinatorImage from "@/images/女性1_crop.png";
@@ -144,6 +145,8 @@ export default function IntroductionQuestionnaire() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
+  const [contactableTimes, setContactableTimes] = useState<string[]>([]);
+  const [preferredContactMethod, setPreferredContactMethod] = useState("電話");
   const [agreed, setAgreed] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
@@ -257,6 +260,8 @@ export default function IntroductionQuestionnaire() {
           name,
           email,
           phone,
+          contactableTimes,
+          preferredContactMethod,
           requestDetail: requestDetail.trim() || "ご希望内容は担当者からのヒアリングを希望",
         }),
       });
@@ -418,6 +423,21 @@ export default function IntroductionQuestionnaire() {
                 <label>お名前<input value={name} onChange={(event) => setName(event.target.value)} placeholder="例：山田 太郎" required /></label>
                 <label>メールアドレス<input type="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="例：zeiri4@zeiri4.com" required /></label>
                 <label>電話番号<input type="tel" value={phone} onChange={(event) => setPhone(event.target.value)} placeholder="例：0312345678" required /></label>
+                <fieldset className="intro-questionnaire__optional-group">
+                  <legend>日中つながりやすい時間帯 <small>任意 / 複数選択可</small></legend>
+                  <div className="intro-questionnaire__compact-options">
+                    {CONTACTABLE_TIME_OPTIONS.map((option) => {
+                      const selected = contactableTimes.includes(option);
+                      return <label key={option} className={`intro-questionnaire__compact-choice ${selected ? "is-selected" : ""}`}><input type="checkbox" checked={selected} onChange={() => setContactableTimes((current) => current.includes(option) ? current.filter((item) => item !== option) : [...current, option])} /><span>{option}</span></label>;
+                    })}
+                  </div>
+                </fieldset>
+                <fieldset className="intro-questionnaire__optional-group">
+                  <legend>ご希望の連絡方法</legend>
+                  <div className="intro-questionnaire__compact-options intro-questionnaire__compact-options--three">
+                    {PREFERRED_CONTACT_METHOD_OPTIONS.map((option) => <label key={option} className={`intro-questionnaire__compact-choice ${preferredContactMethod === option ? "is-selected" : ""}`}><input type="radio" name="preferredContactMethod" value={option} checked={preferredContactMethod === option} onChange={(event) => setPreferredContactMethod(event.target.value)} /><span>{option}</span></label>)}
+                  </div>
+                </fieldset>
                 {requiresContractQuestions && <label>税理士との顧問契約を希望する<select value={advisoryContractPreference} onChange={(event) => setAdvisoryContractPreference(event.target.value)} required><option value="">選択してください</option><option value="はい">はい</option><option value="いいえ">いいえ</option><option value="未定">未定</option></select></label>}
                 {requiresContractQuestions && <label>現在の税理士契約の有無<select value={currentTaxAdvisorContract} onChange={(event) => setCurrentTaxAdvisorContract(event.target.value)} required><option value="">選択してください</option><option value="契約している">契約している</option><option value="契約していない">契約していない</option></select></label>}
                 <label className="intro-questionnaire__agreement"><input type="checkbox" checked={agreed} onChange={(event) => setAgreed(event.target.checked)} /><span><a href="https://orb-inc.co.jp/privacy-policy" target="_blank" rel="noreferrer">プライバシーポリシー</a>に同意する</span></label>
@@ -474,11 +494,19 @@ export default function IntroductionQuestionnaire() {
         .intro-questionnaire__choice--multiple.is-selected .intro-questionnaire__choice-checkbox::after { content: "✓"; font-size: .78rem; line-height: 1; }
         .intro-questionnaire__select-wrap, .intro-questionnaire__textarea-wrap { display: grid; gap: 8px; }
         .intro-questionnaire__select-wrap label, .intro-questionnaire__textarea-wrap label, .intro-questionnaire__contact-fields > label { color: #1b5698; font-size: .76rem; font-weight: 800; }
-        .intro-questionnaire__select-wrap select, .intro-questionnaire__textarea-wrap textarea, .intro-questionnaire__contact-fields input:not([type=checkbox]), .intro-questionnaire__contact-fields select { width: 100%; border: 1px solid #82b2e2; border-radius: 4px; background: #fff; padding: 12px; color: #153e79; font: inherit; font-size: .86rem; outline: none; }
+        .intro-questionnaire__select-wrap select, .intro-questionnaire__textarea-wrap textarea, .intro-questionnaire__contact-fields input:not([type=checkbox]):not([type=radio]), .intro-questionnaire__contact-fields select { width: 100%; border: 1px solid #82b2e2; border-radius: 4px; background: #fff; padding: 12px; color: #153e79; font: inherit; font-size: .86rem; outline: none; }
         .intro-questionnaire__select-wrap select:focus, .intro-questionnaire__textarea-wrap textarea:focus, .intro-questionnaire__contact-fields input:focus, .intro-questionnaire__contact-fields select:focus { border-color: #0875c9; box-shadow: 0 0 0 3px rgba(8, 117, 201, .13); }
         .intro-questionnaire__textarea-wrap textarea { resize: vertical; line-height: 1.65; }
         .intro-questionnaire__contact-fields { display: grid; gap: 14px; }
         .intro-questionnaire__contact-fields > label { display: grid; gap: 6px; }
+        .intro-questionnaire__optional-group { display: grid; gap: 8px; min-width: 0; margin: 0; padding: 0; border: 0; }
+        .intro-questionnaire__optional-group legend { margin: 0; padding: 0; color: #1b5698; font-size: .76rem; font-weight: 800; }
+        .intro-questionnaire__optional-group legend small { margin-left: 4px; color: #6b819a; font-size: .66rem; font-weight: 700; }
+        .intro-questionnaire__compact-options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+        .intro-questionnaire__compact-options--three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+        .intro-questionnaire__compact-choice { display: flex; min-width: 0; min-height: 42px; align-items: center; gap: 8px; border: 1px solid #82b2e2; border-radius: 4px; padding: 9px 10px; color: #315f91; font-size: .76rem; font-weight: 700; line-height: 1.35; cursor: pointer; }
+        .intro-questionnaire__compact-choice.is-selected { border-color: #0875c9; background: #e9f4fd; box-shadow: inset 0 0 0 1px #0875c9; color: #16579d; }
+        .intro-questionnaire__compact-choice input { width: 15px; height: 15px; flex: 0 0 auto; margin: 0; accent-color: #0875c9; }
         .intro-questionnaire__privacy-note { display: flex; align-items: flex-start; gap: 7px; border-radius: 5px; background: #eaf4fc; padding: 10px; color: #39618c; font-size: .7rem; font-weight: 700; line-height: 1.55; }
         .intro-questionnaire__privacy-note svg { width: 15px; height: 15px; flex: 0 0 auto; }
         .intro-questionnaire__agreement { display: flex !important; align-items: center; gap: 8px; }
@@ -495,7 +523,7 @@ export default function IntroductionQuestionnaire() {
         .intro-questionnaire__error { margin: 16px 0 0; color: #c52d2d; font-size: .78rem; font-weight: 700; text-align: center; }
         .intro-questionnaire__support { display: flex; align-items: center; justify-content: center; gap: 7px; margin: 20px auto 0; color: #477191; font-size: .72rem; font-weight: 700; text-align: center; }
         .intro-questionnaire__support svg { width: 18px; height: 18px; }
-        @media (max-width: 640px) { .intro-questionnaire__content { width: min(100% - 24px, 640px); padding-top: 28px; } .intro-questionnaire__question { margin-top: 28px; } .intro-questionnaire__question-prompt { gap: 8px; } .intro-questionnaire__question-prompt--without-avatar { margin-left: 48px; } .intro-questionnaire__question-message { max-width: calc(100% - 38px); font-size: .76rem; } .intro-questionnaire__card { padding: 24px 18px; } .intro-questionnaire__progress { gap: 5px; padding-inline: 8px; } .intro-questionnaire__progress strong { display: none; } .intro-questionnaire__assistant p { font-size: .7rem; } .intro-questionnaire__options--two { grid-template-columns: 1fr; } .intro-questionnaire__choice { min-height: 48px; font-size: .84rem; } .intro-questionnaire__actions { flex-direction: column-reverse; } .intro-questionnaire__back, .intro-questionnaire__next { width: 100%; } }
+        @media (max-width: 640px) { .intro-questionnaire__content { width: min(100% - 24px, 640px); padding-top: 28px; } .intro-questionnaire__question { margin-top: 28px; } .intro-questionnaire__question-prompt { gap: 8px; } .intro-questionnaire__question-prompt--without-avatar { margin-left: 48px; } .intro-questionnaire__question-message { max-width: calc(100% - 38px); font-size: .76rem; } .intro-questionnaire__card { padding: 24px 18px; } .intro-questionnaire__progress { gap: 5px; padding-inline: 8px; } .intro-questionnaire__progress strong { display: none; } .intro-questionnaire__assistant p { font-size: .7rem; } .intro-questionnaire__options--two { grid-template-columns: 1fr; } .intro-questionnaire__choice { min-height: 48px; font-size: .84rem; } .intro-questionnaire__compact-choice { padding-inline: 8px; font-size: .7rem; } .intro-questionnaire__actions { flex-direction: column-reverse; } .intro-questionnaire__back, .intro-questionnaire__next { width: 100%; } }
       `}</style>
     </div>
   );

@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { Resend } from "resend";
 import { formatContactSourceUrl, INTRODUCTION_FORM_FLOW } from "@/lib/contactSource";
+import { normalizeContactableTimes, normalizePreferredContactMethod } from "@/lib/introductionContactPreferences";
 
 const NOTIFY_TO = ["k.umezu@orb-inc.co.jp", "himori@orb-inc.co.jp", "y.suzuki@orb-inc.co.jp", "s.ohori@orb-inc.co.jp", "n.iida@orb-inc.co.jp"];
 
@@ -28,6 +29,8 @@ type ContactPayload = {
   name?: string;
   email?: string;
   phone?: string;
+  contactableTimes?: string[];
+  preferredContactMethod?: string;
   requestDetail?: string;
 };
 
@@ -99,6 +102,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     name,
     email,
     phone,
+    contactableTimes,
+    preferredContactMethod,
     requestDetail,
   } = req.body as ContactPayload;
 
@@ -115,6 +120,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const consultationCategory = getConsultationCategory(clientType, businessType, isIntroductionStep);
   const financialAmountLabel = clientType === "相続税申告" ? "おおよその相続財産の総額" : "年間のおおよその売上額";
   const inheritanceAssetText = inheritanceAssets?.join("、") || "未入力";
+  const contactableTimeText = normalizeContactableTimes(contactableTimes).join("、") || "未選択";
+  const preferredContactMethodText = normalizePreferredContactMethod(preferredContactMethod);
   const sourcePageUrl = formatContactSourceUrl(sourcePage);
 
   if (
@@ -151,6 +158,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         `【お名前】${name}`,
         `【メールアドレス】${email}`,
         `【電話番号】${phone || "未入力"}`,
+        `【日中つながりやすい時間帯】${contactableTimeText}`,
+        `【ご希望の連絡方法】${preferredContactMethodText}`,
         ...(isIntroductionStep && requiresContractQuestions ? [`【税理士との顧問契約を希望する】${advisoryContractPreference}`, `【現在の税理士契約の有無】${currentTaxAdvisorContract}`] : []),
         `【お探しのエリア】${area}`,
         ...(isIntroductionStep && isInheritanceTax ? [`【法定相続人】${legalHeirCount}`, `【相続財産】${inheritanceAssetText}`] : []),
@@ -177,6 +186,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         `【お名前】${name}`,
         `【メールアドレス】${email}`,
         `【電話番号】${phone || "未入力"}`,
+        `【日中つながりやすい時間帯】${contactableTimeText}`,
+        `【ご希望の連絡方法】${preferredContactMethodText}`,
         ...(isIntroductionStep && requiresContractQuestions ? [`【税理士との顧問契約を希望する】${advisoryContractPreference}`, `【現在の税理士契約の有無】${currentTaxAdvisorContract}`] : []),
         `【お探しのエリア】${area}`,
         ...(isIntroductionStep && isInheritanceTax ? [`【法定相続人】${legalHeirCount}`, `【相続財産】${inheritanceAssetText}`] : []),
