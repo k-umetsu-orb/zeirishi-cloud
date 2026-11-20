@@ -459,10 +459,10 @@ function AccountantMarquee({ inHero = false }: { inHero?: boolean }) {
 
 function IntroductionStickyCta({ hidePhoneCtas = false }: { hidePhoneCtas?: boolean }) {
   return (
-    <aside className="intro-sticky-cta" aria-label={hidePhoneCtas ? "無料相談" : "無料相談・電話相談"}>
+    <aside className="intro-sticky-cta" aria-label={hidePhoneCtas ? "無料相談" : "無料相談・LINE相談"}>
       <div className={`intro-sticky-cta__inner intro-concerns__cta${hidePhoneCtas ? " intro-concerns__cta--form-only" : ""}`}>
         <HeroFormCta />
-        {!hidePhoneCtas && <HeroPhoneCta />}
+        {!hidePhoneCtas && <IntroductionContactChannels variant="sticky" showPhone={false} />}
       </div>
     </aside>
   );

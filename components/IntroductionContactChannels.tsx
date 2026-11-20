@@ -11,10 +11,12 @@ export default function IntroductionContactChannels({
   variant = "form",
   onPhoneClick,
   lineContactUrl = LINE_CONTACT_URL,
+  showPhone = true,
 }: {
-  variant?: "form" | "thanks";
+  variant?: "form" | "thanks" | "sticky";
   onPhoneClick?: () => void;
   lineContactUrl?: string;
+  showPhone?: boolean;
 }) {
   const [isLineModalOpen, setIsLineModalOpen] = useState(false);
   const [dynamicQrCode, setDynamicQrCode] = useState<string>();
@@ -78,17 +80,19 @@ export default function IntroductionContactChannels({
     <>
       <div className={`intro-contact-channels intro-contact-channels--${variant}`}>
         <div className="intro-contact-channels__buttons">
-          <a
-            href={`tel:${PHONE_NUMBER}`}
-            className="intro-contact-channel intro-contact-channel--phone"
-            onClick={onPhoneClick}
-          >
-            <span className="intro-contact-channel__icon"><PhoneCall /></span>
-            <span className="intro-contact-channel__copy">
-              <strong>電話で相談する</strong>
-              <small>{PHONE_NUMBER}</small>
-            </span>
-          </a>
+          {showPhone && (
+            <a
+              href={`tel:${PHONE_NUMBER}`}
+              className="intro-contact-channel intro-contact-channel--phone"
+              onClick={onPhoneClick}
+            >
+              <span className="intro-contact-channel__icon"><PhoneCall /></span>
+              <span className="intro-contact-channel__copy">
+                <strong>電話で相談する</strong>
+                <small>{PHONE_NUMBER}</small>
+              </span>
+            </a>
+          )}
 
           <button
             ref={lineButtonRef}
@@ -284,6 +288,38 @@ export default function IntroductionContactChannels({
 
         .intro-contact-channels--thanks .intro-contact-channel { min-height: 72px; }
 
+        .intro-contact-channels--sticky {
+          height: 100%;
+          margin-top: 0;
+          border-top: 0;
+          background: transparent;
+          padding-top: 0;
+        }
+
+        .intro-contact-channels--sticky .intro-contact-channels__buttons {
+          grid-template-columns: 1fr;
+          height: 100%;
+          gap: 0;
+        }
+
+        .intro-contact-channels--sticky .intro-contact-channel {
+          min-height: 104px;
+          border: 0;
+          border-radius: 0;
+          gap: 16px;
+          padding: 12px 20px;
+        }
+
+        .intro-contact-channels--sticky .intro-contact-channel--line {
+          background: #fff;
+          color: #06a847;
+        }
+
+        .intro-contact-channels--sticky :is(.intro-contact-channel__line-mark, .intro-contact-channel__arrow) {
+          background: #06c755;
+          color: #fff;
+        }
+
         .intro-line-modal {
           position: fixed;
           inset: 0;
@@ -417,6 +453,44 @@ export default function IntroductionContactChannels({
           .intro-contact-channels--thanks .intro-contact-channel__arrow {
             width: 34px;
             height: 34px;
+          }
+
+          .intro-contact-channels--sticky :is(.intro-contact-channel__line-mark, .intro-contact-channel__arrow) {
+            width: 52px;
+            height: 52px;
+          }
+
+          .intro-contact-channels--sticky .intro-contact-channel__line-mark { font-size: 0.7rem; }
+          .intro-contact-channels--sticky .intro-contact-channel__copy strong {
+            font-size: clamp(1.05rem, 1.55vw, 1.35rem);
+          }
+
+          .intro-contact-channels--sticky .intro-contact-channel__arrow svg {
+            width: 24px;
+            height: 24px;
+          }
+        }
+
+        @media (max-width: 767px) {
+          .intro-contact-channels--sticky .intro-contact-channel {
+            min-height: 80px;
+            gap: 5px;
+            padding: 7px 8px;
+          }
+
+          .intro-contact-channels--sticky .intro-contact-channel__line-mark {
+            width: 28px;
+            height: 28px;
+            font-size: 0.42rem;
+          }
+
+          .intro-contact-channels--sticky .intro-contact-channel__copy strong {
+            font-size: clamp(0.62rem, 3vw, 0.75rem);
+          }
+
+          .intro-contact-channels--sticky .intro-contact-channel__arrow {
+            width: 22px;
+            height: 22px;
           }
         }
 
