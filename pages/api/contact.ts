@@ -1,4 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
+import { randomBytes } from "node:crypto";
 import { Resend } from "resend";
 import { formatContactSourceUrl, INTRODUCTION_FORM_FLOW } from "@/lib/contactSource";
 import { normalizeContactableTimes, normalizePreferredContactMethod } from "@/lib/introductionContactPreferences";
@@ -8,8 +9,17 @@ const NOTIFY_TO = ["k.umezu@orb-inc.co.jp", "himori@orb-inc.co.jp", "y.suzuki@or
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 const FROM_EMAIL = process.env.RESEND_FROM || "税理士クラウド <no-reply@orb-inc.co.jp>";
+const RECEPTION_CODE_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+
+function createReceptionCode(length = 8) {
+  return Array.from(
+    randomBytes(length),
+    (byte) => RECEPTION_CODE_ALPHABET[byte % RECEPTION_CODE_ALPHABET.length],
+  ).join("");
+}
 
 type ContactPayload = {
+  receptionLineFollowup?: boolean;
   sourcePage?: string;
   formFlow?: string;
   clientType?: string;
@@ -83,6 +93,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   const {
+    receptionLineFollowup,
     sourcePage,
     formFlow,
     clientType,
@@ -142,6 +153,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   const area = cityName ? `${prefectureName} ${cityName}` : prefectureName;
+  const receptionCode = receptionLineFollowup ? createReceptionCode() : undefined;
 
   try {
     // 1通目: 社内通知
@@ -150,6 +162,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       replyTo: email,
       subject: `【税理士クラウド お問い合わせ】${consultType ? `${consultType} - ` : ""}${name}`,
       text: [
+        ...(receptionCode ? [`【受付番号】${receptionCode}`] : []),
         `【流入元ページ】${sourcePageUrl}`,
         `【ご相談者様の区分】${consultationCategory}`,
         ...(isIntroductionStep && isCorporate ? [`【会社名】${companyName}`] : []),
@@ -207,7 +220,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       ].join("\n"),
     });
 
-    res.status(200).json({ ok: true });
+    res.status(200).json({ ok: true, ...(receptionCode ? { receptionCode } : {}) });
   } catch (err) {
     console.error("contact mail error:", err);
     res.status(500).json({ ok: false, error: "メール送信に失敗しました" });

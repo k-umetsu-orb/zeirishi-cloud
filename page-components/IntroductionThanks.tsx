@@ -1,17 +1,29 @@
 /**
  * Introduction Thanks page - /introduction/thanks
  */
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { CheckCircle, ArrowRight, PhoneCall } from "lucide-react";
+import { CheckCircle, ArrowRight } from "lucide-react";
 import GlobalHeader from "@/components/GlobalHeader";
 import GlobalFooter from "@/components/GlobalFooter";
+import IntroductionContactChannels from "@/components/IntroductionContactChannels";
+import {
+  buildIntroductionReceptionLineUrl,
+  INTRODUCTION_RECEPTION_STORAGE_KEY,
+  isValidIntroductionReceptionCode,
+} from "@/lib/introductionReception";
 
 export default function IntroductionThanks() {
   const router = useRouter();
+  const [receptionLineUrl, setReceptionLineUrl] = useState<string>();
 
   useEffect(() => {
+    const receptionCode = sessionStorage.getItem(INTRODUCTION_RECEPTION_STORAGE_KEY);
+    if (isValidIntroductionReceptionCode(receptionCode)) {
+      setReceptionLineUrl(buildIntroductionReceptionLineUrl(receptionCode!));
+    }
+
     if (router.pathname !== "/introduction/thanks") return;
     if (!sessionStorage.getItem("cv_lead_pending")) return;
     sessionStorage.removeItem("cv_lead_pending");
@@ -26,7 +38,7 @@ export default function IntroductionThanks() {
       <GlobalHeader />
 
       <main className="flex-1 flex items-center justify-center bg-muted/20">
-        <div className="container max-w-lg py-20 text-center">
+        <div className="container max-w-lg md:max-w-3xl py-20 text-center">
           <div className="flex justify-center mb-6">
             <CheckCircle className="w-16 h-16 text-primary" />
           </div>
@@ -44,15 +56,7 @@ export default function IntroductionThanks() {
 
           <div className="mt-8 rounded-2xl border border-primary/20 bg-white p-5 shadow-sm">
             <p className="mb-3 text-sm font-bold text-foreground">お急ぎの方はこちら</p>
-            <a
-              href="tel:05017947884"
-              className="inline-flex items-center justify-center gap-2 rounded-xl px-6 py-3 text-base font-bold text-white transition-opacity hover:opacity-90"
-              style={{ background: "linear-gradient(90deg,#1a50a8,#2563eb)" }}
-            >
-              <PhoneCall className="h-5 w-5" />
-              050-1794-7884
-            </a>
-            <p className="mt-2 text-xs text-muted-foreground">受付時間：平日9時〜20時</p>
+            <IntroductionContactChannels variant="thanks" lineContactUrl={receptionLineUrl} />
           </div>
 
           <div className="mt-8">

@@ -9,6 +9,7 @@ import { useRouter } from "next/router";
 import { ArrowRight, Building2, CalendarCheck, ChevronDown, CircleCheck, FilePenLine, Landmark, MousePointerClick, Phone, MessageCircle, Cloud, FileText, MapPin, Search, Calculator, Briefcase, Handshake, ClipboardList, ClipboardCheck, JapaneseYen, Mail, UserRound, Users } from "lucide-react";
 import GlobalHeader from "@/components/GlobalHeader";
 import GlobalFooter from "@/components/GlobalFooter";
+import IntroductionContactChannels from "@/components/IntroductionContactChannels";
 import FAQ from "@/components/FAQ";
 import Breadcrumb from "@/components/Breadcrumb";
 import { getAllPrefectures, getCitiesByPrefecture } from "@/lib/data";
@@ -198,11 +199,13 @@ function ConsultationStartForm({
   excludedOptions = [],
   firstOption,
   stepPath = "/introduction/step",
+  showContactChannels = false,
 }: {
   variant?: "hero" | "section";
   excludedOptions?: string[];
   firstOption?: string;
   stepPath?: string;
+  showContactChannels?: boolean;
 }) {
   const router = useRouter();
   const [selected, setSelected] = useState("");
@@ -254,6 +257,7 @@ function ConsultationStartForm({
         </button>
       </div>
       <p className="introduction-start-form__privacy"><CircleCheck /> 入力情報は公開されません</p>
+      {showContactChannels && <IntroductionContactChannels onPhoneClick={reportPhoneConversion} />}
     </section>
   );
 }
@@ -749,12 +753,14 @@ export default function Introduction({
   hidePhoneCtas = false,
   noindex = false,
   formStepPath = "/introduction/step",
+  showContactChannels = false,
 }: {
   content?: IntroductionPageContent;
   showDesktopSatisfaction?: boolean;
   hidePhoneCtas?: boolean;
   noindex?: boolean;
   formStepPath?: string;
+  showContactChannels?: boolean;
 }) {
   usePageTitle(
     content?.documentTitle ?? "税理士・会計事務所の無料紹介サービス | 税理士クラウド",
@@ -768,7 +774,7 @@ export default function Introduction({
       <main className="flex-1 introduction-main">
 
         {/* ── Hero ── */}
-      <section className={`testlp-hero${showDesktopSatisfaction ? " testlp-hero--desktop-satisfaction" : ""}`}>
+      <section className={`testlp-hero${showDesktopSatisfaction ? " testlp-hero--desktop-satisfaction" : ""}${showContactChannels ? " testlp-hero--contact-channels" : ""}`}>
           <div className="testlp-hero__wash" />
           <div className="testlp-hero__top-fade" />
           <div className="testlp-hero__ring testlp-hero__ring--top" />
@@ -861,6 +867,7 @@ export default function Introduction({
                 excludedOptions={content?.excludedConsultationStarters}
                 firstOption={content?.heroFirstConsultationStarter}
                 stepPath={formStepPath}
+                showContactChannels={showContactChannels}
               />
             </div>
           </div>
@@ -945,6 +952,7 @@ export default function Introduction({
             <ConsultationStartForm
               excludedOptions={content?.excludedConsultationStarters}
               stepPath={formStepPath}
+              showContactChannels={showContactChannels}
             />
           </div>
         </section>
@@ -3831,6 +3839,48 @@ export default function Introduction({
 
         /* /introduction のPC専用。既存のSP要素・スタイルには適用しない。 */
         @media (min-width: 1024px) {
+          .testlp-hero--contact-channels .testlp-hero__inner {
+            min-height: 440px;
+          }
+
+          .testlp-hero--contact-channels.testlp-hero--desktop-satisfaction .testlp-hero__start-panel {
+            top: 8px;
+          }
+
+          .testlp-hero--contact-channels .testlp-hero__start-panel .intro-contact-channels {
+            margin-top: 8px;
+            padding-top: 8px;
+          }
+
+          .testlp-hero--contact-channels .testlp-hero__start-panel .intro-contact-channel {
+            min-height: 58px;
+            gap: 8px;
+            padding: 8px 10px;
+          }
+
+          .testlp-hero--contact-channels .testlp-hero__start-panel :is(.intro-contact-channel__icon, .intro-contact-channel__line-mark) {
+            width: 34px;
+            height: 34px;
+          }
+
+          .testlp-hero--contact-channels .testlp-hero__start-panel .intro-contact-channel__icon svg {
+            width: 19px;
+            height: 19px;
+          }
+
+          .testlp-hero--contact-channels .testlp-hero__start-panel .intro-contact-channel__copy strong {
+            font-size: 0.76rem;
+          }
+
+          .testlp-hero--contact-channels .testlp-hero__start-panel .intro-contact-channel__copy small {
+            font-size: 0.64rem;
+          }
+
+          .testlp-hero--contact-channels .testlp-hero__start-panel .intro-contact-channel__arrow {
+            width: 28px;
+            height: 28px;
+          }
+
           .testlp-hero--desktop-satisfaction .testlp-hero__breadcrumb,
           .testlp-hero--desktop-satisfaction .testlp-hero__badge { display: none; }
           .testlp-hero--desktop-satisfaction .testlp-hero__inner { padding-top: 40px; }

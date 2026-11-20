@@ -8,6 +8,10 @@ import GlobalFooter from "@/components/GlobalFooter";
 import { INTRODUCTION_FORM_FLOW, normalizeIntroductionSourcePath } from "@/lib/contactSource";
 import { getAllPrefectures, getCitiesByPrefecture } from "@/lib/data";
 import { CONTACTABLE_TIME_OPTIONS, PREFERRED_CONTACT_METHOD_OPTIONS } from "@/lib/introductionContactPreferences";
+import {
+  INTRODUCTION_RECEPTION_STORAGE_KEY,
+  isValidIntroductionReceptionCode,
+} from "@/lib/introductionReception";
 import logoIcon from "@/images/税アイコン.png";
 import logoText from "@/images/ロゴテキスト.png";
 import coordinatorImage from "@/images/女性1_crop.png";
@@ -241,6 +245,7 @@ export default function IntroductionQuestionnaire() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          receptionLineFollowup: true,
           sourcePage,
           formFlow: INTRODUCTION_FORM_FLOW,
           clientType,
@@ -267,6 +272,12 @@ export default function IntroductionQuestionnaire() {
       });
 
       if (!response.ok) throw new Error("送信に失敗しました");
+      const result = await response.json() as { receptionCode?: string };
+      if (isValidIntroductionReceptionCode(result.receptionCode)) {
+        sessionStorage.setItem(INTRODUCTION_RECEPTION_STORAGE_KEY, result.receptionCode!);
+      } else {
+        sessionStorage.removeItem(INTRODUCTION_RECEPTION_STORAGE_KEY);
+      }
       window.oaiq?.("measure", "lead_created", { type: "customer_action" });
       sessionStorage.setItem("cv_lead_pending", "1");
       await router.push("/introduction/thanks");
