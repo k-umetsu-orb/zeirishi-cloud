@@ -37,7 +37,8 @@ const ACCOUNTANT_PHOTOS = [
   { src: accountantPhoto8, crop: "framed" },
   { src: accountantPhoto9, crop: "framed" },
 ];
-const MARQUEE_PHOTOS = Array.from({ length: 6 }, () => ACCOUNTANT_PHOTOS).flat();
+// 複製しすぎるとトラック幅が1万px超になり、iOS Safariで画像が白抜け・描画崩れする。2セットで十分にループできる。
+const MARQUEE_PHOTOS = Array.from({ length: 2 }, () => ACCOUNTANT_PHOTOS).flat();
 
 type ConcernTone = "blue" | "orange" | "teal" | "purple";
 type ConcernIcon = "message" | "cloud" | "file" | "landmark";
@@ -2890,8 +2891,8 @@ export default function IntroductionLp01({ content }: { content?: IntroductionPa
         .intro-accountant-marquee__track {
           display: flex;
           width: max-content;
-          /* 5枚→9枚への追加後も、以前と同じ移動速度を保つ。 */
-          animation-duration: 153s;
+          /* 2セット複製に合わせ、以前と同じ移動速度になる再生時間にする。 */
+          animation-duration: 51s;
         }
         .intro-accountant-marquee__item { flex: 0 0 auto; margin: 0 18px; }
         .intro-accountant-marquee__photo {

@@ -330,7 +330,8 @@ const ACCOUNTANT_PHOTOS = [
 ] as const;
 
 // 横幅の広いディスプレイでも途中で画像が切れないよう、十分な長さになるまで複製する
-const MARQUEE_PHOTOS = Array.from({ length: 6 }, () => ACCOUNTANT_PHOTOS).flat();
+// 複製しすぎるとトラック幅が1万px超になり、iOS Safariで画像が白抜け・描画崩れする。2セットで十分にループできる。
+const MARQUEE_PHOTOS = Array.from({ length: 2 }, () => ACCOUNTANT_PHOTOS).flat();
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
 
@@ -900,8 +901,8 @@ export default function Home({ officeCount, interviewUrls }: { officeCount: numb
             <div className="pointer-events-none absolute inset-y-0 left-0 w-12 md:w-24 bg-gradient-to-r from-[#f4f7fb] to-transparent z-10" />
             <div className="pointer-events-none absolute inset-y-0 right-0 w-12 md:w-24 bg-gradient-to-l from-[#f4f7fb] to-transparent z-10" />
 
-            {/* 5枚→9枚への増加後も、以前と同じ移動速度を保つため再生時間を比例して延長する */}
-            <div className="flex w-max animate-scroll-x" style={{ animationDuration: "153s" }}>
+            {/* 2セット複製に合わせ、以前と同じ移動速度になる再生時間にする */}
+            <div className="flex w-max animate-scroll-x" style={{ animationDuration: "51s" }}>
               {[...MARQUEE_PHOTOS, ...MARQUEE_PHOTOS].map((photo, i) => (
                 <div key={i} className="shrink-0 mx-4 md:mx-7">
                   <div className="relative w-28 h-28 md:w-40 md:h-40 rounded-full overflow-hidden shadow-md border-4 border-white">
