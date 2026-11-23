@@ -200,12 +200,14 @@ function ConsultationStartForm({
   firstOption,
   stepPath = "/introduction/step",
   showContactChannels = false,
+  contactChannelsLineOnly = false,
 }: {
   variant?: "hero" | "section";
   excludedOptions?: string[];
   firstOption?: string;
   stepPath?: string;
   showContactChannels?: boolean;
+  contactChannelsLineOnly?: boolean;
 }) {
   const router = useRouter();
   const [selected, setSelected] = useState("");
@@ -227,7 +229,7 @@ function ConsultationStartForm({
 
   return (
     <section
-      className={`introduction-start-form introduction-start-form--${variant}${visibleConsultationStarters.length === 3 ? " introduction-start-form--three-options" : ""}`}
+      className={`introduction-start-form introduction-start-form--${variant}${visibleConsultationStarters.length === 3 ? " introduction-start-form--three-options" : ""}${contactChannelsLineOnly && visibleConsultationStarters.length === 3 ? " introduction-start-form--compact-line-only-contact" : ""}`}
       aria-label="無料相談の開始フォーム"
     >
       <div className="introduction-start-form__heading">
@@ -257,7 +259,12 @@ function ConsultationStartForm({
         </button>
       </div>
       <p className="introduction-start-form__privacy"><CircleCheck /> 入力情報は公開されません</p>
-      {showContactChannels && <IntroductionContactChannels onPhoneClick={reportPhoneConversion} />}
+      {showContactChannels && (
+        <IntroductionContactChannels
+          onPhoneClick={reportPhoneConversion}
+          showPhone={!contactChannelsLineOnly}
+        />
+      )}
     </section>
   );
 }
@@ -457,12 +464,12 @@ function AccountantMarquee({ inHero = false }: { inHero?: boolean }) {
   );
 }
 
-function IntroductionStickyCta({ hidePhoneCtas = false }: { hidePhoneCtas?: boolean }) {
+function IntroductionStickyCta() {
   return (
-    <aside className="intro-sticky-cta" aria-label={hidePhoneCtas ? "無料相談" : "無料相談・LINE相談"}>
-      <div className={`intro-sticky-cta__inner intro-concerns__cta${hidePhoneCtas ? " intro-concerns__cta--form-only" : ""}`}>
+    <aside className="intro-sticky-cta" aria-label="無料相談・LINE相談">
+      <div className="intro-sticky-cta__inner intro-concerns__cta">
         <HeroFormCta />
-        {!hidePhoneCtas && <IntroductionContactChannels variant="sticky" showPhone={false} />}
+        <IntroductionContactChannels variant="sticky" showPhone={false} />
       </div>
     </aside>
   );
@@ -762,6 +769,8 @@ export default function Introduction({
   formStepPath?: string;
   showContactChannels?: boolean;
 }) {
+  const showStartFormContactChannels = showContactChannels || hidePhoneCtas;
+
   usePageTitle(
     content?.documentTitle ?? "税理士・会計事務所の無料紹介サービス | 税理士クラウド",
     content?.documentDescription ?? "税理士・会計事務所をお探しながら税理士クラウドへご相談ください。税理士業界に特化した専門のコーディネーターがあなたにぴったりの税理士・会計事務所をご紹介します。",
@@ -774,7 +783,7 @@ export default function Introduction({
       <main className="flex-1 introduction-main">
 
         {/* ── Hero ── */}
-      <section className={`testlp-hero${showDesktopSatisfaction ? " testlp-hero--desktop-satisfaction" : ""}${showContactChannels ? " testlp-hero--contact-channels" : ""}`}>
+      <section className={`testlp-hero${showDesktopSatisfaction ? " testlp-hero--desktop-satisfaction" : ""}${showStartFormContactChannels ? " testlp-hero--contact-channels" : ""}`}>
           <div className="testlp-hero__wash" />
           <div className="testlp-hero__top-fade" />
           <div className="testlp-hero__ring testlp-hero__ring--top" />
@@ -867,7 +876,8 @@ export default function Introduction({
                 excludedOptions={content?.excludedConsultationStarters}
                 firstOption={content?.heroFirstConsultationStarter}
                 stepPath={formStepPath}
-                showContactChannels={showContactChannels}
+                showContactChannels={showStartFormContactChannels}
+                contactChannelsLineOnly={hidePhoneCtas}
               />
             </div>
           </div>
@@ -952,7 +962,8 @@ export default function Introduction({
             <ConsultationStartForm
               excludedOptions={content?.excludedConsultationStarters}
               stepPath={formStepPath}
-              showContactChannels={showContactChannels}
+              showContactChannels={showStartFormContactChannels}
+              contactChannelsLineOnly={hidePhoneCtas}
             />
           </div>
         </section>
@@ -978,7 +989,7 @@ export default function Introduction({
       </main>
 
       <GlobalFooter />
-      <IntroductionStickyCta hidePhoneCtas={hidePhoneCtas} />
+      <IntroductionStickyCta />
       <style jsx global>{`
         .testlp-hero {
           position: relative;
@@ -3879,6 +3890,37 @@ export default function Introduction({
           .testlp-hero--contact-channels .testlp-hero__start-panel .intro-contact-channel__arrow {
             width: 28px;
             height: 28px;
+          }
+
+          /* 電話なしFVは、選択肢部分を詰めてLINE導線込みでも通常LPと同じフォーム高に収める。 */
+          .testlp-hero--contact-channels .testlp-hero__start-panel .intro-contact-channels--line-only .intro-contact-channels__buttons {
+            width: 75%;
+            margin-right: auto;
+            margin-left: auto;
+          }
+
+          .testlp-hero--contact-channels .testlp-hero__start-panel .introduction-start-form--compact-line-only-contact .introduction-start-form__choices {
+            gap: 6px;
+          }
+
+          .testlp-hero--contact-channels .testlp-hero__start-panel .introduction-start-form--compact-line-only-contact :is(.introduction-start-form__choice, .introduction-start-form__next) {
+            min-height: 35px;
+          }
+
+          .introduction-theme--industry .testlp-hero--contact-channels .testlp-hero__start-panel .introduction-start-form--compact-line-only-contact.introduction-start-form--three-options .introduction-start-form__choices {
+            min-height: 199px;
+            grid-auto-rows: 1fr;
+          }
+
+          .testlp-hero--contact-channels .testlp-hero__start-panel .introduction-start-form--compact-line-only-contact .intro-contact-channels {
+            margin-top: 4px;
+            padding-top: 4px;
+          }
+
+          .testlp-hero--contact-channels .testlp-hero__start-panel .introduction-start-form--compact-line-only-contact .intro-contact-channel {
+            min-height: 44px;
+            padding-top: 4px;
+            padding-bottom: 4px;
           }
 
           .testlp-hero--desktop-satisfaction .testlp-hero__breadcrumb,

@@ -1,5 +1,5 @@
 import { PageMeta } from "@/lib/usePageMeta";
-import IntroductionLp01 from "@/page-components/IntroductionLp01";
+import Introduction from "@/page-components/Introduction";
 
 export default function IntroductionLp01Page() {
   return (
@@ -9,7 +9,13 @@ export default function IntroductionLp01Page() {
         description="税理士クラウドの税理士紹介サービスのご案内です。完全無料・最短翌営業日でご要望に合った税理士をご紹介します。"
         noindex
       />
-      <IntroductionLp01 />
+      <Introduction
+        showDesktopSatisfaction
+        hidePhoneCtas
+        noindex
+        formStepPath="/introduction-lp01/step"
+        showContactChannels
+      />
     </>
   );
 }

@@ -78,7 +78,7 @@ export default function IntroductionContactChannels({
 
   return (
     <>
-      <div className={`intro-contact-channels intro-contact-channels--${variant}`}>
+      <div className={`intro-contact-channels intro-contact-channels--${variant}${showPhone ? "" : " intro-contact-channels--line-only"}`}>
         <div className="intro-contact-channels__buttons">
           {showPhone && (
             <a
@@ -183,6 +183,10 @@ export default function IntroductionContactChannels({
           display: grid;
           grid-template-columns: repeat(2, minmax(0, 1fr));
           gap: 10px;
+        }
+
+        .intro-contact-channels--line-only .intro-contact-channels__buttons {
+          grid-template-columns: 1fr;
         }
 
         .intro-contact-channels--form .intro-contact-channels__buttons {
