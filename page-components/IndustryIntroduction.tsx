@@ -594,6 +594,7 @@ export default function IndustryIntroduction({
         hidePhoneCtas={hidePhoneCtas}
         noindex={noindex}
         formStepPath={formStepPath}
+        showContactChannels={!hidePhoneCtas}
         content={{
           ...config.content,
           documentTitle: config.title,

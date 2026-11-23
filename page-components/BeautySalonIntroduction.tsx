@@ -32,6 +32,7 @@ export default function BeautySalonIntroduction({
         hidePhoneCtas={hidePhoneCtas}
         noindex={noindex}
         formStepPath={formStepPath}
+        showContactChannels={!hidePhoneCtas}
         content={{
           pageTheme: "beauty",
           breadcrumbLabel: "美容サロン向け税理士紹介",

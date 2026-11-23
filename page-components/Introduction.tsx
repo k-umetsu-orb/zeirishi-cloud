@@ -783,7 +783,7 @@ export default function Introduction({
       <main className="flex-1 introduction-main">
 
         {/* ── Hero ── */}
-      <section className={`testlp-hero${showDesktopSatisfaction ? " testlp-hero--desktop-satisfaction" : ""}${showStartFormContactChannels ? " testlp-hero--contact-channels" : ""}`}>
+      <section className={`testlp-hero${showDesktopSatisfaction ? " testlp-hero--desktop-satisfaction" : ""}${showStartFormContactChannels ? " testlp-hero--contact-channels" : ""}${showContactChannels && !hidePhoneCtas ? " testlp-hero--contact-channels-with-phone" : ""}`}>
           <div className="testlp-hero__wash" />
           <div className="testlp-hero__top-fade" />
           <div className="testlp-hero__ring testlp-hero__ring--top" />
@@ -3854,6 +3854,10 @@ export default function Introduction({
             min-height: 440px;
           }
 
+          .introduction-theme--industry .testlp-hero--contact-channels-with-phone .testlp-hero__inner {
+            min-height: 500px;
+          }
+
           .testlp-hero--contact-channels.testlp-hero--desktop-satisfaction .testlp-hero__start-panel {
             top: 8px;
           }
@@ -3908,7 +3912,7 @@ export default function Introduction({
           }
 
           .introduction-theme--industry .testlp-hero--contact-channels .testlp-hero__start-panel .introduction-start-form--compact-line-only-contact.introduction-start-form--three-options .introduction-start-form__choices {
-            min-height: 199px;
+            min-height: 225px;
             grid-auto-rows: 1fr;
           }
 
@@ -3918,7 +3922,7 @@ export default function Introduction({
           }
 
           .testlp-hero--contact-channels .testlp-hero__start-panel .introduction-start-form--compact-line-only-contact .intro-contact-channel {
-            min-height: 44px;
+            min-height: 50px;
             padding-top: 4px;
             padding-bottom: 4px;
           }
