@@ -1128,7 +1128,7 @@ export default function Home({ officeCount, interviewUrls }: { officeCount: numb
                 {
                   icon: Users,
                   title: "税理士を紹介してもらう",
-                  desc: "専門スタッフが、完全無料で豊富な経験と実績のある税理士・会計事務所を最短翌日にご紹介します。まずは気軽に、お申し込みフォームにご要望をご記載ください。",
+                  desc: "専門スタッフが、完全無料で豊富な経験と実績のある税理士・会計事務所を最短当日にご紹介します。まずは気軽に、お申し込みフォームにご要望をご記載ください。",
                   href: "/introduction",
                 },
                 {
@@ -1453,7 +1453,7 @@ export default function Home({ officeCount, interviewUrls }: { officeCount: numb
                       <ArrowRight className="h-4 w-4" />
                     </span>
                   </span>
-                  <span className="block text-xs font-bold text-primary">【最短1週間で完了！】</span>
+                  <span className="block text-xs font-bold text-primary">【最短当日にご紹介可能】</span>
                 </span>
               </Link>
               <a

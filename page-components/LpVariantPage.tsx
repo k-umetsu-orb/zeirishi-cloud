@@ -12,7 +12,7 @@ import womanImage from "@/images/女性1_crop.png";
 const merits = [
   { icon: <Shield className="w-8 h-8" />,        title: "完全無料",            desc: "ご相談から紹介まで一切費用はかかりません。成功報酬も不要です。" },
   { icon: <Users className="w-8 h-8" />,         title: "専門コーディネーター", desc: "税理士業界に精通した担当者が最適な税理士をご提案します。" },
-  { icon: <CalendarCheck className="w-8 h-8" />, title: "最短翌営業日ご紹介",  desc: "お急ぎの場合でも迅速に対応。お問い合わせ後すぐにご連絡します。" },
+  { icon: <CalendarCheck className="w-8 h-8" />, title: "最短当日ご紹介",  desc: "お急ぎの場合でも迅速に対応。お問い合わせ後すぐにご連絡します。" },
   { icon: <Globe className="w-8 h-8" />,         title: "全国対応",            desc: "全国3,000件以上の事務所ネットワークから地域を問わずご紹介します。" },
 ];
 
@@ -482,7 +482,7 @@ export default function LpVariantPage({
               ご利用の流れ
             </h2>
             <p className="text-center text-sm text-muted-foreground mb-10">
-              お問い合わせから税理士紹介まで最短1週間
+              お問い合わせから最短当日に税理士をご紹介可能
             </p>
             <div className="space-y-0">
               {steps.map((step, i) => (

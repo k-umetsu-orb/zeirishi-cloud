@@ -93,7 +93,7 @@ function HeroFormCta({ title = "税理士を比較してみる" }: { title?: str
           <p className="testlp-form-cta__title">
             {title}
           </p>
-          <p className="testlp-form-cta__note">【最短1週間で完了！】</p>
+          <p className="testlp-form-cta__note">【最短当日にご紹介可能】</p>
         </div>
         <div className="testlp-form-cta__arrow">
           <ArrowRight className="testlp-form-cta__arrow-svg" />
