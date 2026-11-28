@@ -1,5 +1,5 @@
 import { PageMeta } from "@/lib/usePageMeta";
-import Introduction, { type IntroductionPageContent } from "@/page-components/Introduction";
+import Introduction, { type IntroductionIndustrySection, type IntroductionPageContent } from "@/page-components/Introduction";
 import itFreelancerCase1 from "@/images/industry-cases/it-freelancer-1.png";
 import itFreelancerCase2 from "@/images/industry-cases/it-freelancer-2.png";
 import restaurantCase1 from "@/images/industry-cases/restaurant-1.png";
@@ -569,6 +569,7 @@ type IndustryIntroductionProps = {
   noindex?: boolean;
   canonical?: string;
   formStepPath?: string;
+  industrySectionOverride?: Partial<IntroductionIndustrySection>;
 };
 
 export default function IndustryIntroduction({
@@ -577,9 +578,13 @@ export default function IndustryIntroduction({
   noindex = false,
   canonical,
   formStepPath,
+  industrySectionOverride,
 }: IndustryIntroductionProps) {
   const config = industryConfigs[industry];
   const resolvedCanonical = canonical ?? (noindex ? undefined : `https://zeirishi-cloud.jp/${config.slug}`);
+  const industrySection = config.content.industrySection && industrySectionOverride
+    ? { ...config.content.industrySection, ...industrySectionOverride }
+    : config.content.industrySection;
 
   return (
     <>
@@ -597,6 +602,7 @@ export default function IndustryIntroduction({
         showContactChannels={!hidePhoneCtas}
         content={{
           ...config.content,
+          industrySection,
           documentTitle: config.title,
           documentDescription: config.description,
         }}
